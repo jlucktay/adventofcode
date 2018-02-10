@@ -1,92 +1,80 @@
+/*
+http://adventofcode.com/2017/day/2
+*/
+
 package main
 
 import (
 	"fmt"
 	"io/ioutil"
+	"log"
 	"strconv"
 	"strings"
 )
 
 func main() {
-	testInput := [][]int{{5, 1, 9, 5}, {7, 5, 3}, {2, 4, 6, 8}}
-	fmt.Println(corruptionChecksum(testInput), "should match 18")
+	input, err := ioutil.ReadFile("../input.txt")
 
-	day2Input := "/Users/jameslucktaylor/Google Drive/Projects/Advent of Code 2017/day2_input.txt"
-	inputArray := readLines(day2Input)
-	fmt.Println(corruptionChecksum(inputArray))
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	cleanInput := strings.TrimSpace(string(input))
+	fmt.Printf("Result for day 2, part 1: %d\n", corruptionChecksum(cleanInput))
 }
 
-func corruptionChecksum(input [][]int) int {
-	totalChecksum := 0
+/*
+The spreadsheet consists of rows of apparently-random numbers. To make sure the recovery process is on the right track, they need you to calculate the spreadsheet's checksum. For each row, determine the difference between the largest value and the smallest value; the checksum is the sum of all of these differences.
+*/
+func corruptionChecksum(input string) int {
+	var totalChecksum int
 
-	for _, rowContent := range input {
-		lowest := 9999
-		highest := 0
+	for _, rowContent := range convertSpreadsheet(input) {
+		// maximum int value, which is dependent on architecture
+		// from here: https://stackoverflow.com/questions/6878590/the-maximum-value-for-an-int-type-in-go/6878625#6878625
+		var lowest = int(^uint(0) >> 1)
+		var highest int
 
 		for _, cell := range rowContent {
-			switch {
-			case cell > highest:
+			if cell == 0 {
+				break
+			}
+
+			if cell > highest {
 				highest = cell
-			case cell < lowest:
+			}
+
+			if cell < lowest {
 				lowest = cell
 			}
 		}
 
-		totalChecksum += (highest - lowest)
-	}
-
-	return totalChecksum
-}
-
-func evenlyDivisibleChecksum(input []string) int {
-	totalChecksum := 0
-
-	for row := 0; row < len(input); row++ {
-		cells := strings.Split(input[row], "\t")
-		lowest := 9999
-		highest := 0
-
-		for cell := 0; cell < len(cells); cell++ {
-			intCell, _ := strconv.Atoi(cells[cell])
-
-			if intCell > highest {
-				highest = intCell
-			}
-
-			if intCell < lowest {
-				lowest = intCell
-			}
+		if highest-lowest < 0 {
+			continue
+		} else {
+			totalChecksum += (highest - lowest)
 		}
-
-		totalChecksum += (highest - lowest)
 	}
 
 	return totalChecksum
 }
 
-func readLines(filename string) [][]int {
-	var arrReturn = [][]int{}
-	content, ioErr := ioutil.ReadFile(filename)
+func convertSpreadsheet(input string) [][]int {
+	result := make([][]int, 16)
 
-	if ioErr != nil {
-		panic(ioErr)
-	}
+	for row, i := range strings.Split(input, "\n") {
+		result[row] = make([]int, 16)
 
-	for row, i := range strings.Split(string(content), "\n") {
-		for _, j := range strings.Split(i, "\t") {
-			convInt, convErr := strconv.Atoi(string(j))
+		for column, j := range strings.Split(i, "\t") {
+			convInt, convErr := strconv.Atoi(strings.TrimSpace(string(j)))
 
 			if convErr != nil {
 				panic(convErr)
 			}
 
-			arrReturn[row] = append(arrReturn[row], convInt)
+			result[row][column] = convInt
 		}
 	}
 
-	return arrReturn
+	return result
 }
-
-//	Failed to continue:
-//		Cannot find Delve debugger.
-//		Install from https://github.com/derekparker/delve & ensure it is in your "GOPATH/bin" or "PATH"."
