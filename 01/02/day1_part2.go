@@ -20,7 +20,6 @@ func main() {
 	}
 
 	cleanInput := strings.TrimSpace(string(input))
-
 	fmt.Printf("Result for day 1, part 2: %d\n", decode(cleanInput))
 }
 
