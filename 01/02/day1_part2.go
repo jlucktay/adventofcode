@@ -27,9 +27,9 @@ func main() {
 /*
 Now, instead of considering the next digit, it wants you to consider the digit halfway around the circular list. That is, if your list contains 10 items, only include a digit in your sum if the digit 10/2 = 5 steps forward matches it. Fortunately, your list has an even number of elements.
 */
-func decode(encoded string) uint64 {
+func decode(encoded string) int {
 	halfLength := len(encoded) / 2
-	var sum uint64
+	var sum int
 
 	for i, c := range encoded {
 		if i >= halfLength {
@@ -37,9 +37,9 @@ func decode(encoded string) uint64 {
 			break
 		}
 
-		current, _ := strconv.ParseUint(string(c), 10, 8)
+		current, _ := strconv.Atoi(string(c))
 		halfwayForward := encoded[(i+halfLength)%len(encoded)]
-		halfway, _ := strconv.ParseUint(string(halfwayForward), 10, 8)
+		halfway, _ := strconv.Atoi(string(halfwayForward))
 
 		if current == halfway {
 			sum += current

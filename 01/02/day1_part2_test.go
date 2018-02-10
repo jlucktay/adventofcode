@@ -13,7 +13,7 @@ import "testing"
 func TestDecode(t *testing.T) {
 	cases := []struct {
 		in   string
-		want uint64
+		want int
 	}{
 		{"1212", 6},
 		{"1221", 0},

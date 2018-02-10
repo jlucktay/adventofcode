@@ -27,12 +27,12 @@ func main() {
 /*
 The captcha requires you to review a sequence of digits (your puzzle input) and find the sum of all digits that match the next digit in the list. The list is circular, so the digit after the last digit is the first digit in the list.
 */
-func decode(encoded string) uint64 {
-	var current, previous, sum uint64
+func decode(encoded string) int {
+	var current, previous, sum int
 
 	for _, c := range encoded {
 		previous = current
-		current, _ = strconv.ParseUint(string(c), 10, 8)
+		current, _ = strconv.Atoi(string(c))
 
 		if previous == current {
 			sum += current
@@ -40,7 +40,7 @@ func decode(encoded string) uint64 {
 	}
 
 	if encoded[0] == encoded[len(encoded)-1] {
-		finalMatch, _ := strconv.ParseUint(string(encoded[0]), 10, 8)
+		finalMatch, _ := strconv.Atoi(string(encoded[0]))
 		sum += finalMatch
 	}
 
