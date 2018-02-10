@@ -1,4 +1,4 @@
-package adventDay2
+package advent2017Day2
 
 import (
 	"strconv"

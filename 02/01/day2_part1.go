@@ -8,8 +8,9 @@ import (
 	"fmt"
 	"io/ioutil"
 	"log"
-	"strconv"
 	"strings"
+
+	d2 "github.com/jlucktay/advent2017/02"
 )
 
 func main() {
@@ -29,7 +30,7 @@ The spreadsheet consists of rows of apparently-random numbers. To make sure the 
 func corruptionChecksum(input string) int {
 	var totalChecksum int
 
-	for _, rowContent := range convertSpreadsheet(input) {
+	for _, rowContent := range d2.ConvertInput(input) {
 		// maximum int value, which is dependent on architecture
 		// from here: https://stackoverflow.com/questions/6878590/the-maximum-value-for-an-int-type-in-go/6878625#6878625
 		var lowest = int(^uint(0) >> 1)
@@ -57,24 +58,4 @@ func corruptionChecksum(input string) int {
 	}
 
 	return totalChecksum
-}
-
-func convertSpreadsheet(input string) [][]int {
-	result := make([][]int, 16)
-
-	for row, i := range strings.Split(input, "\n") {
-		result[row] = make([]int, 16)
-
-		for column, j := range strings.Split(i, "\t") {
-			convInt, convErr := strconv.Atoi(strings.TrimSpace(string(j)))
-
-			if convErr != nil {
-				panic(convErr)
-			}
-
-			result[row][column] = convInt
-		}
-	}
-
-	return result
 }
