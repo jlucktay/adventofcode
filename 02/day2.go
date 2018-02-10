@@ -1,3 +1,7 @@
+/*
+http://adventofcode.com/2017/day/2
+*/
+
 package day2
 
 import (
