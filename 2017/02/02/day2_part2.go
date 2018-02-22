@@ -10,7 +10,7 @@ import (
 	"log"
 	"strings"
 
-	d2 "github.com/jlucktay/advent2017/02"
+	d2 "github.com/jlucktay/adventofcode/2017/02"
 )
 
 func main() {
