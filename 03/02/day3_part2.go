@@ -41,6 +41,7 @@ type spiral struct {
 	dir                      direction
 	firstChange              bool
 	edgeDistance, sideLength uint
+	nodeMap                  map[spiralNodeCoords]*spiralNode
 }
 
 func (s *spiral) Init() {
@@ -50,27 +51,36 @@ func (s *spiral) Init() {
 	s.firstChange = true
 	s.edgeDistance = 0
 	s.sideLength = 1
+	s.nodeMap = make(map[spiralNodeCoords]*spiralNode)
 }
 
 func (s *spiral) Add() {
 	if s.root == nil {
-		s.root = &spiralNode{
-			spiralNodeCoords{0, 0},
+		newCoords := spiralNodeCoords{0, 0}
+		newNode := &spiralNode{
+			newCoords,
 			nil,
 			1,
 		}
+
+		s.root = newNode
 		s.last = s.root
+		s.nodeMap[newCoords] = newNode
 
 		return
 	}
 
-	s.last.next = &spiralNode{
-		s.last.coords.next(s.dir),
+	newCoords := s.last.coords.next(s.dir)
+	newNode := &spiralNode{
+		newCoords,
 		nil,
 		s.last.value + 1,
 	}
 
+	s.last.next = newNode
 	s.last = s.last.next
+	s.nodeMap[newCoords] = newNode
+
 	s.edgeDistance++
 
 	if s.edgeDistance >= s.sideLength {
@@ -85,17 +95,14 @@ func (s *spiral) Add() {
 		}
 	}
 
+	// for _, n := range s.last.coords.neighbours() {
+	// 	if s.nodeMap[n] {
+	// 	}
+	// }
+
 	// if s.last.coords.x > 0 && s.last.coords.x == s.last.coords.y*-1 {
 	// 	fmt.Printf("%d..", s.Size())
 	// }
-}
-
-func (s *spiral) Size() uint {
-	if s.root == nil {
-		return 0
-	}
-
-	return s.last.value
 }
 
 /*
@@ -103,6 +110,19 @@ Manhattan distance will be the sum of the absolutes of the last node's coordinat
 */
 func (s *spiral) Manhattan() uint {
 	return uint(math.Abs(float64(s.last.coords.x)) + math.Abs(float64(s.last.coords.y)))
+}
+
+func (snc spiralNodeCoords) neighbours() [8]spiralNodeCoords {
+	return [...]spiralNodeCoords{
+		spiralNodeCoords{snc.x, snc.y + 1},
+		spiralNodeCoords{snc.x + 1, snc.y + 1},
+		spiralNodeCoords{snc.x + 1, snc.y},
+		spiralNodeCoords{snc.x + 1, snc.y - 1},
+		spiralNodeCoords{snc.x, snc.y - 1},
+		spiralNodeCoords{snc.x - 1, snc.y - 1},
+		spiralNodeCoords{snc.x - 1, snc.y},
+		spiralNodeCoords{snc.x - 1, snc.y + 1},
+	}
 }
 
 func (d direction) turn() direction {
