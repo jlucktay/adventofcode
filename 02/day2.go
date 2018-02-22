@@ -14,19 +14,19 @@ ConvertInput will parse and rearrange the input provided for the day 2 exercises
 http://adventofcode.com/2017/day/2
 */
 func ConvertInput(input string) [][]int {
-	result := make([][]int, 16)
+	result := make([][]int, 4)
 
 	for row, i := range strings.Split(input, "\n") {
-		result[row] = make([]int, 16)
+		result[row] = make([]int, 4)
 
-		for column, j := range strings.Split(i, "\t") {
-			convInt, convErr := strconv.Atoi(strings.TrimSpace(string(j)))
+		for col, j := range strings.Split(i, "\t") {
+			convInt, err := strconv.Atoi(strings.TrimSpace(string(j)))
 
-			if convErr != nil {
-				panic(convErr)
+			if err != nil {
+				panic(err)
 			}
 
-			result[row][column] = convInt
+			result[row][col] = convInt
 		}
 	}
 
