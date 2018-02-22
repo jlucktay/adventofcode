@@ -8,7 +8,9 @@
 
 package main
 
-import "testing"
+import (
+	"testing"
+)
 
 func TestDecode(t *testing.T) {
 	cases := []struct {
