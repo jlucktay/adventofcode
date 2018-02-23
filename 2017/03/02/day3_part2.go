@@ -114,14 +114,14 @@ func (s *spiral) Manhattan() uint {
 
 func (snc spiralNodeCoords) neighbours() [8]spiralNodeCoords {
 	return [...]spiralNodeCoords{
-		spiralNodeCoords{snc.x, snc.y + 1},
-		spiralNodeCoords{snc.x + 1, snc.y + 1},
-		spiralNodeCoords{snc.x + 1, snc.y},
-		spiralNodeCoords{snc.x + 1, snc.y - 1},
-		spiralNodeCoords{snc.x, snc.y - 1},
-		spiralNodeCoords{snc.x - 1, snc.y - 1},
-		spiralNodeCoords{snc.x - 1, snc.y},
-		spiralNodeCoords{snc.x - 1, snc.y + 1},
+		{snc.x, snc.y + 1},
+		{snc.x + 1, snc.y + 1},
+		{snc.x + 1, snc.y},
+		{snc.x + 1, snc.y - 1},
+		{snc.x, snc.y - 1},
+		{snc.x - 1, snc.y - 1},
+		{snc.x - 1, snc.y},
+		{snc.x - 1, snc.y + 1},
 	}
 }
 
