@@ -17,6 +17,7 @@ func TestValidatePassphrase(t *testing.T) {
 		in   string
 		want bool
 	}{
+		{"", false},
 		{"abcde fghij", true},
 		{"abcde xyz ecdab", false},
 		{"a ab abc abd abf abj", true},
