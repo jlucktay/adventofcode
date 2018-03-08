@@ -21,6 +21,10 @@ func TestCorruptionChecksum(t *testing.T) {
 		in   string
 		want int
 	}{
+		{`0`, 0},
+		{`0	1	0
+2	0	3
+0	4	0	5`, 9},
 		{`5	1	9	5
 7	5	3
 2	4	6	8`, 18},
