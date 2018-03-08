@@ -19,12 +19,12 @@ func evenlyDivisibleChecksum(input string) int {
 
 		for i, cellOne := range row {
 			if cellOne == 0 {
-				break
+				continue
 			}
 
 			for _, cellTwo := range row[i+1:] {
 				if cellTwo == 0 {
-					break
+					continue
 				}
 
 				if cellOne > cellTwo && cellOne%cellTwo == 0 {

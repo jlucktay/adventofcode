@@ -21,6 +21,9 @@ func TestEvenlyDivisibleChecksum(t *testing.T) {
 		in   string
 		want int
 	}{
+		{`0	9	2	8
+9	4	0	3
+3	8	6	0`, 9},
 		{`5	9	2	8
 9	4	7	3
 3	8	6	5`, 9},
