@@ -23,7 +23,7 @@ func ConvertInput(input string) [][]int {
 			convInt, err := strconv.Atoi(strings.TrimSpace(string(j)))
 
 			if err != nil {
-				panic(err)
+				convInt = 0
 			}
 
 			result[row] = append(result[row], convInt)
