@@ -5,7 +5,6 @@ http://adventofcode.com/2017/day/3
 package main
 
 import (
-	"fmt"
 	"math"
 )
 
@@ -129,18 +128,4 @@ func (snc spiralNodeCoords) next(dir direction) spiralNodeCoords {
 	default: //down
 		return spiralNodeCoords{snc.x, snc.y - 1}
 	}
-}
-
-func main() {
-	var spir spiral
-	spir.Init()
-
-	target := 277678
-
-	for index := 0; index < target; index++ {
-		spir.Add()
-	}
-
-	// fmt.Println("\nlast:", spir.last)
-	fmt.Println("Manhattan distance for", target, "is", spir.Manhattan())
 }

@@ -5,30 +5,9 @@ http://adventofcode.com/2017/day/4
 package main
 
 import (
-	"fmt"
-	"io/ioutil"
-	"log"
 	"sort"
 	"strings"
 )
-
-func main() {
-	input, err := ioutil.ReadFile("../input.txt")
-
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	var tally uint
-
-	for _, p := range strings.Split(string(input[:]), "\n") {
-		if validatePassphrase(p) {
-			tally++
-		}
-	}
-
-	fmt.Printf("Result for day 4, part 2: %d\n", tally)
-}
 
 func sortString(w string) string {
 	s := strings.Split(w, "")
