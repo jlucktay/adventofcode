@@ -22,7 +22,8 @@ func corruptionChecksum(input string) int {
 
 		for _, cell := range rowContent {
 			if cell == 0 {
-				break
+				lowest = 0
+				continue
 			}
 
 			if cell > highest {
