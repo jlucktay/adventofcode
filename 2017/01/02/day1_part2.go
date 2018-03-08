@@ -4,24 +4,7 @@ http://adventofcode.com/2017/day/1
 
 package main
 
-import (
-	"fmt"
-	"io/ioutil"
-	"log"
-	"strconv"
-	"strings"
-)
-
-func main() {
-	input, err := ioutil.ReadFile("../input.txt")
-
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	cleanInput := strings.TrimSpace(string(input))
-	fmt.Printf("Result for day 1, part 2: %d\n", decode(cleanInput))
-}
+import "strconv"
 
 /*
 Now, instead of considering the next digit, it wants you to consider the digit halfway around the circular list. That is, if your list contains 10 items, only include a digit in your sum if the digit 10/2 = 5 steps forward matches it. Fortunately, your list has an even number of elements.
