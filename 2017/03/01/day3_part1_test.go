@@ -13,7 +13,7 @@ import "testing"
 
 func TestManhattan(t *testing.T) {
 	cases := []struct {
-		in   int
+		in   uint
 		want uint
 	}{
 		{1, 0},
@@ -26,7 +26,11 @@ func TestManhattan(t *testing.T) {
 		var s spiral
 		s.Init()
 
-		for i := 0; i < c.in; i++ {
+		if s.Size() != 0 {
+			t.Error("Size of new empty spiral is not zero!")
+		}
+
+		for i := uint(0); i < c.in; i++ {
 			s.Add()
 		}
 
@@ -34,6 +38,10 @@ func TestManhattan(t *testing.T) {
 
 		if got != c.want {
 			t.Errorf("Manhattan(%v) == %v, want %v", c.in, got, c.want)
+		}
+
+		if s.Size() != c.in {
+			t.Errorf("s.Size() == %v, want %v", s.Size(), c.in)
 		}
 	}
 }
