@@ -35,11 +35,7 @@ func corruptionChecksum(input string) int {
 			}
 		}
 
-		if highest-lowest < 0 {
-			continue
-		} else {
-			totalChecksum += (highest - lowest)
-		}
+		totalChecksum += (highest - lowest)
 	}
 
 	return totalChecksum
