@@ -38,3 +38,30 @@ func TestManhattan(t *testing.T) {
 		}
 	}
 }
+
+// Co-ordinates always have 8 neighbours surrounding them
+func TestNeighboursCount(t *testing.T) {
+	cases := []struct {
+		in   spiralNodeCoords
+		want int
+	}{
+		{
+			spiralNodeCoords{0, 0},
+			8,
+		},
+		{
+			spiralNodeCoords{27, 42},
+			8,
+		},
+		{
+			spiralNodeCoords{-100, -200},
+			8,
+		},
+	}
+
+	for _, c := range cases {
+		if len(c.in.neighbours()) != 8 {
+			t.Errorf("len(%v.neighbours()) != 8", c.in)
+		}
+	}
+}
