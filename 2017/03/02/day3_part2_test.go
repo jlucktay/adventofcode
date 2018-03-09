@@ -65,3 +65,29 @@ func TestNeighboursCount(t *testing.T) {
 		}
 	}
 }
+
+func TestCoordsString(t *testing.T) {
+	cases := []struct {
+		in   spiralNodeCoords
+		want string
+	}{
+		{
+			spiralNodeCoords{0, 0},
+			"[0,0]",
+		},
+		{
+			spiralNodeCoords{-100, -1000},
+			"[-100,-1000]",
+		},
+		{
+			spiralNodeCoords{123, 456},
+			"[123,456]",
+		},
+	}
+
+	for _, c := range cases {
+		if c.in.String() != c.want {
+			t.Errorf("String of '%v' doesn't match '%v'", c.in.String(), c.want)
+		}
+	}
+}
