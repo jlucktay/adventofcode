@@ -5,6 +5,7 @@ http://adventofcode.com/2017/day/3
 package main
 
 import (
+	"fmt"
 	"math"
 )
 
@@ -122,6 +123,10 @@ func (snc spiralNodeCoords) neighbours() [8]spiralNodeCoords {
 		{snc.x - 1, snc.y},
 		{snc.x - 1, snc.y + 1},
 	}
+}
+
+func (snc spiralNodeCoords) String() string {
+	return fmt.Sprintf("[%d,%d]", snc.x, snc.y)
 }
 
 func (d direction) turn() direction {
