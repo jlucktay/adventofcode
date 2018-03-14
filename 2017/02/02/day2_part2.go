@@ -25,18 +25,10 @@ func checksumSingleRow(row []int) int {
 	var rowChecksum int
 
 	for i, cellOne := range row {
-		if cellOne == 0 {
-			continue
-		}
-
 		for _, cellTwo := range row[i+1:] {
-			if cellTwo == 0 {
-				continue
-			}
-
-			if cellOne > cellTwo && cellOne%cellTwo == 0 {
+			if cellTwo != 0 && cellOne > cellTwo && cellOne%cellTwo == 0 {
 				rowChecksum += cellOne / cellTwo
-			} else if cellOne < cellTwo && cellTwo%cellOne == 0 {
+			} else if cellOne != 0 && cellOne < cellTwo && cellTwo%cellOne == 0 {
 				rowChecksum += cellTwo / cellOne
 			}
 		}
