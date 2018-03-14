@@ -14,29 +14,33 @@ The spreadsheet consists of rows of apparently-random numbers. To make sure the 
 func corruptionChecksum(input string) int {
 	var totalChecksum int
 
-	for _, rowContent := range d2.ConvertInput(input) {
-		// maximum int value, which is dependent on architecture
-		// from here: https://stackoverflow.com/questions/6878590/the-maximum-value-for-an-int-type-in-go/6878625#6878625
-		var lowest = int(^uint(0) >> 1)
-		var highest int
-
-		for _, cell := range rowContent {
-			if cell == 0 {
-				lowest = 0
-				continue
-			}
-
-			if cell > highest {
-				highest = cell
-			}
-
-			if cell < lowest {
-				lowest = cell
-			}
-		}
-
-		totalChecksum += (highest - lowest)
+	for _, row := range d2.ConvertInput(input) {
+		totalChecksum += checksumSingleRow(row)
 	}
 
 	return totalChecksum
+}
+
+func checksumSingleRow(row []int) int {
+	// maximum int value, which is dependent on architecture
+	// from here: https://stackoverflow.com/questions/6878590/the-maximum-value-for-an-int-type-in-go/6878625#6878625
+	var lowest = int(^uint(0) >> 1)
+	var highest int
+
+	for _, cell := range row {
+		if cell == 0 {
+			lowest = 0
+			continue
+		}
+
+		if cell > highest {
+			highest = cell
+		}
+
+		if cell < lowest {
+			lowest = cell
+		}
+	}
+
+	return (highest - lowest)
 }
