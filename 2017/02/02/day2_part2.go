@@ -15,32 +15,32 @@ func evenlyDivisibleChecksum(input string) int {
 	var totalChecksum int
 
 	for _, row := range d2.ConvertInput(input) {
-		cleanMatchFound := false
+		totalChecksum += checksumSingleRow(row)
+	}
 
-		for i, cellOne := range row {
-			if cellOne == 0 {
+	return totalChecksum
+}
+
+func checksumSingleRow(row []int) int {
+	var rowChecksum int
+
+	for i, cellOne := range row {
+		if cellOne == 0 {
+			continue
+		}
+
+		for _, cellTwo := range row[i+1:] {
+			if cellTwo == 0 {
 				continue
 			}
 
-			for _, cellTwo := range row[i+1:] {
-				if cellTwo == 0 {
-					continue
-				}
-
-				if cellOne > cellTwo && cellOne%cellTwo == 0 {
-					totalChecksum += cellOne / cellTwo
-					cleanMatchFound = true
-				} else if cellOne < cellTwo && cellTwo%cellOne == 0 {
-					totalChecksum += cellTwo / cellOne
-					cleanMatchFound = true
-				}
-			}
-
-			if cleanMatchFound {
-				break
+			if cellOne > cellTwo && cellOne%cellTwo == 0 {
+				rowChecksum += cellOne / cellTwo
+			} else if cellOne < cellTwo && cellTwo%cellOne == 0 {
+				rowChecksum += cellTwo / cellOne
 			}
 		}
 	}
 
-	return totalChecksum
+	return rowChecksum
 }
