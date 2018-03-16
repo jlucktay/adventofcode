@@ -1,7 +1,5 @@
-/*
-http://adventofcode.com/2017/day/1
-*/
-
+// Package main for Advent of Code 2017, day 1, part 2
+// http://adventofcode.com/2017/day/1
 package main
 
 import "strconv"

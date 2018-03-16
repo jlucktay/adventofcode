@@ -1,7 +1,6 @@
-/*
-http://adventofcode.com/2017/day/2
-*/
-
+// Package day2 for Advent of Code 2017, day 2
+// http://adventofcode.com/2017/day/2
+// Contains a function used by both parts of day 2
 package day2
 
 import (
