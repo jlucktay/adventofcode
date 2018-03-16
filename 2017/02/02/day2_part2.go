@@ -1,7 +1,5 @@
-/*
-http://adventofcode.com/2017/day/2
-*/
-
+// Package main for Advent of Code 2017, day 2, part 2
+// http://adventofcode.com/2017/day/2
 package main
 
 import (
