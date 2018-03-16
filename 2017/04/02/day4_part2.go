@@ -15,11 +15,11 @@ func sortString(w string) string {
 }
 
 func validatePassphrase(passphrase string) bool {
-	split := strings.Split(passphrase, " ")
-
 	if len(passphrase) == 0 {
 		return false
 	}
+
+	split := strings.Split(passphrase, " ")
 
 	for a, b := range split {
 		outer := sortString(b)
