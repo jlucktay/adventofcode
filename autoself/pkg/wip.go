@@ -1,7 +1,7 @@
-// Package autosquared is code that writes boilerplate code.
+// Package autoself is code that writes boilerplate code.
 // It is a self-perpetuating package that gathers stories from the Advent of Code website and scaffolds out code
 // skeletons for the challenge described on the given year and day.
-package autosquared
+package autoself
 
 import (
 	"fmt"
