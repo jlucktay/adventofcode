@@ -12,6 +12,11 @@
 - CLI arg(s)
   - year
   - date(s)
+- each day has 2 parts
+  - initially, only part 1 will be visible
+  - an unauthenticated HTTP request won't ever see part 2
+    - add functionality to allow a session cookie value to be specified
+    - this would also allow us to fetch puzzle inputs, since they are user-specific
 
 ## Modular bits
 
