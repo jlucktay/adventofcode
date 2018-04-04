@@ -18,6 +18,7 @@
   - initially, only part 1 will be visible
   - an unauthenticated HTTP request won't ever see part 2
     - add functionality to allow a session cookie value to be specified
+      - see `cookiemonster` sub-directory for a one-shot script that can pull the appropriate cookie out
     - this would also allow us to fetch puzzle inputs, since they are user-specific
 
 ## Modular bits
