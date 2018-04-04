@@ -5,6 +5,8 @@
 - Create Go code templates, one for each day of the Advent of Code
 - Start by aiming at 2017 only
 - Eventually go back through previous years as well
+  - 2015
+  - 2016
 
 ## Misc
 
@@ -27,6 +29,7 @@
   - test case example(s)
     - the first line that ends with a `:` up to the second-last line
   - stinger
-    - the last line, which (usually?) ends with a `?`
+    - the last line, which (usually?) ends with a `?` to summarise and pose the challenge
 - Arrange and execute text template, based on `Day` input
-- Write template output to disk (implement the `Writer`(?) interface)
+- Write template output to disk
+  - implement the `Writer`(?) interface
