@@ -1,5 +1,7 @@
-// Gets stories from AoC
-package main
+// Package autosquared is code that writes boilerplate code.
+// It is a self-perpetuating package that gathers stories from the Advent of Code website and scaffolds out code
+// skeletons for the given year and day.
+package autosquared
 
 import (
 	"fmt"
@@ -9,7 +11,7 @@ import (
 	"github.com/PuerkitoBio/goquery"
 )
 
-func main() {
+func do() {
 	descriptions := make(map[int]map[string]string)
 
 	getAdventDayDescriptions(1, 25, descriptions)
