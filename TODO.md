@@ -15,10 +15,13 @@
 
 ## Modular bits
 
-- `HTTP GET` creates a `Day`
+- **HTTP GET** creates a `Day`
 - Refine a `DayDesc` from the raw `Day` into sub-components:
   - intro
-  - test case examples
+    - everything from the start up to the test case example(s)
+  - test case example(s)
+    - the first line that ends with a `:` up to the second-last line
   - stinger
+    - the last line, which (usually?) ends with a `?`
 - Arrange and execute text template, based on `Day` input
 - Write template output to disk (implement the `Writer`(?) interface)
