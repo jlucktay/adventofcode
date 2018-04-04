@@ -1,6 +1,6 @@
 // Package autosquared is code that writes boilerplate code.
 // It is a self-perpetuating package that gathers stories from the Advent of Code website and scaffolds out code
-// skeletons for the given year and day.
+// skeletons for the challenge described on the given year and day.
 package autosquared
 
 import (
