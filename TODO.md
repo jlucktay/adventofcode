@@ -19,11 +19,17 @@
   - an unauthenticated HTTP request won't ever see part 2
     - add functionality to allow a session cookie value to be specified
       - see `cookiemonster` sub-directory for a one-shot script that can pull the appropriate cookie out
-    - this would also allow us to fetch puzzle inputs, since they are user-specific
 
 ## Modular bits
 
-- **HTTP GET** creates a `Day`
+- **HTTP GET** fetches and returns a `Day`:
+  - inputs:
+    - date
+    - year
+    - optional session cookie
+      - this would also allow us to fetch puzzle inputs, since they are user-specific
+  - outputs:
+    - Day
 - Refine a `DayDesc` from the raw `Day` into sub-components:
   - intro
     - everything from the start up to the test case example(s)
