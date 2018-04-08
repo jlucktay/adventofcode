@@ -17,7 +17,7 @@ import (
 	"golang.org/x/crypto/pbkdf2"
 )
 
-// Inpsiration
+// Inspiration:
 // http://n8henrie.com/2013/11/use-chromes-cookies-for-easier-downloading-with-python-requests/
 
 // Chromium Mac os_crypt:  http://dacort.me/1ynPMgx
@@ -73,6 +73,7 @@ func main() {
 func decryptValue(encryptedValue []byte) string {
 	key := pbkdf2.Key([]byte(password), []byte(salt), iterations, length, sha1.New)
 	block, err := aes.NewCipher(key)
+
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -82,10 +83,13 @@ func decryptValue(encryptedValue []byte) string {
 	cbc.CryptBlocks(decrypted, encryptedValue)
 
 	plainText, err := aesStripPadding(decrypted)
+
 	if err != nil {
 		fmt.Println("Error decrypting:", err)
+
 		return ""
 	}
+
 	return string(plainText)
 }
 
@@ -95,10 +99,13 @@ func aesStripPadding(data []byte) ([]byte, error) {
 	if len(data)%length != 0 {
 		return nil, fmt.Errorf("decrypted data block length is not a multiple of %d", length)
 	}
+
 	paddingLen := int(data[len(data)-1])
+
 	if paddingLen > 16 {
 		return nil, fmt.Errorf("invalid last block padding length: %d", paddingLen)
 	}
+
 	return data[:len(data)-paddingLen], nil
 }
 
@@ -108,6 +115,7 @@ func getPassword() string {
 	parts = parts[1:len(parts)]
 
 	out, err := exec.Command(cmd, parts...).Output()
+
 	if err != nil {
 		log.Fatal("error finding password ", err)
 	}
@@ -120,17 +128,21 @@ func getCookies(domain string) (cookies []Cookie) {
 	cookiesFile := fmt.Sprintf("%s/Library/Application Support/Google/Chrome/Default/Cookies", usr.HomeDir)
 
 	db, err := sql.Open("sqlite3", cookiesFile)
-	if err != nil {
-		log.Fatal(err)
-	}
 	defer db.Close()
 
-	rows, err := db.Query("SELECT name, value, host_key, encrypted_value FROM cookies WHERE host_key like ?", fmt.Sprintf("%%%s%%", domain))
 	if err != nil {
 		log.Fatal(err)
 	}
 
+	rows, err := db.Query(
+		"SELECT name, value, host_key, encrypted_value FROM cookies WHERE host_key like ?",
+		fmt.Sprintf("%%%s%%", domain))
 	defer rows.Close()
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	for rows.Next() {
 		var name, value, hostKey string
 		var encryptedValue []byte
