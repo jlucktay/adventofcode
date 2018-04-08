@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"log"
 	"strconv"
+	"strings"
 
 	"github.com/PuerkitoBio/goquery"
 	"github.com/jlucktay/adventofcode/aocautoself/pkg"
@@ -29,9 +30,47 @@ func Fetch(y, d uint) aocautoself.Day {
 	doc.Find("article.day-desc").Each(
 		func(i int, s *goquery.Selection) {
 			fmt.Println("[fetchaocday.Fetch] i: '" + strconv.Itoa(i) + "'")
-			day.Description = s.Text()
+
+			switch i {
+			case 0:
+				breakDescriptionDown(&day.Part1, s.Text(), i)
+			case 1:
+				breakDescriptionDown(&day.Part2, s.Text(), i)
+			default:
+				panic("don't know what to do with this many article.day-desc elements")
+			}
+
+			day.Description += s.Text()
 		},
 	)
 
 	return *day
+}
+
+func breakDescriptionDown(dd *aocautoself.DayDesc, desc string, part int) {
+	descSlice := strings.Split(desc, "\n")
+	endsWithColon, endsWithQuestion := false, false
+
+	for _, y := range descSlice {
+		if len(y) > 0 {
+			switch strings.TrimSpace(y)[len(y)-1:] {
+			case ":":
+				endsWithColon = true
+			case "?":
+				endsWithQuestion = true
+			}
+		}
+
+		if !endsWithColon && !endsWithQuestion {
+			dd.Fluff += y + "\n"
+		} else if !endsWithQuestion {
+			dd.Test += y + "\n"
+		} else {
+			dd.Stinger += y + "\n"
+		}
+	}
+
+	dd.Fluff = strings.TrimSpace(dd.Fluff)
+	dd.Test = strings.TrimSpace(dd.Test)
+	dd.Stinger = strings.TrimSpace(dd.Stinger)
 }
