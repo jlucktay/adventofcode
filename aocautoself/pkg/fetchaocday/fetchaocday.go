@@ -37,7 +37,7 @@ func Fetch(y, d uint) aocautoself.Day {
 			case 1:
 				breakDescriptionDown(&day.Part2, s.Text(), i)
 			default:
-				panic("don't know what to do with this many article.day-desc elements")
+				panic(fmt.Sprintf("don't know what to do with %d article.day-desc elements", i+1))
 			}
 
 			day.Description += s.Text()
