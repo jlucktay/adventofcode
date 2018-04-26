@@ -5,7 +5,7 @@ package aocautoself
 
 import "fmt"
 
-func (d Day) String() string {
+func (d *Day) String() string {
 	s := fmt.Sprintf("Advent of Code %d, day %d.\n", d.Year, d.Date)
 	s += fmt.Sprintf("Raw description: \"%s\"\n", d.Description)
 
