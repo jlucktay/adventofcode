@@ -40,3 +40,9 @@
 - Arrange and execute text template, based on `Day` input
 - Write template output to disk
   - implement the `Writer`(?) interface
+
+## CI integrations
+
+- Webhooks to Slack channel
+  - [Code Climate](https://codeclimate.com/repos/5aa8f4157cee18029e006596/settings/integrations/slack/edit)
+  - [Scrutinizer](https://scrutinizer-ci.com/g/jlucktay/adventofcode/settings/service-hooks/slack)
