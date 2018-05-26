@@ -8,7 +8,6 @@ import (
 	"net/http"
 	"net/url"
 	"regexp"
-	"strconv"
 	"strings"
 
 	"github.com/PuerkitoBio/goquery"
@@ -31,7 +30,7 @@ func Fetch(cookie string, y, d uint) (output aocautoself.Day) {
 		log.Fatalf("status code error: %d %s", res.StatusCode, res.Status)
 	}
 
-	fmt.Printf("[fetchaocday.Fetch] Fetching '%s'...\n", dayURL)
+	// fmt.Printf("[fetchaocday.Fetch] Fetching '%s'...\n", dayURL)
 
 	doc, err := goquery.NewDocumentFromReader(res.Body)
 	if err != nil {
@@ -40,7 +39,7 @@ func Fetch(cookie string, y, d uint) (output aocautoself.Day) {
 
 	doc.Find("article.day-desc").Each(
 		func(i int, s *goquery.Selection) {
-			fmt.Println("[fetchaocday.Fetch] i: '" + strconv.Itoa(i) + "'")
+			// fmt.Println("[fetchaocday.Fetch] i: '" + strconv.Itoa(i) + "'")
 
 			switch i {
 			case 0:
