@@ -5,6 +5,8 @@ package fetchaocday
 import (
 	"fmt"
 	"log"
+	"net/http"
+	"net/url"
 	"strconv"
 	"strings"
 
@@ -14,15 +16,23 @@ import (
 )
 
 // Fetch will perform the necessary HTTP magic to get an Advent of Code day for the given year and date.
-func Fetch(y, d uint) aocautoself.Day {
-	day := aocday.NewDay(y, d)
+func Fetch(cookie string, y, d uint) (output aocautoself.Day) {
+	output = *aocday.NewDay(y, d)
+	dayURL, _ := url.Parse(fmt.Sprintf("http://adventofcode.com/%d/day/%d", output.Year, output.Date))
 
-	url := fmt.Sprintf("http://adventofcode.com/%d/day/%d", y, d)
+	res, err := http.DefaultClient.Do(newRequest(*dayURL, cookie))
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer res.Body.Close()
 
-	fmt.Println("[fetchaocday.Fetch] Fetching '" + url + "'...")
+	if res.StatusCode != 200 {
+		log.Fatalf("status code error: %d %s", res.StatusCode, res.Status)
+	}
 
-	doc, err := goquery.NewDocument(url)
+	fmt.Printf("[fetchaocday.Fetch] Fetching '%s'...\n", dayURL)
 
+	doc, err := goquery.NewDocumentFromReader(res.Body)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -33,27 +43,27 @@ func Fetch(y, d uint) aocautoself.Day {
 
 			switch i {
 			case 0:
-				breakDescriptionDown(&day.Part1, s.Text(), i)
+				breakDescriptionDown(&output.Part1, s.Text())
 			case 1:
-				breakDescriptionDown(&day.Part2, s.Text(), i)
+				breakDescriptionDown(&output.Part2, s.Text())
 			default:
-				panic(fmt.Sprintf("don't know what to do with %d article.day-desc elements", i+1))
+				log.Fatalf("'%d' article.day-desc elements is too many", i+1)
 			}
 
-			day.Description += s.Text()
+			output.Description += s.Text()
 		},
 	)
 
-	return *day
+	return
 }
 
-func breakDescriptionDown(dd *aocautoself.DayDesc, desc string, part int) {
+func breakDescriptionDown(dd *aocautoself.DayDesc, desc string) {
 	descSlice := strings.Split(desc, "\n")
 	endsWithColon, endsWithQuestion := false, false
 
-	for _, y := range descSlice {
-		if len(y) > 0 {
-			switch strings.TrimSpace(y)[len(y)-1:] {
+	for _, line := range descSlice {
+		if len(line) > 0 {
+			switch strings.TrimSpace(line)[len(line)-1:] {
 			case ":":
 				endsWithColon = true
 			case "?":
@@ -62,15 +72,27 @@ func breakDescriptionDown(dd *aocautoself.DayDesc, desc string, part int) {
 		}
 
 		if !endsWithColon && !endsWithQuestion {
-			dd.Fluff += y + "\n"
+			dd.Fluff += line + "\n"
 		} else if !endsWithQuestion {
-			dd.Test += y + "\n"
+			dd.Test += line + "\n"
 		} else {
-			dd.Stinger += y + "\n"
+			dd.Stinger += line + "\n"
 		}
 	}
 
 	dd.Fluff = strings.TrimSpace(dd.Fluff)
 	dd.Test = strings.TrimSpace(dd.Test)
 	dd.Stinger = strings.TrimSpace(dd.Stinger)
+}
+
+func newRequest(u url.URL, sessionCookie string) (req *http.Request) {
+	//TODO: validate sessionCookie as 96 character hexadecimal
+	req, err := http.NewRequest("GET", u.String(), nil)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	req.Header.Add("Cookie", fmt.Sprintf("session=%s", sessionCookie))
+
+	return req
 }
