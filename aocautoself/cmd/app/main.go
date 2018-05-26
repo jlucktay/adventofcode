@@ -18,5 +18,5 @@ func main() {
 
 	days := make([]aocautoself.Day, 0)
 	days = append(days, fetchaocday.Fetch(cookie, 2017, 1))
-	fmt.Println(days[0])
+	fmt.Println(days[0].String())
 }
