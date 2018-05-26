@@ -1,5 +1,5 @@
-// Cookiemonster will give you cookies!
-package main
+// Package cookiemonster will monster your cookies!
+package cookiemonster
 
 import (
 	"crypto/aes"
@@ -8,11 +8,11 @@ import (
 	"database/sql"
 	"fmt"
 	"log"
-	"os"
 	"os/exec"
 	"os/user"
 	"strings"
 
+	// Imported to help chew on cookies
 	_ "github.com/mattn/go-sqlite3"
 	"golang.org/x/crypto/pbkdf2"
 )
@@ -25,7 +25,7 @@ var (
 	salt       = "saltysalt"
 	iv         = "                "
 	length     = 16
-	password   = ""
+	password   = getPassword()
 	iterations = 1003
 )
 
@@ -37,8 +37,7 @@ type Cookie struct {
 	EncryptedValue []byte
 }
 
-// DecryptedValue - Get the unencrypted value of a Chrome cookie
-func (c *Cookie) DecryptedValue() string {
+func (c *Cookie) decryptedValue() string {
 	if c.Value > "" {
 		return c.Value
 	}
@@ -49,25 +48,6 @@ func (c *Cookie) DecryptedValue() string {
 	}
 
 	return ""
-}
-
-func usage() {
-	fmt.Fprintf(os.Stderr, "usage: %s [domain]\n", os.Args[0])
-	os.Exit(2)
-}
-
-func main() {
-	if len(os.Args) != 2 {
-		usage()
-	}
-
-	domain := os.Args[1]
-	password = getPassword()
-
-	// TODO: Output in Netscape format
-	for _, cookie := range getCookies(domain) {
-		fmt.Printf("%s/%s: %s\n", cookie.Domain, cookie.Key, cookie.DecryptedValue())
-	}
 }
 
 func decryptValue(encryptedValue []byte) string {
@@ -148,6 +128,20 @@ func getCookies(domain string) (cookies []Cookie) {
 		var encryptedValue []byte
 		rows.Scan(&name, &value, &hostKey, &encryptedValue)
 		cookies = append(cookies, Cookie{hostKey, name, value, encryptedValue})
+	}
+
+	return
+}
+
+// GetCookieWithKey will check all of the cookies from the given domain, and
+// return the value if one has a key that matches exactly.
+// If no such cookie is found, an empty string is returned instead.
+func GetCookieWithKey(domain, key string) (cookie string) {
+	for _, b := range getCookies(domain) {
+		if b.Key == key {
+			cookie = b.decryptedValue()
+			return
+		}
 	}
 
 	return

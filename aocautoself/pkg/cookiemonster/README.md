@@ -1,6 +1,6 @@
 # About `cookiemonster`
 
-From [here](https://gist.github.com/dacort/bd6a5116224c594b14db).
+Originally from [here](https://gist.github.com/dacort/bd6a5116224c594b14db).
 
 ## Execution
 

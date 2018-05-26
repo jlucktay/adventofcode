@@ -6,8 +6,8 @@ import (
 )
 
 // NewDay initialises a new Day with the given Year (y), Date (d), empty string fields, and returns it.
-func NewDay(y, d uint) *aocautoself.Day {
-	day := &aocautoself.Day{}
+func NewDay(y, d uint) (day *aocautoself.Day) {
+	day = &aocautoself.Day{}
 
 	day.Year = y
 	day.Date = d
@@ -16,5 +16,5 @@ func NewDay(y, d uint) *aocautoself.Day {
 	day.Part1 = aocautoself.DayDesc{Fluff: "", Test: "", Stinger: ""}
 	day.Part2 = aocautoself.DayDesc{Fluff: "", Test: "", Stinger: ""}
 
-	return day
+	return
 }
