@@ -7,6 +7,7 @@ import (
 	"log"
 	"net/http"
 	"net/url"
+	"regexp"
 	"strconv"
 	"strings"
 
@@ -86,8 +87,17 @@ func breakDescriptionDown(dd *aocautoself.DayDesc, desc string) {
 }
 
 func newRequest(u url.URL, sessionCookie string) (req *http.Request) {
-	//TODO: validate sessionCookie as 96 character hexadecimal
-	req, err := http.NewRequest("GET", u.String(), nil)
+	cookiePattern := `(?i)^[0-9a-f]{96,96}$`
+	r, err := regexp.Compile(cookiePattern)
+	if err != nil {
+		log.Fatalf("regex '%s' couldn't compile: %s", cookiePattern, err)
+	}
+
+	if !r.MatchString(sessionCookie) {
+		log.Fatalf("session cookie '%s' was not a 96 character hexadecimal", sessionCookie)
+	}
+
+	req, err = http.NewRequest("GET", u.String(), nil)
 	if err != nil {
 		log.Fatal(err)
 	}
