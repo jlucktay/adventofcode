@@ -25,7 +25,6 @@ var (
 	salt       = "saltysalt"
 	iv         = "                "
 	length     = 16
-	password   = getPassword()
 	iterations = 1003
 )
 
@@ -51,7 +50,7 @@ func (c *Cookie) decryptedValue() string {
 }
 
 func decryptValue(encryptedValue []byte) string {
-	key := pbkdf2.Key([]byte(password), []byte(salt), iterations, length, sha1.New)
+	key := pbkdf2.Key([]byte(getPassword()), []byte(salt), iterations, length, sha1.New)
 	block, err := aes.NewCipher(key)
 
 	if err != nil {
