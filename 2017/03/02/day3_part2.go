@@ -23,6 +23,7 @@ type spiralNodeCoords struct {
 type spiralNode struct {
 	coords spiralNodeCoords
 	next   *spiralNode
+	parent *spiral
 	value  uint
 }
 
@@ -58,6 +59,7 @@ func (s *spiral) Add() {
 		newNode := &spiralNode{
 			newCoords,
 			nil,
+			s,
 			1,
 		}
 
@@ -72,8 +74,11 @@ func (s *spiral) Add() {
 	newNode := &spiralNode{
 		newCoords,
 		nil,
-		s.last.value + 1,
+		s,
+		0,
 	}
+
+	newNode.value = newNode.sumNeighbours()
 
 	s.last.next = newNode
 	s.last = s.last.next
@@ -92,20 +97,9 @@ func (s *spiral) Add() {
 			s.sideLength++
 		}
 	}
-
-	// for _, n := range s.last.coords.neighbours() {
-	// 	if s.nodeMap[n] {
-	// 	}
-	// }
-
-	// if s.last.coords.x > 0 && s.last.coords.x == s.last.coords.y*-1 {
-	// 	fmt.Printf("%d..", s.Size())
-	// }
 }
 
-/*
-Manhattan distance will be the sum of the absolutes of the last node's coordinates.
-*/
+// Manhattan distance will be the sum of the absolutes of the last node's coordinates.
 func (s *spiral) Manhattan() uint {
 	return uint(math.Abs(float64(s.last.coords.x)) + math.Abs(float64(s.last.coords.y)))
 }
@@ -121,6 +115,20 @@ func (snc spiralNodeCoords) neighbours() [8]spiralNodeCoords {
 		{snc.x - 1, snc.y},
 		{snc.x - 1, snc.y + 1},
 	}
+}
+
+func (sn spiralNode) sumNeighbours() (result uint) {
+	for _, neighbour := range sn.coords.neighbours() {
+		if node, ok := sn.parent.nodeMap[neighbour]; ok {
+			result += node.value
+		}
+	}
+
+	return
+}
+
+func (sn spiralNode) String() string {
+	return fmt.Sprintf("%s %v", sn.coords, sn.value)
 }
 
 func (snc spiralNodeCoords) String() string {

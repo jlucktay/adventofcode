@@ -7,13 +7,13 @@ import "fmt"
 func main() {
 	var spir spiral
 	spir.Init()
+	spir.Add()
 
-	target := 277678
+	target := uint(277678)
 
-	for index := 0; index < target; index++ {
+	for spir.last.value < target {
 		spir.Add()
 	}
 
-	// fmt.Println("\nlast:", spir.last)
-	fmt.Println("Manhattan distance for", target, "is", spir.Manhattan())
+	fmt.Println("last:", spir.last)
 }
