@@ -32,15 +32,16 @@ type spiralNode struct {
 root:			(pointer to) the first node
 last:			(pointer to) the last node
 dir:			direction in which to add the next node
-firstChange:	side lengths come in pairs, so are we on the first of the two with this side length, or the second?
 edgeDistance:	number of nodes already traversed on the current edge
 sideLength:		the maximum number of nodes to add, before we need to change direction
+firstChange:	side lengths come in pairs, so are we on the first of the two with this side length, or the second?
+nodeMap:		a map of all existing nodes that have been added to this spiral
 */
 type spiral struct {
 	root, last               *spiralNode
 	dir                      direction
-	firstChange              bool
 	edgeDistance, sideLength uint
+	firstChange              bool
 	nodeMap                  map[spiralNodeCoords]*spiralNode
 }
 
@@ -48,9 +49,9 @@ func (s *spiral) Init() {
 	s.root = nil
 	s.last = nil
 	s.dir = right
-	s.firstChange = true
 	s.edgeDistance = 0
 	s.sideLength = 1
+	s.firstChange = true
 	s.nodeMap = make(map[spiralNodeCoords]*spiralNode)
 }
 
@@ -71,18 +72,8 @@ func (s *spiral) Add() {
 	s.last = s.last.next
 	s.nodeMap[newNode.coords] = newNode
 
-	s.edgeDistance++
-
-	if s.edgeDistance >= s.sideLength {
-		s.edgeDistance = 0
-		s.dir = s.dir.turn()
-
-		if s.firstChange {
-			s.firstChange = false
-		} else {
-			s.firstChange = true
-			s.sideLength++
-		}
+	if s.edgeDistance++; s.edgeDistance >= s.sideLength {
+		s.turn()
 	}
 }
 
@@ -91,6 +82,7 @@ func (s *spiral) Manhattan() uint64 {
 	return uint64(abs.WithTwosComplement(s.last.coords.x) + abs.WithTwosComplement(s.last.coords.y))
 }
 
+// Generates co-ordinates for all possible neighbours
 func (snc spiralNodeCoords) neighbours() [8]spiralNodeCoords {
 	return [...]spiralNodeCoords{
 		{snc.x, snc.y + 1},
@@ -104,6 +96,7 @@ func (snc spiralNodeCoords) neighbours() [8]spiralNodeCoords {
 	}
 }
 
+// Calculates the sum of all actual neighbours' values
 func (sn spiralNode) sumNeighbours() (result uint) {
 	for _, neighbour := range sn.coords.neighbours() {
 		if node, ok := sn.parent.nodeMap[neighbour]; ok {
@@ -122,16 +115,25 @@ func (snc spiralNodeCoords) String() string {
 	return fmt.Sprintf("[%d,%d]", snc.x, snc.y)
 }
 
-func (d direction) turn() direction {
-	switch d {
+func (s *spiral) turn() {
+	s.edgeDistance = 0
+
+	if s.firstChange {
+		s.firstChange = false
+	} else {
+		s.firstChange = true
+		s.sideLength++
+	}
+
+	switch s.dir {
 	case right:
-		return up
+		s.dir = up
 	case up:
-		return left
+		s.dir = left
 	case left:
-		return down
+		s.dir = down
 	default: //down
-		return right
+		s.dir = right
 	}
 }
 
