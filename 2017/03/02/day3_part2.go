@@ -18,7 +18,7 @@ const (
 )
 
 type spiralNodeCoords struct {
-	x, y int
+	x, y int64
 }
 
 type spiralNode struct {
