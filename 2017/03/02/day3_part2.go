@@ -22,9 +22,9 @@ type spiralNodeCoords struct {
 }
 
 type spiralNode struct {
+	parent *spiral
 	coords spiralNodeCoords
 	next   *spiralNode
-	parent *spiral
 	value  uint
 }
 
@@ -56,34 +56,20 @@ func (s *spiral) Init() {
 
 func (s *spiral) Add() {
 	if s.root == nil {
-		newCoords := spiralNodeCoords{0, 0}
-		newNode := &spiralNode{
-			newCoords,
-			nil,
-			s,
-			1,
-		}
-
+		newNode := &spiralNode{s, spiralNodeCoords{0, 0}, nil, 1}
 		s.root = newNode
 		s.last = s.root
-		s.nodeMap[newCoords] = newNode
+		s.nodeMap[newNode.coords] = newNode
 
 		return
 	}
 
-	newCoords := s.last.coords.next(s.dir)
-	newNode := &spiralNode{
-		newCoords,
-		nil,
-		s,
-		0,
-	}
-
+	newNode := &spiralNode{s, s.last.nextCoords(), nil, 0}
 	newNode.value = newNode.sumNeighbours()
 
 	s.last.next = newNode
 	s.last = s.last.next
-	s.nodeMap[newCoords] = newNode
+	s.nodeMap[newNode.coords] = newNode
 
 	s.edgeDistance++
 
@@ -149,15 +135,15 @@ func (d direction) turn() direction {
 	}
 }
 
-func (snc spiralNodeCoords) next(dir direction) spiralNodeCoords {
-	switch dir {
+func (sn spiralNode) nextCoords() spiralNodeCoords {
+	switch sn.parent.dir {
 	case right:
-		return spiralNodeCoords{snc.x + 1, snc.y}
+		return spiralNodeCoords{sn.coords.x + 1, sn.coords.y}
 	case up:
-		return spiralNodeCoords{snc.x, snc.y + 1}
+		return spiralNodeCoords{sn.coords.x, sn.coords.y + 1}
 	case left:
-		return spiralNodeCoords{snc.x - 1, snc.y}
+		return spiralNodeCoords{sn.coords.x - 1, sn.coords.y}
 	default: //down
-		return spiralNodeCoords{snc.x, snc.y - 1}
+		return spiralNodeCoords{sn.coords.x, sn.coords.y - 1}
 	}
 }
