@@ -91,18 +91,9 @@ func TestNeighboursCount(t *testing.T) {
 		in   spiralNodeCoords
 		want int
 	}{
-		{
-			spiralNodeCoords{0, 0},
-			8,
-		},
-		{
-			spiralNodeCoords{27, 42},
-			8,
-		},
-		{
-			spiralNodeCoords{-100, -200},
-			8,
-		},
+		{spiralNodeCoords{0, 0}, 8},
+		{spiralNodeCoords{27, 42}, 8},
+		{spiralNodeCoords{-100, -200}, 8},
 	}
 
 	for _, c := range cases {
@@ -117,18 +108,9 @@ func TestCoordsString(t *testing.T) {
 		in   spiralNodeCoords
 		want string
 	}{
-		{
-			spiralNodeCoords{0, 0},
-			"[0,0]",
-		},
-		{
-			spiralNodeCoords{-100, -1000},
-			"[-100,-1000]",
-		},
-		{
-			spiralNodeCoords{123, 456},
-			"[123,456]",
-		},
+		{spiralNodeCoords{0, 0}, "[0,0]"},
+		{spiralNodeCoords{-100, -1000}, "[-100,-1000]"},
+		{spiralNodeCoords{123, 456}, "[123,456]"},
 	}
 
 	for _, c := range cases {
