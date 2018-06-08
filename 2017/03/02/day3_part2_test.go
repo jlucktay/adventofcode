@@ -61,7 +61,7 @@ func TestLastValue(t *testing.T) {
 func TestManhattan(t *testing.T) {
 	cases := []struct {
 		in   int
-		want uint
+		want uint64
 	}{
 		{1, 0},
 		{12, 3},
