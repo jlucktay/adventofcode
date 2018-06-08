@@ -4,7 +4,8 @@ package main
 
 import (
 	"fmt"
-	"math"
+
+	"github.com/cavaliercoder/go-abs"
 )
 
 type direction uint8
@@ -100,8 +101,8 @@ func (s *spiral) Add() {
 }
 
 // Manhattan distance will be the sum of the absolutes of the last node's coordinates.
-func (s *spiral) Manhattan() uint {
-	return uint(math.Abs(float64(s.last.coords.x)) + math.Abs(float64(s.last.coords.y)))
+func (s *spiral) Manhattan() uint64 {
+	return uint64(abs.WithTwosComplement(s.last.coords.x) + abs.WithTwosComplement(s.last.coords.y))
 }
 
 func (snc spiralNodeCoords) neighbours() [8]spiralNodeCoords {
