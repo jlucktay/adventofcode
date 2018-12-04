@@ -28,7 +28,7 @@ func TestProcessInput(t *testing.T) {
 	}
 
 	for _, c := range cases {
-		got := processInput(c.in)
+		got := ProcessInput(c.in)
 
 		if !reflect.DeepEqual(got, c.want) {
 			t.Errorf("f(%v) == %v, want %v", c.in, got, c.want)
