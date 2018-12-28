@@ -26,9 +26,7 @@ func ProcessInput(input string) []int {
 	for _, i := range strings.Split(string(input), "\n") {
 		convInt, convErr := strconv.Atoi(strings.TrimSpace(string(i)))
 
-		if convErr != nil {
-			convInt = 0
-		} else {
+		if convErr == nil {
 			result = append(result, convInt)
 		}
 	}
