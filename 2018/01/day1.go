@@ -7,6 +7,7 @@ import (
 	"strings"
 )
 
+// GetInput returns the content of 'input.txt' as a string
 func GetInput() string {
 	rawInput, err := ioutil.ReadFile("../input.txt")
 
@@ -17,6 +18,8 @@ func GetInput() string {
 	return string(rawInput)
 }
 
+// ProcessInput converts an input file string from newline-delimited integers to
+// a slice of positive and negative ints
 func ProcessInput(input string) []int {
 	result := make([]int, 0)
 
