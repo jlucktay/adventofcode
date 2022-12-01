@@ -20,4 +20,5 @@ func main() {
 	}
 
 	fmt.Println(day01.MostCalories(string(input)))
+	fmt.Println(day01.ThreeMostCalories(string(input)))
 }
