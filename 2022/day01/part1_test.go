@@ -8,10 +8,7 @@ import (
 	"go.jlucktay.dev/adventofcode/2022/day01"
 )
 
-func TestMostCalories(t *testing.T) {
-	is := is.New(t)
-
-	const INPUT string = `1000
+const INPUT string = `1000
 2000
 3000
 
@@ -26,6 +23,9 @@ func TestMostCalories(t *testing.T) {
 
 10000
 `
+
+func TestMostCalories(t *testing.T) {
+	is := is.New(t)
 
 	actual, err := day01.MostCalories(INPUT)
 	is.NoErr(err)
