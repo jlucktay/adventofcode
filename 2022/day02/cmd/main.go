@@ -26,4 +26,5 @@ func main() {
 	}
 
 	fmt.Println(day02.TotalScore(string(input)))
+	fmt.Println(day02.StrategisedScore(string(input)))
 }
