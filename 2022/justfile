@@ -1,0 +1,8 @@
+@default:
+	#!/usr/bin/env sh
+	for day in day[0-9][0-9]; do
+		go build -o "cmd-${day}" "./$day/cmd"
+		echo "$day"
+		"./cmd-${day}" "$day/input.txt"
+		echo
+	done
