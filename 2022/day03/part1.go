@@ -4,7 +4,6 @@ import (
 	"bufio"
 	"fmt"
 	"strings"
-	"unicode"
 )
 
 func RucksackPrioritySum(input string) (int, error) {
@@ -39,20 +38,6 @@ func RucksackPrioritySum(input string) (int, error) {
 	return total, nil
 }
 
-func getRunes(rucksackHalf string) (map[rune]struct{}, error) {
-	if strings.Contains(rucksackHalf, "\n") {
-		return nil, fmt.Errorf("newline in rucksack half '%s'", rucksackHalf)
-	}
-
-	items := map[rune]struct{}{}
-
-	for _, runeValue := range rucksackHalf {
-		items[runeValue] = struct{}{}
-	}
-
-	return items, nil
-}
-
 func commonRune(left, right map[rune]struct{}) rune {
 	for k := range left {
 		if _, ok := right[k]; ok {
@@ -61,16 +46,4 @@ func commonRune(left, right map[rune]struct{}) rune {
 	}
 
 	return ' '
-}
-
-func toNum(r rune) int {
-	if unicode.IsUpper(r) {
-		return int(r%65) + 27
-	}
-
-	if unicode.IsLower(r) {
-		return int(r%97) + 1
-	}
-
-	return 0
 }

@@ -26,4 +26,5 @@ func main() {
 	}
 
 	fmt.Println(day03.RucksackPrioritySum(string(input)))
+	fmt.Println(day03.RucksackGroupPriority(string(input)))
 }
