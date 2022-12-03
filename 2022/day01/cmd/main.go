@@ -2,29 +2,13 @@ package main
 
 import (
 	"fmt"
-	"os"
 
+	aoc2022 "go.jlucktay.dev/adventofcode/2022"
 	"go.jlucktay.dev/adventofcode/2022/day01"
 )
 
-const (
-	EXIT_SUCCESS = iota
-	EXIT_NO_INPUT_FILE_ARG
-	EXIT_CAN_NOT_READ_FILE
-)
-
 func main() {
-	if len(os.Args) != 2 {
-		fmt.Fprintln(os.Stderr, "wrong number of arguments - need an input file")
-		os.Exit(EXIT_NO_INPUT_FILE_ARG)
-	}
-
-	input, err := os.ReadFile(os.Args[1])
-	if err != nil {
-		fmt.Fprintf(os.Stderr, "could not read file '%s': %v\n", os.Args[1], err)
-		os.Exit(EXIT_CAN_NOT_READ_FILE)
-	}
-
-	fmt.Println(day01.MostCalories(string(input)))
-	fmt.Println(day01.ThreeMostCalories(string(input)))
+	input := aoc2022.RootCmd()
+	fmt.Println(day01.MostCalories(input))
+	fmt.Println(day01.ThreeMostCalories(input))
 }
