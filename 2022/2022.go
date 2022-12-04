@@ -9,6 +9,8 @@ const (
 	EXIT_SUCCESS = iota
 	EXIT_NO_INPUT_FILE_ARG
 	EXIT_CAN_NOT_READ_FILE
+	EXIT_PART_1_ERROR
+	EXIT_PART_2_ERROR
 )
 
 func RootCmd() string {
