@@ -2,24 +2,34 @@ package day02
 
 import (
 	"bufio"
+	"fmt"
 	"strings"
 	"unicode/utf8"
 )
 
-func StrategisedScore(input string) int {
+func StrategisedScore(input string) (int, error) {
 	scanner := bufio.NewScanner(strings.NewReader(input))
 	total := 0
 
 	for scanner.Scan() {
-		shapes := strings.Split(scanner.Text(), " ")
+		line := scanner.Text()
+		shapes := strings.Split(line, " ")
+
+		if len(shapes) != 2 {
+			return 0, fmt.Errorf("could not split line '%s' on a space", line)
+		}
 
 		rOpp, _ := utf8.DecodeRuneInString(shapes[0])
 		rPlay, _ := utf8.DecodeRuneInString(shapes[1])
 
+		if rOpp == utf8.RuneError || rPlay == utf8.RuneError {
+			return 0, fmt.Errorf("could not decode rune from '%v'", shapes)
+		}
+
 		total += strategiseRPS(rOpp, rPlay)
 	}
 
-	return total
+	return total, nil
 }
 
 // Player

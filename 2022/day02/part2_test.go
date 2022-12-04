@@ -11,5 +11,7 @@ import (
 func TestStrategisedScore(t *testing.T) {
 	is := is.New(t)
 
-	is.Equal(day02.StrategisedScore(INPUT), 12)
+	actual, err := day02.StrategisedScore(INPUT)
+	is.NoErr(err)
+	is.Equal(12, actual)
 }
