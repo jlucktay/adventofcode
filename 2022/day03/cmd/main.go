@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"os"
 
 	aoc2022 "go.jlucktay.dev/adventofcode/2022"
 	"go.jlucktay.dev/adventofcode/2022/day03"
@@ -9,6 +10,20 @@ import (
 
 func main() {
 	input := aoc2022.RootCmd()
-	fmt.Println(day03.RucksackPrioritySum(input))
-	fmt.Println(day03.RucksackGroupPriority(input))
+
+	part1, err := day03.RucksackPrioritySum(input)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "error from part 1: %v\n", err)
+		os.Exit(aoc2022.EXIT_PART_1_ERROR)
+	}
+
+	fmt.Println(part1)
+
+	part2, err := day03.RucksackGroupPriority(input)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "error from part 2: %v\n", err)
+		os.Exit(aoc2022.EXIT_PART_2_ERROR)
+	}
+
+	fmt.Println(part2)
 }
