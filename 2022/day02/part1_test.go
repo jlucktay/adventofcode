@@ -11,5 +11,7 @@ import (
 func TestTotalScore(t *testing.T) {
 	is := is.New(t)
 
-	is.Equal(day02.TotalScore(INPUT), 15)
+	actual, err := day02.TotalScore(INPUT)
+	is.NoErr(err)
+	is.Equal(15, actual)
 }
