@@ -8,10 +8,10 @@ import (
 	"go.jlucktay.dev/adventofcode/2022/day05"
 )
 
-func TestTopCrate9000(t *testing.T) {
+func TestTopCrate9001(t *testing.T) {
 	is := is.New(t)
 
-	actual, err := day05.TopCrate9000(INPUT)
+	actual, err := day05.TopCrate9001(INPUT)
 	is.NoErr(err)
-	is.Equal("CMZ", actual)
+	is.Equal("MCD", actual)
 }
