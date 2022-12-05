@@ -2,7 +2,7 @@
 
 ---
 
-[This deck!](https://gitpitch.com/jlucktay/adventofcode/master)
+[This deck!](https://gitpitch.com/jlucktay/adventofcode/main)
 
 ---
 
