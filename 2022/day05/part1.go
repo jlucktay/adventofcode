@@ -11,7 +11,7 @@ import (
 	"unicode/utf8"
 )
 
-func TopCrateOnEachStack(input string) (string, error) {
+func TopCrate9000(input string) (string, error) {
 	scanner := bufio.NewScanner(strings.NewReader(input))
 	afterSeperator := false
 
@@ -31,8 +31,13 @@ func TopCrateOnEachStack(input string) (string, error) {
 			}
 		} else {
 			// Below the seperator, parse 'move X from Y to Z'
-			if err := parseMoveOrders(&crateDeques, line); err != nil {
+			qty, from, to, err := parseMoveOrders(&crateDeques, line)
+			if err != nil {
 				return "", fmt.Errorf("parsing move orders '%s': %w", line, err)
+			}
+
+			if err := crateMover9000(&crateDeques, qty, from, to); err != nil {
+				return "", fmt.Errorf("moving crates with 9000: %w", err)
 			}
 		}
 	}
@@ -89,44 +94,48 @@ func parseLineOfCrates(incoming *[]crateDeque, line string) error {
 	return nil
 }
 
-func parseMoveOrders(crates *[]crateDeque, orders string) error {
+func parseMoveOrders(crates *[]crateDeque, orders string) (int, int, int, error) {
 	pattern := `^move ([0-9]+) from ([0-9]+) to ([0-9]+)$`
 	regex, err := regexp.Compile(pattern)
 	if err != nil {
-		return fmt.Errorf("compiling regular expression '%s': %w", pattern, err)
+		return 0, 0, 0, fmt.Errorf("compiling regular expression '%s': %w", pattern, err)
 	}
 
 	found := regex.FindStringSubmatch(orders)
 	if found == nil {
-		return fmt.Errorf("finding submatches in '%s'", orders)
+		return 0, 0, 0, fmt.Errorf("finding submatches in '%s'", orders)
 	}
 
 	if len(found) != 4 {
-		return errors.New("regex SNAFU")
+		return 0, 0, 0, errors.New("regex SNAFU")
 	}
 
 	moveQuantity, err := strconv.ParseInt(found[1], 10, 32)
 	if err != nil {
-		return fmt.Errorf("parsing int from '%s': %w", found[1], err)
+		return 0, 0, 0, fmt.Errorf("parsing int from '%s': %w", found[1], err)
 	}
 
 	fromStack, err := strconv.ParseInt(found[2], 10, 32)
 	if err != nil {
-		return fmt.Errorf("parsing int from '%s': %w", found[2], err)
+		return 0, 0, 0, fmt.Errorf("parsing int from '%s': %w", found[2], err)
 	}
 
 	toStack, err := strconv.ParseInt(found[3], 10, 32)
 	if err != nil {
-		return fmt.Errorf("parsing int from '%s': %w", found[3], err)
+		return 0, 0, 0, fmt.Errorf("parsing int from '%s': %w", found[3], err)
 	}
 
-	for i := int64(0); i < moveQuantity; i++ {
-		crate, ok := (*crates)[fromStack-1].popFirst()
+	return int(moveQuantity), int(fromStack), int(toStack), nil
+}
+
+func crateMover9000(stacks *[]crateDeque, qty, from, to int) error {
+	for i := 0; i < qty; i++ {
+		crate, ok := (*stacks)[from-1].popFirst()
 		if !ok {
-			return fmt.Errorf("getting first from stack #%d", fromStack)
+			return fmt.Errorf("getting first from stack #%d", from)
 		}
 
-		(*crates)[toStack-1].prepend(crate)
+		(*stacks)[to-1].prepend(crate)
 	}
 
 	return nil
