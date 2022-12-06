@@ -3,6 +3,9 @@ default: test build-run clean
 test:
 	go test -count=1 -failfast -v -vet "" ./...
 
+testnewscanner:
+	go test -count=1 -failfast -run '^TestNewScanner$' -v -vet "" ./day03
+
 build-run:
 	#!/usr/bin/env bash
 	for day in day[0-9][0-9]; do
