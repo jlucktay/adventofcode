@@ -19,11 +19,11 @@ var INPUT = []struct {
 	{"zcfzfwzzqfrljwzlrfnpqdbhtmscgvjw", 11},
 }
 
-func TestFindMarkerInDatastream(t *testing.T) {
+func TestFindStartOfPacketMarker(t *testing.T) {
 	is := is.New(t)
 
 	for _, input := range INPUT {
-		marker, err := day06.FindMarkerInDatastream(input.datastream)
+		marker, err := day06.FindStartOfPacketMarker(input.datastream)
 		is.NoErr(err)
 		is.Equal(input.marker, marker)
 	}
