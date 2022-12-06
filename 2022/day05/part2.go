@@ -37,6 +37,10 @@ func TopCrate9001(input string) (string, error) {
 		}
 	}
 
+	if err := scanner.Err(); err != nil {
+		return "", fmt.Errorf("scanning input: %v", err)
+	}
+
 	finalOrder := ""
 	for i := 0; i < len(crateDeques); i++ {
 		firstCrate, ok := crateDeques[i].getFirst()

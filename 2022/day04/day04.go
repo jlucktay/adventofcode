@@ -34,6 +34,10 @@ func sectionIDAnalysis(analyser func(left []int, right []int) bool, input string
 		}
 	}
 
+	if err := scanner.Err(); err != nil {
+		return 0, fmt.Errorf("scanning input: %v", err)
+	}
+
 	return result, nil
 }
 
