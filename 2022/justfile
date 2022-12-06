@@ -1,7 +1,7 @@
 default: test build-run clean
 
 test:
-	go test -v ./...
+	go test -count=1 -failfast -v -vet "" ./...
 
 build-run:
 	#!/usr/bin/env bash

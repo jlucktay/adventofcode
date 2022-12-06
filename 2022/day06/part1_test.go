@@ -8,23 +8,12 @@ import (
 	"go.jlucktay.dev/adventofcode/2022/day06"
 )
 
-var INPUT = []struct {
-	datastream string
-	marker     int
-}{
-	{"mjqjpqmgbljsphdztnvjfqwrcgsmlb", 7},
-	{"bvwbjplbgvbhsrlpgdmjqwftvncz", 5},
-	{"nppdvjthqldpwncqszvftbrmjlhg", 6},
-	{"nznrnfrfntjfmvfwmzdfjlvtqnbhcprsg", 10},
-	{"zcfzfwzzqfrljwzlrfnpqdbhtmscgvjw", 11},
-}
-
 func TestFindStartOfPacketMarker(t *testing.T) {
 	is := is.New(t)
 
 	for _, input := range INPUT {
 		marker, err := day06.FindStartOfPacketMarker(input.datastream)
 		is.NoErr(err)
-		is.Equal(input.marker, marker)
+		is.Equal(input.packet, marker)
 	}
 }
