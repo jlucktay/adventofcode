@@ -35,6 +35,10 @@ func RucksackPrioritySum(input string) (int, error) {
 		total += toNum(cr)
 	}
 
+	if err := scanner.Err(); err != nil {
+		return 0, fmt.Errorf("scanning input: %v", err)
+	}
+
 	return total, nil
 }
 
