@@ -1,16 +1,14 @@
 package day06
 
-import (
-	"fmt"
-)
+import "fmt"
 
-const packetSize = 4
+const messageSize = 14
 
-func FindStartOfPacketMarker(input string) (int, error) {
-	foundChars := [packetSize]rune{}
+func FindStartOfMessageMarker(input string) (int, error) {
+	foundChars := [messageSize]rune{}
 
 	for index, r := range input {
-		foundChars[index%packetSize] = r
+		foundChars[index%messageSize] = r
 		mapOfArray := make(map[rune]int)
 
 		for _, r := range foundChars {
@@ -20,7 +18,7 @@ func FindStartOfPacketMarker(input string) (int, error) {
 			}
 		}
 
-		if len(mapOfArray) == packetSize {
+		if len(mapOfArray) == messageSize {
 			return index + 1, nil
 		}
 	}
