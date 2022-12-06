@@ -29,6 +29,10 @@ func TotalScore(input string) (int, error) {
 		total += playRPS(rOpp, rPlay)
 	}
 
+	if err := scanner.Err(); err != nil {
+		return 0, fmt.Errorf("scanning input: %v", err)
+	}
+
 	return total, nil
 }
 
