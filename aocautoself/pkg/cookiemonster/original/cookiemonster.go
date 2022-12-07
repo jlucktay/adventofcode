@@ -73,7 +73,6 @@ func main() {
 func decryptValue(encryptedValue []byte) string {
 	key := pbkdf2.Key([]byte(password), []byte(salt), iterations, length, sha1.New)
 	block, err := aes.NewCipher(key)
-
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -83,7 +82,6 @@ func decryptValue(encryptedValue []byte) string {
 	cbc.CryptBlocks(decrypted, encryptedValue)
 
 	plainText, err := aesStripPadding(decrypted)
-
 	if err != nil {
 		fmt.Println("Error decrypting:", err)
 
@@ -115,7 +113,6 @@ func getPassword() string {
 	parts = parts[1:]
 
 	out, err := exec.Command(cmd, parts...).Output()
-
 	if err != nil {
 		log.Fatal("error finding password ", err)
 	}
@@ -128,20 +125,18 @@ func getCookies(domain string) (cookies []Cookie) {
 	cookiesFile := fmt.Sprintf("%s/Library/Application Support/Google/Chrome/Default/Cookies", usr.HomeDir)
 
 	db, err := sql.Open("sqlite3", cookiesFile)
-	defer db.Close()
-
 	if err != nil {
 		log.Fatal(err)
 	}
+	defer db.Close()
 
 	rows, err := db.Query(
 		"SELECT name, value, host_key, encrypted_value FROM cookies WHERE host_key like ?",
 		fmt.Sprintf("%%%s%%", domain))
-	defer rows.Close()
-
 	if err != nil {
 		log.Fatal(err)
 	}
+	defer rows.Close()
 
 	for rows.Next() {
 		var name, value, hostKey string

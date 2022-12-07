@@ -110,7 +110,7 @@ func (d direction) turn() direction {
 		return left
 	case left:
 		return down
-	default: //down
+	default: // down
 		return right
 	}
 }
@@ -123,7 +123,7 @@ func (snc spiralNodeCoords) next(dir direction) spiralNodeCoords {
 		return spiralNodeCoords{snc.x, snc.y + 1}
 	case left:
 		return spiralNodeCoords{snc.x - 1, snc.y}
-	default: //down
+	default: // down
 		return spiralNodeCoords{snc.x, snc.y - 1}
 	}
 }

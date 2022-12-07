@@ -22,7 +22,7 @@ func corruptionChecksum(input string) int {
 func checksumSingleRow(row []int) int {
 	// maximum int value, which is dependent on architecture
 	// from here: https://stackoverflow.com/questions/6878590/the-maximum-value-for-an-int-type-in-go/6878625#6878625
-	var lowest = int(^uint(0) >> 1)
+	lowest := int(^uint(0) >> 1)
 	var highest int
 
 	for _, cell := range row {

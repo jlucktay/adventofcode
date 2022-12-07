@@ -40,7 +40,8 @@ func TestFunction(t *testing.T) {
 		{
 			[]int{0, 3, 0, 1, -3},
 			5,
-			[]int{2, 5, 0, 1, -2}},
+			[]int{2, 5, 0, 1, -2},
+		},
 	}
 
 	for _, c := range cases {

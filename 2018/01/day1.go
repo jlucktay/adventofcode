@@ -10,7 +10,6 @@ import (
 // GetInput returns the content of 'input.txt' as a string
 func GetInput() string {
 	rawInput, err := ioutil.ReadFile("../input.txt")
-
 	if err != nil {
 		log.Fatal(err)
 	}

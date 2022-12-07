@@ -20,7 +20,6 @@ func ConvertInput(input string) [][]int {
 
 		for _, j := range strings.Split(i, "\t") {
 			convInt, err := strconv.Atoi(strings.TrimSpace(string(j)))
-
 			if err != nil {
 				convInt = 0
 			}
