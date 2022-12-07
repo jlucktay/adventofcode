@@ -36,9 +36,7 @@ const (
 	CountryID = "cid"
 )
 
-var (
-	validBirthYear = regexp.MustCompile(``)
-)
+var validBirthYear = regexp.MustCompile(``)
 
 func main() {
 	rawInput, errRead := ioutil.ReadFile("../input.txt")

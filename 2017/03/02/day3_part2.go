@@ -132,7 +132,7 @@ func (s *spiral) turn() {
 		s.dir = left
 	case left:
 		s.dir = down
-	default: //down
+	default: // down
 		s.dir = right
 	}
 }
@@ -145,7 +145,7 @@ func (sn spiralNode) nextCoords() spiralNodeCoords {
 		return spiralNodeCoords{sn.coords.x, sn.coords.y + 1}
 	case left:
 		return spiralNodeCoords{sn.coords.x - 1, sn.coords.y}
-	default: //down
+	default: // down
 		return spiralNodeCoords{sn.coords.x, sn.coords.y - 1}
 	}
 }
