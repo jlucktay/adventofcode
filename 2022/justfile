@@ -1,7 +1,7 @@
 default: test build-run clean
 
 test:
-	go test -count=1 -failfast -v -vet "" ./...
+	go test -count=1 -v -vet "" ./...
 
 testnewscanner:
 	go test -count=1 -failfast -run '^TestNewScanner$' -v -vet "" ./day03
