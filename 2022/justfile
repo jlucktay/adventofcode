@@ -1,24 +1,35 @@
-default: test build run clean
+default_glob := "day[0-9][0-9]"
+default: (test default_glob) (build default_glob) (run default_glob) (clean default_glob)
 
-test:
-	go test -count=1000 -vet "" ./day*
+latest_day := `fd --type directory --max-depth 1 | sort -fu | tail -n 1 | cut -d '/' -f1`
 
-testnewscanner:
+@latest:
+	just run {{ latest_day }}
+	just clean {{ latest_day }}
+
+test glob:
+	go test -count=1000 -vet "" ./{{ glob }}
+
+_testnewscanner:
 	go test -count=1 -failfast -run '^TestNewScanner$' -v -vet "" ./day03
 
-@build:
+build glob: (test glob)
 	#!/usr/bin/env bash
-	for day in day[0-9][0-9]; do
-		go build -o "cmd-${day}" "./$day/cmd"
+	set -euo pipefail
+	for day in {{ glob }}; do
+		(
+			set -x
+			go build -o "cmd-${day}" "./$day/cmd"
+		)
 	done
 
-run: build
+run glob: (build glob)
 	#!/usr/bin/env bash
-	for day in day[0-9][0-9]; do
+	for day in {{ glob }}; do
 		echo "$day"
 		"./cmd-${day}" "$day/input.txt"
 		echo
 	done
 
-clean:
-	rm -fv ./cmd-day[0-9][0-9]
+clean glob:
+	rm -fv ./cmd-{{ glob }}
