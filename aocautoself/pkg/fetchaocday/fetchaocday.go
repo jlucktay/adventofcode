@@ -11,8 +11,8 @@ import (
 	"strings"
 
 	"github.com/PuerkitoBio/goquery"
-	"github.com/jlucktay/adventofcode/aocautoself/pkg"
-	"github.com/jlucktay/adventofcode/aocautoself/pkg/aocday"
+	aocautoself "go.jlucktay.dev/adventofcode/aocautoself/pkg"
+	"go.jlucktay.dev/adventofcode/aocautoself/pkg/aocday"
 )
 
 // Fetch will perform the necessary HTTP magic to get an Advent of Code day for the given year and date.

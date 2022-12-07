@@ -3,7 +3,7 @@
 package main
 
 import (
-	d2 "github.com/jlucktay/adventofcode/2017/02"
+	d2 "go.jlucktay.dev/adventofcode/2017/02"
 )
 
 /*
