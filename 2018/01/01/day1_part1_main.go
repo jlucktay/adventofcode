@@ -8,7 +8,7 @@ package main
 import (
 	"fmt"
 
-	d1 "github.com/jlucktay/adventofcode/2018/01"
+	d1 "go.jlucktay.dev/adventofcode/2018/01"
 )
 
 func main() {

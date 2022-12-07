@@ -5,9 +5,9 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/jlucktay/adventofcode/aocautoself/pkg"
-	"github.com/jlucktay/adventofcode/aocautoself/pkg/cookiemonster"
-	"github.com/jlucktay/adventofcode/aocautoself/pkg/fetchaocday"
+	aocautoself "go.jlucktay.dev/adventofcode/aocautoself/pkg"
+	"go.jlucktay.dev/adventofcode/aocautoself/pkg/cookiemonster"
+	"go.jlucktay.dev/adventofcode/aocautoself/pkg/fetchaocday"
 )
 
 func main() {

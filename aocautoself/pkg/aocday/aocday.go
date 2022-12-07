@@ -2,7 +2,7 @@
 package aocday
 
 import (
-	"github.com/jlucktay/adventofcode/aocautoself/pkg"
+	aocautoself "go.jlucktay.dev/adventofcode/aocautoself/pkg"
 )
 
 // NewDay initialises a new Day with the given Year (y), Date (d), empty string fields, and returns it.
