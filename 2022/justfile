@@ -1,4 +1,4 @@
-default: test build-run clean
+default: test build run clean
 
 test:
 	go test -count=1000 -vet "" ./day*
@@ -6,10 +6,15 @@ test:
 testnewscanner:
 	go test -count=1 -failfast -run '^TestNewScanner$' -v -vet "" ./day03
 
-build-run:
+@build:
 	#!/usr/bin/env bash
 	for day in day[0-9][0-9]; do
 		go build -o "cmd-${day}" "./$day/cmd"
+	done
+
+run: build
+	#!/usr/bin/env bash
+	for day in day[0-9][0-9]; do
 		echo "$day"
 		"./cmd-${day}" "$day/input.txt"
 		echo
