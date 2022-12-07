@@ -12,16 +12,8 @@ type FileSystem struct {
 	root, cwd *directory
 }
 
-type dirEntryType string
-
-const (
-	det_dir  dirEntryType = "directory"
-	det_file dirEntryType = "file"
-)
-
 type dirEntry interface {
 	prettyPrint(name string, indent int) string
-	entryType() dirEntryType
 	totalSize() int
 }
 
@@ -51,8 +43,6 @@ func (d *directory) prettyPrint(name string, indent int) string {
 	return sb.String()
 }
 
-func (d *directory) entryType() dirEntryType { return det_dir }
-
 func (d *directory) totalSize() int {
 	size := 0
 
@@ -70,8 +60,6 @@ type file struct {
 func (f *file) prettyPrint(name string, indent int) string {
 	return fmt.Sprintf("%*s- %s (file, size=%d)\n", indent, "", name, f.size)
 }
-
-func (f *file) entryType() dirEntryType { return det_file }
 
 func (f *file) totalSize() int {
 	return f.size
@@ -164,7 +152,7 @@ func (fs *FileSystem) changeDirectory(targetDir string) error {
 	}
 
 	for name, entry := range fs.cwd.entries {
-		if entry.entryType() != det_dir {
+		if _, ok := entry.(*directory); !ok {
 			continue
 		}
 

@@ -42,3 +42,18 @@ func TestTotalSize(t *testing.T) {
 	is.Equal(24933642, fs.root.entries["d"].(*directory).totalSize())
 	is.Equal(48381165, fs.root.totalSize())
 }
+
+func TestPopulateDirSizeMap(t *testing.T) {
+	is := is.New(t)
+
+	fs, err := ParseFileSystem(INPUT)
+	is.NoErr(err)
+
+	dirSizes := make(map[string]int)
+	populateDirSizeMap(dirSizes, fs.root, "/")
+
+	is.Equal(len(dirSizes), 3)
+	is.Equal(94853, dirSizes["/a"])
+	is.Equal(584, dirSizes["/a/e"])
+	is.Equal(24933642, dirSizes["/d"])
+}
