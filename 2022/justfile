@@ -8,7 +8,7 @@ latest_day := `fd --type directory --max-depth 1 | sort -fu | tail -n 1 | cut -d
 	just clean {{ latest_day }}
 
 test glob:
-	go test -count=1000 -vet "" ./{{ glob }}
+	go test -count=1000 -failfast -vet "" ./{{ glob }}
 
 _testnewscanner:
 	go test -count=1 -failfast -run '^TestNewScanner$' -v -vet "" ./day03
