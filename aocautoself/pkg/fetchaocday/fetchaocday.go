@@ -4,57 +4,74 @@ package fetchaocday
 
 import (
 	"fmt"
-	"log"
 	"net/http"
 	"net/url"
 	"regexp"
 	"strings"
 
 	"github.com/PuerkitoBio/goquery"
+	"golang.org/x/sync/errgroup"
+
 	aocautoself "go.jlucktay.dev/adventofcode/aocautoself/pkg"
 	"go.jlucktay.dev/adventofcode/aocautoself/pkg/aocday"
 )
 
 // Fetch will perform the necessary HTTP magic to get an Advent of Code day for the given year and date.
-func Fetch(cookie string, y, d uint) (output aocautoself.Day) {
-	output = *aocday.NewDay(y, d)
-	dayURL, _ := url.Parse(fmt.Sprintf("http://adventofcode.com/%d/day/%d", output.Year, output.Date))
+func Fetch(cookie string, year, day uint) (aocautoself.Day, error) {
+	output := *aocday.NewDay(year, day)
 
-	res, err := http.DefaultClient.Do(newRequest(*dayURL, cookie))
+	dayURL, err := url.Parse(fmt.Sprintf("http://adventofcode.com/%d/day/%d", output.Year, output.Date))
 	if err != nil {
-		log.Fatal(err)
+		return aocautoself.Day{}, err
+	}
+
+	req, err := newRequest(*dayURL, cookie)
+	if err != nil {
+		return aocautoself.Day{}, err
+	}
+
+	res, err := http.DefaultClient.Do(req)
+	if err != nil {
+		return aocautoself.Day{}, err
 	}
 	defer res.Body.Close()
 
 	if res.StatusCode != 200 {
-		log.Fatalf("status code error: %d %s", res.StatusCode, res.Status)
+		return aocautoself.Day{}, fmt.Errorf("status code error: %d %s", res.StatusCode, res.Status)
 	}
-
-	// fmt.Printf("[fetchaocday.Fetch] Fetching '%s'...\n", dayURL)
 
 	doc, err := goquery.NewDocumentFromReader(res.Body)
 	if err != nil {
-		log.Fatal(err)
+		return aocautoself.Day{}, err
 	}
+
+	g := errgroup.Group{}
+	g.SetLimit(1)
 
 	doc.Find("article.day-desc").Each(
 		func(i int, s *goquery.Selection) {
-			// fmt.Println("[fetchaocday.Fetch] i: '" + strconv.Itoa(i) + "'")
+			g.Go(func() error {
+				switch i {
+				case 0:
+					breakDescriptionDown(&output.Part1, s.Text())
+				case 1:
+					breakDescriptionDown(&output.Part2, s.Text())
+				default:
+					return fmt.Errorf("'%d' article.day-desc elements is too many", i+1)
+				}
 
-			switch i {
-			case 0:
-				breakDescriptionDown(&output.Part1, s.Text())
-			case 1:
-				breakDescriptionDown(&output.Part2, s.Text())
-			default:
-				log.Fatalf("'%d' article.day-desc elements is too many", i+1)
-			}
+				output.Description += s.Text()
 
-			output.Description += s.Text()
+				return nil
+			})
 		},
 	)
 
-	return
+	if err := g.Wait(); err != nil {
+		return aocautoself.Day{}, fmt.Errorf("parsing doc: %w", err)
+	}
+
+	return output, nil
 }
 
 func breakDescriptionDown(dd *aocautoself.DayDesc, desc string) {
@@ -85,23 +102,23 @@ func breakDescriptionDown(dd *aocautoself.DayDesc, desc string) {
 	dd.Stinger = strings.TrimSpace(dd.Stinger)
 }
 
-func newRequest(u url.URL, sessionCookie string) (req *http.Request) {
-	cookiePattern := `(?i)^[0-9a-f]{96,96}$`
+func newRequest(u url.URL, sessionCookie string) (*http.Request, error) {
+	cookiePattern := `(?i)^[0-9a-f]{128}$`
 	r, err := regexp.Compile(cookiePattern)
 	if err != nil {
-		log.Fatalf("regex '%s' couldn't compile: %s", cookiePattern, err)
+		return nil, fmt.Errorf("regex '%s' couldn't compile: %w", cookiePattern, err)
 	}
 
 	if !r.MatchString(sessionCookie) {
-		log.Fatalf("session cookie '%s' was not a 96 character hexadecimal", sessionCookie)
+		return nil, fmt.Errorf("session cookie '%s' was not a 128 character hexadecimal", sessionCookie)
 	}
 
-	req, err = http.NewRequest("GET", u.String(), nil)
+	req, err := http.NewRequest("GET", u.String(), nil)
 	if err != nil {
-		log.Fatal(err)
+		return nil, err
 	}
 
 	req.Header.Add("Cookie", fmt.Sprintf("session=%s", sessionCookie))
 
-	return req
+	return req, nil
 }
