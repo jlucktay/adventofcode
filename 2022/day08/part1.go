@@ -1,26 +1,5 @@
 package day08
 
-func (ttg *TallTreeGrid) VisibleFromOutsideGrid() int {
-	visibleCount := 0
-
-	// Every tree around the outside is automatically visible.
-	horizontalGridSize := len(ttg.trees[0])
-	verticalGridSize := len(ttg.trees)
-	perimeter := horizontalGridSize*2 + (verticalGridSize-2)*2
-	visibleCount += perimeter
-
-	for i := 1; i < len(ttg.trees)-1; i++ {
-		for j := 1; j < len(ttg.trees[i])-1; j++ {
-			// Look all four ways
-			if ttg.lookDownAt(j, i) || ttg.lookLeftAt(j, i) || ttg.lookUpAt(j, i) || ttg.lookRightAt(j, i) {
-				visibleCount++
-			}
-		}
-	}
-
-	return visibleCount
-}
-
 func (ttg *TallTreeGrid) lookDownAt(x, y int) bool {
 	heightOfTargetTree := ttg.trees[y][x]
 
@@ -71,6 +50,26 @@ func (ttg *TallTreeGrid) lookRightAt(x, y int) bool {
 
 func TreesVisibleFromOutsideGrid(input string) (int, error) {
 	ttg, err := NewTallTreeGrid(input)
+	if err != nil {
+		return 0, err
+	}
 
-	return ttg.VisibleFromOutsideGrid(), err
+	visibleCount := 0
+
+	// Every tree around the outside is automatically visible.
+	horizontalGridSize := len(ttg.trees[0])
+	verticalGridSize := len(ttg.trees)
+	perimeter := horizontalGridSize*2 + (verticalGridSize-2)*2
+	visibleCount += perimeter
+
+	for i := 1; i < len(ttg.trees)-1; i++ {
+		for j := 1; j < len(ttg.trees[i])-1; j++ {
+			// Look all four ways
+			if ttg.lookDownAt(j, i) || ttg.lookLeftAt(j, i) || ttg.lookUpAt(j, i) || ttg.lookRightAt(j, i) {
+				visibleCount++
+			}
+		}
+	}
+
+	return visibleCount, nil
 }

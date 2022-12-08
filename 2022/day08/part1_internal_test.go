@@ -6,13 +6,6 @@ import (
 	"github.com/matryer/is"
 )
 
-const INPUT = `30373
-25512
-65332
-33549
-35390
-`
-
 func TestNewTallTreeGrid(t *testing.T) {
 	is := is.New(t)
 
