@@ -4,19 +4,39 @@ package main
 import (
 	"fmt"
 	"log"
+	"time"
 
-	aocautoself "go.jlucktay.dev/adventofcode/aocautoself/pkg"
-	"go.jlucktay.dev/adventofcode/aocautoself/pkg/cookiemonster"
+	"github.com/zellyn/kooky"
+	_ "github.com/zellyn/kooky/browser/firefox"
+
 	"go.jlucktay.dev/adventofcode/aocautoself/pkg/fetchaocday"
 )
 
 func main() {
-	cookie := cookiemonster.GetCookieWithKey("adventofcode.com", "session")
-	if cookie == "" {
-		log.Fatal("'cookie' was empty")
+	session := ""
+
+	for _, cookieStore := range kooky.FindAllCookieStores() {
+		if !cookieStore.IsDefaultProfile() {
+			continue
+		}
+
+		fmt.Printf("%s -> %s\n", cookieStore.Browser(), cookieStore.FilePath())
+
+		cookies, err := cookieStore.ReadCookies(kooky.Valid, kooky.Domain("adventofcode.com"), kooky.Name("session"))
+		if err != nil {
+			log.Fatal(err)
+		} else if len(cookies) != 1 {
+			log.Fatal("wrong number of session cookies")
+		}
+
+		fmt.Printf("Expires: %s\n", cookies[0].Expires.Format(time.RFC3339))
+		session = cookies[0].Value
 	}
 
-	days := make([]aocautoself.Day, 0)
-	days = append(days, fetchaocday.Fetch(cookie, 2017, 1))
-	fmt.Println(days[0].String())
+	day, err := fetchaocday.Fetch(session, 2017, 1)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	fmt.Println(day.String())
 }
