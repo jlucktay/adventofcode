@@ -91,11 +91,3 @@ func TestDistanceFrom(t *testing.T) {
 		})
 	}
 }
-
-func TestTailVisitCount(t *testing.T) {
-	is := is.New(t)
-
-	r := day09.NewRope()
-	is.NoErr(r.ParseCommands(INPUT))
-	is.Equal(13, r.TailVisitCount())
-}
