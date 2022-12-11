@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"errors"
 	"fmt"
+	"sort"
 	"strconv"
 	"strings"
 	"unicode/utf8"
@@ -15,6 +16,19 @@ type Monkey struct {
 	testDivFactor   int
 	ifTrue, ifFalse int
 	thrownCounter   int
+}
+
+type Monkeys []Monkey
+
+func (m *Monkeys) LCM() int {
+	// Collect least common multiple divisors.
+	lcmDivs := []int{}
+
+	for index := range *m {
+		lcmDivs = append(lcmDivs, (*m)[index].testDivFactor)
+	}
+
+	return lcm(lcmDivs[0], lcmDivs[1], lcmDivs[2:]...)
 }
 
 type action struct {
@@ -112,7 +126,7 @@ func ParseMonkey(input string) (*Monkey, error) {
 	return m, nil
 }
 
-func (m *Monkey) Turn() (map[int][]int, error) {
+func (m *Monkey) Turn(relief int) (map[int][]int, error) {
 	throwTo := map[int][]int{}
 
 	for _, item := range m.inventory {
@@ -132,8 +146,13 @@ func (m *Monkey) Turn() (map[int][]int, error) {
 			return nil, fmt.Errorf("unknown op '%s'", string(m.op.op))
 		}
 
-		// Divide by three and round down.
-		item /= 3
+		if relief == 0 {
+			// Divide by three and round down.
+			item /= 3
+		} else {
+			// "You'll need to find another way to keep your worry levels manageable."
+			item %= relief
+		}
 
 		// Test worry level.
 		if item%m.testDivFactor == 0 {
@@ -156,4 +175,54 @@ func (m *Monkey) Turn() (map[int][]int, error) {
 	m.inventory = []int{}
 
 	return throwTo, nil
+}
+
+func SimulateRoundsOfMonkeyBusiness(input string, rounds int, lcmRelief bool) (int, error) {
+	xInput := strings.Split(input, "\n\n")
+
+	monkeys := Monkeys{}
+
+	for _, monkey := range xInput {
+		m, err := ParseMonkey(monkey)
+		if err != nil {
+			return 0, err
+		}
+
+		monkeys = append(monkeys, *m)
+	}
+
+	relief := 0
+
+	if lcmRelief {
+		relief = monkeys.LCM()
+	}
+
+	for round := 0; round < rounds; round++ {
+		for index := range monkeys {
+			thrownItems, err := monkeys[index].Turn(relief)
+			if err != nil {
+				return 0, err
+			}
+
+			for recipient, items := range thrownItems {
+				monkeys[recipient].inventory = append(monkeys[recipient].inventory, items...)
+			}
+		}
+	}
+
+	throwCounters := []int{}
+
+	for index := range monkeys {
+		throwCounters = append(throwCounters, monkeys[index].thrownCounter)
+	}
+
+	if len(throwCounters) < 2 {
+		return 0, errors.New("less than two monkeys threw things")
+	}
+
+	sort.Ints(throwCounters)
+
+	result := throwCounters[len(throwCounters)-1] * throwCounters[len(throwCounters)-2]
+
+	return result, nil
 }

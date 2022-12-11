@@ -18,4 +18,12 @@ func main() {
 	}
 
 	fmt.Println(part1)
+
+	part2, err := day11.TenThousandRoundsOfMonkeyBusiness(input)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "error from part 2: %v\n", err)
+		os.Exit(aoc2022.EXIT_PART_2_ERROR)
+	}
+
+	fmt.Println(part2)
 }
