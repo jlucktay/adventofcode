@@ -1,7 +1,7 @@
 default_glob := "day[0-9][0-9]"
 default: (test default_glob) (build default_glob) (run default_glob) (clean default_glob)
 
-latest_day := `fd --type directory --max-depth 1 | sort -fu | tail -n 1 | cut -d '/' -f1`
+latest_day := `fd --max-depth 1 --regex --type directory '^day[0-9]{2}$' | sort -fu | tail -n 1 | cut -d '/' -f1`
 
 @latest:
 	just run {{ latest_day }}
