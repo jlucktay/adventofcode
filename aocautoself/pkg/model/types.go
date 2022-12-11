@@ -1,13 +1,10 @@
-// Package aocautoself is code that writes boilerplate code.
-// It is a self-perpetuating package that gathers stories from the Advent of Code website and scaffolds out code
-// skeletons for the challenge described on the given year and day.
-package aocautoself
+package model
 
 // Day is a single day in the Advent of Code event challenges.
 // It has two DayDesc sub-structs, for parts 1 and 2 of the given day.
 type Day struct {
 	// The year and date of this particular day
-	Year, Date uint
+	Year, Date int
 
 	// The raw text from the <article class="day-desc"> element(s)
 	Description string
