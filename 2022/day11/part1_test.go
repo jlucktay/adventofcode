@@ -13,5 +13,5 @@ func TestTwentyRoundsOfMonkeyBusiness(t *testing.T) {
 
 	actual, err := day11.TwentyRoundsOfMonkeyBusiness(INPUT)
 	is.NoErr(err)
-	is.Equal(10605, actual)
+	is.Equal(10_605, actual)
 }
