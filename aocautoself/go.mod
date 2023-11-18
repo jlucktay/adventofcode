@@ -13,8 +13,7 @@ require (
 	github.com/go-ini/ini v1.67.0 // indirect
 	github.com/go-sqlite/sqlite3 v0.0.0-20180313105335-53dd8e640ee7 // indirect
 	github.com/gonuts/binary v0.2.0 // indirect
-	golang.org/x/crypto v0.4.0 // indirect
-	golang.org/x/net v0.4.0 // indirect
+	golang.org/x/net v0.17.0 // indirect
 	golang.org/x/sync v0.1.0
-	golang.org/x/text v0.5.0 // indirect
+	golang.org/x/text v0.13.0 // indirect
 )
