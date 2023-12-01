@@ -16,3 +16,6 @@ cmd-aocautoself
 
 # MacOS
 .DS_Store
+
+# Pending resolution of https://github.com/golang/go/issues/51941
+/go.work.sum
