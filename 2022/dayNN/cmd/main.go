@@ -5,13 +5,13 @@ import (
 	"os"
 
 	aoc2022 "go.jlucktay.dev/adventofcode/2022"
-	day13 "go.jlucktay.dev/adventofcode/2022/day13"
+	dayNN "go.jlucktay.dev/adventofcode/2022/dayNN"
 )
 
 func main() {
 	input := aoc2022.RootCmd()
 
-	part1, err := day13.Part1(input)
+	part1, err := dayNN.Part1(input)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "error from part 1: %v\n", err)
 		os.Exit(aoc2022.EXIT_PART_1_ERROR)
@@ -19,7 +19,7 @@ func main() {
 
 	fmt.Println(part1)
 
-	part2, err := day13.Part2(input)
+	part2, err := dayNN.Part2(input)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "error from part 2: %v\n", err)
 		os.Exit(aoc2022.EXIT_PART_2_ERROR)

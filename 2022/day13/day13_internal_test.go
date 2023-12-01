@@ -50,6 +50,22 @@ func TestParseList(t *testing.T) {
 				PacketInteger(42),
 			},
 		},
+		"less smol": {
+			input: `[42,27]`,
+			output: &PacketList{
+				PacketInteger(42),
+				PacketInteger(27),
+			},
+		},
+		"list smol": {
+			input: `[[42],27]`,
+			output: &PacketList{
+				&PacketList{
+					PacketInteger(42),
+				},
+				PacketInteger(27),
+			},
+		},
 		"given input": {
 			input: INPUT,
 			output: &PacketList{
