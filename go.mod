@@ -1,3 +1,5 @@
 module go.jlucktay.dev/adventofcode
 
-go 1.19
+go 1.21
+
+require github.com/matryer/is v1.4.1
