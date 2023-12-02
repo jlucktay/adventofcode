@@ -1,3 +1,3 @@
 module go.jlucktay.dev/adventofcode/2018
 
-go 1.19
+go 1.21
