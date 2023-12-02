@@ -43,17 +43,18 @@ Looks up the adventofcode.com session cookie from the default profile of the loc
 
 		Version: version,
 
-		RunE: root(flagYearOverride, flagDateOverride),
+		RunE: root(&flagYearOverride, &flagDateOverride),
 	}
+
+	// Add flags to the root command.
+	rootCmd.Flags().AddFlagSet(rootFlags())
 
 	// Wire in the arguments passed to this func.
 	rootCmd.SetOut(stdout)
 	rootCmd.SetErr(stderr)
 	rootCmd.SetArgs(args[1:])
 
-	// Add flags to the root command, and then execute it with the given context.
-	rootCmd.LocalFlags().AddFlagSet(localFlags())
-
+	// Execute command with the given context.
 	if err := rootCmd.ExecuteContext(ctx); err != nil {
 		switch {
 		case errors.Is(err, ErrUnknownArguments):
@@ -66,7 +67,7 @@ Looks up the adventofcode.com session cookie from the default profile of the loc
 	return ExitSuccess
 }
 
-func root(year, date int) func(*cobra.Command, []string) error {
+func root(year, date *int) func(*cobra.Command, []string) error {
 	return func(cmd *cobra.Command, args []string) error {
 		// Check for any remaining unparsed arguments.
 		if len(args) > 0 {
@@ -87,7 +88,7 @@ func root(year, date int) func(*cobra.Command, []string) error {
 			return err
 		}
 
-		day, err := fetch.Day(cmd.Context(), cookie, year, date)
+		day, err := fetch.Day(cmd.Context(), cookie, *year, *date)
 		if err != nil {
 			return err
 		}

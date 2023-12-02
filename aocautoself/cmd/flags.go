@@ -11,12 +11,12 @@ var (
 	flagYearOverride, flagDateOverride int
 )
 
-// localFlags returns a [pflag.FlagSet] to be added to the root command.
-func localFlags() *pflag.FlagSet {
+// rootFlags returns a [pflag.FlagSet] to be added to the root command.
+func rootFlags() *pflag.FlagSet {
 	pfs := &pflag.FlagSet{}
 	now := time.Now()
-	pfs.IntVarP(&flagYearOverride, "year", "y", now.Year(), "use this year instead of parsing from right now")
-	pfs.IntVarP(&flagDateOverride, "date", "d", now.Day(), "use this day of the month instead of parsing from right now")
+	pfs.IntVarP(&flagYearOverride, "year", "y", now.Year(), "use given year instead of defaulting to this year")
+	pfs.IntVarP(&flagDateOverride, "date", "d", now.Day(), "use given day of the month instead of defaulting to today")
 
 	return pfs
 }
