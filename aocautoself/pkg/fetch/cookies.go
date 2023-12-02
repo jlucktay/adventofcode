@@ -5,6 +5,7 @@ import (
 	"regexp"
 
 	"github.com/zellyn/kooky"
+
 	_ "github.com/zellyn/kooky/browser/firefox"
 )
 
