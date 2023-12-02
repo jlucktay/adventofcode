@@ -31,4 +31,11 @@ func main() {
 	}
 
 	slog.Info("part 1", slog.Int("result", part1))
+
+	part2, err := day02.CubeConundrumPartTwo(string(input))
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "%v\n", err)
+	}
+
+	slog.Info("part 2", slog.Int("result", part2))
 }

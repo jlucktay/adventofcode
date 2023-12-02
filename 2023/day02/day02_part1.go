@@ -7,15 +7,9 @@ import (
 	"strings"
 )
 
-func CubeConundrum(input string) (int, error) {
+func parseInput(input string) (map[int]GameCubes, error) {
 	lines := strings.Split(input, "\n")
-	possibleGames := 0
-
-	cubeColourLimitations := map[string]int{
-		"red":   12,
-		"green": 13,
-		"blue":  14,
-	}
+	result := make(map[int]GameCubes)
 
 	for _, line := range lines {
 		if line == "" {
@@ -36,7 +30,7 @@ func CubeConundrum(input string) (int, error) {
 
 		scanned, err := fmt.Sscanf(games[0], "Game %d", &gameNumber)
 		if err != nil {
-			return 0, err
+			return nil, err
 		}
 
 		slog.Debug("scanned numbers",
@@ -44,7 +38,7 @@ func CubeConundrum(input string) (int, error) {
 			slog.Int("game_number", gameNumber))
 
 		if scanned != 1 {
-			return 0, fmt.Errorf("expecting 1 scanned game number, got %d", scanned)
+			return nil, fmt.Errorf("expecting 1 scanned game number, got %d", scanned)
 		}
 
 		slog.Debug("remainder of line",
@@ -93,6 +87,27 @@ func CubeConundrum(input string) (int, error) {
 				slog.String("key", fmt.Sprintf("%+v", gc)))
 		}
 
+		result[gameNumber] = game
+	}
+
+	return result, nil
+}
+
+func CubeConundrum(input string) (int, error) {
+	cubeColourLimitations := map[string]int{
+		"red":   12,
+		"green": 13,
+		"blue":  14,
+	}
+
+	possibleGames := 0
+
+	games, err := parseInput(input)
+	if err != nil {
+		return 0, err
+	}
+
+	for gameNumber, game := range games {
 		slog.Debug("game",
 			slog.Int("game_number", gameNumber),
 			slog.String("key", fmt.Sprintf("%+v", game)))
