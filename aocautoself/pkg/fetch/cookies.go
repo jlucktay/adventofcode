@@ -13,7 +13,8 @@ const (
 	cookieName   = "session"
 )
 
-func SessionCookie() (string, error) {
+// FirefoxCookie reads the adventofcode.com session cookie from the default profile in the local install of Firefox.
+func FirefoxCookie() (string, error) {
 	session := ""
 
 	for _, cookieStore := range kooky.FindAllCookieStores() {
