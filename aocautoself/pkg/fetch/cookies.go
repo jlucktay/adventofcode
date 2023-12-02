@@ -32,6 +32,8 @@ func FirefoxCookie() (*http.Cookie, error) {
 		}
 
 		session = cookies[0].Value
+
+		break
 	}
 
 	if session == "" {
