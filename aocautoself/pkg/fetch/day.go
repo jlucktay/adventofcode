@@ -2,7 +2,9 @@ package fetch
 
 import (
 	"bytes"
+	"context"
 	"fmt"
+	"net/http"
 	"strings"
 
 	"github.com/PuerkitoBio/goquery"
@@ -12,8 +14,8 @@ import (
 )
 
 // Day will perform the necessary HTTP magic to get an Advent of Code day for the given year and date.
-func Day(cookie string, year, day int) (*model.Day, error) {
-	details, err := getFromWeb(year, day, cookie)
+func Day(ctx context.Context, session *http.Cookie, year, day int) (*model.Day, error) {
+	details, err := getFromWeb(ctx, year, day, session)
 	if err != nil {
 		return nil, err
 	}

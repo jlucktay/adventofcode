@@ -2,6 +2,7 @@ package fetch
 
 import (
 	"fmt"
+	"net/http"
 	"regexp"
 
 	"github.com/zellyn/kooky"
@@ -15,7 +16,7 @@ const (
 )
 
 // FirefoxCookie reads the adventofcode.com session cookie from the default profile in the local install of Firefox.
-func FirefoxCookie() (string, error) {
+func FirefoxCookie() (*http.Cookie, error) {
 	session := ""
 
 	for _, cookieStore := range kooky.FindAllCookieStores() {
@@ -25,22 +26,27 @@ func FirefoxCookie() (string, error) {
 
 		cookies, err := cookieStore.ReadCookies(kooky.Valid, kooky.Domain(cookieDomain), kooky.Name(cookieName))
 		if err != nil {
-			return "", fmt.Errorf("reading cookies: %w", err)
+			return nil, fmt.Errorf("reading cookies: %w", err)
 		} else if len(cookies) != 1 {
-			return "", fmt.Errorf("wrong number of '%s' cookies from '%s' domain", cookieName, cookieDomain)
+			return nil, fmt.Errorf("wrong number of '%s' cookies from '%s' domain", cookieName, cookieDomain)
 		}
 
 		session = cookies[0].Value
 	}
 
 	if session == "" {
-		return "", fmt.Errorf("could not find '%s' cookie from '%s' domain in default profile of Firefox cookie store",
+		return nil, fmt.Errorf("could not find '%s' cookie from '%s' domain in default profile of Firefox cookie store",
 			cookieName, cookieDomain)
 	}
 
 	if !regexp.MustCompile(`(?i)^[0-9a-f]{128}$`).MatchString(session) {
-		return "", fmt.Errorf("session cookie '%s' was not a 128 character hexadecimal", session)
+		return nil, fmt.Errorf("session cookie '%s' was not a 128 character hexadecimal", session)
 	}
 
-	return session, nil
+	cookie := &http.Cookie{
+		Name:  cookieName,
+		Value: session,
+	}
+
+	return cookie, nil
 }

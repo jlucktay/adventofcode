@@ -1,27 +1,29 @@
 package fetch
 
 import (
+	"context"
 	"fmt"
 	"io"
 	"net/http"
 	"net/url"
 )
 
-func getFromWeb(year, date int, sessionCookie string) ([]byte, error) {
+func getFromWeb(ctx context.Context, year, date int, session *http.Cookie) ([]byte, error) {
 	dayURL, err := url.Parse(fmt.Sprintf("https://adventofcode.com/%d/day/%d", year, date))
 	if err != nil {
 		return nil, err
 	}
 
-	req, err := http.NewRequest("GET", dayURL.String(), nil)
+	req, err := http.NewRequestWithContext(ctx, http.MethodGet, dayURL.String(), nil)
 	if err != nil {
 		return nil, err
 	}
 
-	req.AddCookie(&http.Cookie{
-		Name:  "session",
-		Value: sessionCookie,
-	})
+	if err := session.Valid(); err != nil {
+		return nil, err
+	}
+
+	req.AddCookie(session)
 
 	res, err := http.DefaultClient.Do(req)
 	if err != nil {

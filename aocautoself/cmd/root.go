@@ -87,7 +87,7 @@ func root(year, date int) func(*cobra.Command, []string) error {
 			return err
 		}
 
-		day, err := fetch.Day(cookie, year, date)
+		day, err := fetch.Day(cmd.Context(), cookie, year, date)
 		if err != nil {
 			return err
 		}
