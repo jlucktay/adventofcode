@@ -6,6 +6,7 @@ import (
 	"errors"
 	"fmt"
 	"io"
+	"log/slog"
 	"path/filepath"
 	"strings"
 	"time"
@@ -44,6 +45,9 @@ Looks up the adventofcode.com session cookie from the default profile of the loc
 		Version: version,
 
 		RunE: root(&flagYearOverride, &flagDateOverride),
+
+		SilenceErrors: true,
+		SilenceUsage:  true,
 	}
 
 	// Add flags to the root command.
@@ -56,6 +60,9 @@ Looks up the adventofcode.com session cookie from the default profile of the loc
 
 	// Execute command with the given context.
 	if err := rootCmd.ExecuteContext(ctx); err != nil {
+		defer slog.Error("executing root command",
+			slog.Any("err", err))
+
 		switch {
 		case errors.Is(err, ErrUnknownArguments):
 			return ExitParsingArguments

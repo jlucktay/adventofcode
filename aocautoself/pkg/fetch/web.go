@@ -37,7 +37,7 @@ func getFromWeb(ctx context.Context, year, date int, session *http.Cookie) ([]by
 	defer resp.Body.Close()
 
 	if resp.StatusCode != http.StatusOK {
-		return nil, fmt.Errorf("non-OK status error: %s", resp.Status)
+		return nil, fmt.Errorf("non-OK status error GETing '%s': %s", dayURL, resp.Status)
 	}
 
 	bytes, err := io.ReadAll(resp.Body)
