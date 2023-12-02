@@ -6,6 +6,7 @@ import (
 	"io"
 	"net/http"
 	"net/url"
+	"time"
 )
 
 func getFromWeb(ctx context.Context, year, date int, session *http.Cookie) ([]byte, error) {
@@ -25,17 +26,21 @@ func getFromWeb(ctx context.Context, year, date int, session *http.Cookie) ([]by
 
 	req.AddCookie(session)
 
-	res, err := http.DefaultClient.Do(req)
+	hc := http.Client{
+		Timeout: time.Second * 10,
+	}
+
+	resp, err := hc.Do(req)
 	if err != nil {
 		return nil, err
 	}
-	defer res.Body.Close()
+	defer resp.Body.Close()
 
-	if res.StatusCode != 200 {
-		return nil, fmt.Errorf("status code error: %d %s", res.StatusCode, res.Status)
+	if resp.StatusCode != http.StatusOK {
+		return nil, fmt.Errorf("non-OK status error: %s", resp.Status)
 	}
 
-	bytes, err := io.ReadAll(res.Body)
+	bytes, err := io.ReadAll(resp.Body)
 	if err != nil {
 		return nil, err
 	}
