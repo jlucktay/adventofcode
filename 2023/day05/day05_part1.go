@@ -10,14 +10,15 @@ import (
 	"strings"
 )
 
-// What is the lowest location number that corresponds to any of the initial seed numbers?
-func Part1(inputLines []string) (int, error) {
+func parseInput(inputLines []string) ([]int, []AtoB, error) {
 	seeds := []int{}
 	mapsFromInput := []AtoB{}
 	onAMap := false
-	lowest := math.MaxInt
 
 	for ilIndex := range inputLines {
+		slog.Debug("parsing input line",
+			slog.String("line", inputLines[ilIndex]))
+
 		if inputLines[ilIndex] == "" {
 			onAMap = false
 			continue
@@ -29,7 +30,7 @@ func Part1(inputLines []string) (int, error) {
 			for _, xil := range xInputLine {
 				parsedXil, err := strconv.Atoi(xil)
 				if err != nil {
-					return 0, err
+					return nil, nil, err
 				}
 
 				seeds = append(seeds, parsedXil)
@@ -42,7 +43,7 @@ func Part1(inputLines []string) (int, error) {
 			onAMap = true
 			xBefore := strings.Split(before, "-")
 			if len(xBefore) != 3 {
-				return 0, fmt.Errorf("expecting 3 tokens from line '%s' delimited by '-'", before)
+				return nil, nil, fmt.Errorf("expecting 3 tokens from line '%s' delimited by '-'", before)
 			}
 
 			newAtoB := AtoB{
@@ -58,7 +59,7 @@ func Part1(inputLines []string) (int, error) {
 		if onAMap {
 			xLine := strings.Split(inputLines[ilIndex], " ")
 			if len(xLine) != 3 {
-				return 0, fmt.Errorf("expecting 3 tokens from line '%s' delimited by '-'", inputLines[ilIndex])
+				return nil, nil, fmt.Errorf("expecting 3 tokens from line '%s' delimited by '-'", inputLines[ilIndex])
 			}
 
 			parsedMapNumbers := [3]int{}
@@ -66,7 +67,7 @@ func Part1(inputLines []string) (int, error) {
 			for a, b := range xLine {
 				tmp, err := strconv.Atoi(b)
 				if err != nil {
-					return 0, err
+					return nil, nil, err
 				}
 
 				parsedMapNumbers[a] = tmp
@@ -86,17 +87,33 @@ func Part1(inputLines []string) (int, error) {
 		}
 	}
 
-	slog.Info("seeds", slog.String("slice", fmt.Sprintf("%#v", seeds)))
-	slog.Info("maps", slog.String("slice", fmt.Sprintf("%+v", mapsFromInput)))
+	return seeds, mapsFromInput, nil
+}
+
+// What is the lowest location number that corresponds to any of the initial seed numbers?
+func Part1(inputLines []string) (int, error) {
+	seeds, mapsFromInput, err := parseInput(inputLines)
+	if err != nil {
+		return 0, err
+	}
+
+	slog.Debug("part 1 got parsed input")
+
+	slog.Debug("seeds",
+		slog.String("slice", fmt.Sprintf("%#v", seeds)))
+	slog.Debug("maps",
+		slog.String("slice", fmt.Sprintf("%+v", mapsFromInput)))
+
+	lowest := math.MaxInt
 
 	for _, seed := range seeds {
-		slog.Info("outer loop",
+		slog.Debug("outer loop",
 			slog.Int("seed", seed))
 
 		corresponding := seed
 
 		for _, a2b := range mapsFromInput {
-			slog.Info("inner loop",
+			slog.Debug("inner loop",
 				slog.Int("seed", seed),
 				slog.String("from", a2b.from),
 				slog.String("to", a2b.to))
@@ -105,7 +122,7 @@ func Part1(inputLines []string) (int, error) {
 		}
 
 		if corresponding < lowest {
-			slog.Info("inside if",
+			slog.Debug("inside if",
 				slog.Int("seed", seed),
 				slog.Int("corresponding", corresponding))
 
