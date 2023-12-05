@@ -14,7 +14,9 @@ const inputPath = "input.txt"
 func main() {
 	input, err := os.ReadFile(inputPath)
 	if err != nil {
-		slog.Error("could not read input file", slog.Any("err", err), slog.String("path", inputPath))
+		slog.Error("could not read input file",
+			slog.Any("err", err),
+			slog.String("path", inputPath))
 
 		return
 	}
@@ -23,7 +25,8 @@ func main() {
 
 	p1, err := Part1(lines)
 	if err != nil {
-		slog.Error("part 1", slog.Any("err", err))
+		slog.Error("part 1",
+			slog.Any("err", err))
 
 		return
 	}
@@ -32,7 +35,8 @@ func main() {
 
 	p2, err := Part2(lines)
 	if err != nil {
-		slog.Error("part 2", slog.Any("err", err))
+		slog.Error("part 2",
+			slog.Any("err", err))
 
 		return
 	}
