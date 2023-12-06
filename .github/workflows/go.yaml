@@ -16,7 +16,7 @@ on:
 
 jobs:
   build:
-    name: Build/vet/test
+    name: Build and test
 
     runs-on: ubuntu-latest
 
@@ -30,11 +30,8 @@ jobs:
       - name: Build
         run: go list -f '{{ .Dir }}' -m | xargs -I % -t go build -C % ./...
 
-      - name: Vet
-        run: go list -f '{{ .Dir }}' -m | xargs -I % -t go vet -C % ./...
-
       - name: Test
-        run: go list -f '{{ .Dir }}' -m | xargs -I % -t go test -C % --count=1 --failfast -v ./...
+        run: go list -f '{{ .Dir }}' -m | xargs -I % -t go test -C % --count=1 --failfast -v --vet ./...
 
       - uses: codecov/codecov-action@v3
         with:
