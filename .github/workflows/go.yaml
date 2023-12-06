@@ -16,6 +16,8 @@ on:
 
 jobs:
   build:
+    name: Build/vet/test
+
     runs-on: ubuntu-latest
 
     steps:
