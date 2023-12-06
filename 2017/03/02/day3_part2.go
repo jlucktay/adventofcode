@@ -4,8 +4,7 @@ package main
 
 import (
 	"fmt"
-
-	"github.com/cavaliercoder/go-abs"
+	"math/big"
 )
 
 type direction uint8
@@ -79,7 +78,15 @@ func (s *spiral) Add() {
 
 // Manhattan distance will be the sum of the absolutes of the last node's coordinates.
 func (s *spiral) Manhattan() uint64 {
-	return uint64(abs.WithTwosComplement(s.last.coords.x) + abs.WithTwosComplement(s.last.coords.y))
+	var absBigX, absBigY big.Int
+
+	bigX := big.NewInt(s.last.coords.x)
+	bigY := big.NewInt(s.last.coords.y)
+
+	absBigX.Abs(bigX)
+	absBigY.Abs(bigY)
+
+	return uint64(absBigX.Int64() + absBigY.Int64())
 }
 
 // Generates co-ordinates for all possible neighbours
