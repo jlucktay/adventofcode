@@ -273,42 +273,80 @@ func TestHighCard(t *testing.T) {
 	is := is.New(t)
 
 	testCases := map[string]struct {
-		in   Hand
-		want Card
+		in    Hand
+		joker bool
+		want  Card
 	}{
 		"aces": {
-			in:   Hand{cards: [5]Card{'A', '2', '3', '4', '5'}},
-			want: 'A',
+			in:    Hand{cards: [5]Card{'A', '2', '3', '4', '5'}},
+			joker: false,
+			want:  'A',
 		},
 
 		"full house": {
-			in:   Hand{cards: [5]Card{'2', '2', '2', '2', '2'}},
-			want: Err,
+			in:    Hand{cards: [5]Card{'2', '2', '2', '2', '2'}},
+			joker: false,
+			want:  Err,
 		},
 
 		"all different": {
-			in:   Hand{cards: [5]Card{'2', '3', '4', '5', '6'}},
-			want: '6',
+			in:    Hand{cards: [5]Card{'2', '3', '4', '5', '6'}},
+			joker: false,
+			want:  '6',
 		},
 
 		"KK678": {
-			in:   Hand{cards: [5]Card{'K', 'K', '6', '7', '8'}},
-			want: Err,
+			in:    Hand{cards: [5]Card{'K', 'K', '6', '7', '8'}},
+			joker: false,
+			want:  Err,
 		},
 
 		"KQ678": {
-			in:   Hand{cards: [5]Card{'K', 'Q', '6', '7', '8'}},
-			want: 'K',
+			in:    Hand{cards: [5]Card{'K', 'Q', '6', '7', '8'}},
+			joker: false,
+			want:  'K',
 		},
 
 		"KTJQT": {
-			in:   Hand{cards: [5]Card{'K', 'T', 'J', 'Q', 'T'}},
-			want: Err,
+			in:    Hand{cards: [5]Card{'K', 'T', 'J', 'Q', 'T'}},
+			joker: false,
+			want:  Err,
+		},
+
+		"KTJQT jokers wild": {
+			in:    Hand{cards: [5]Card{'K', 'T', 'J', 'Q', 'T'}},
+			joker: true,
+			want:  Err,
+		},
+
+		"KTJQ3 jokers wild": {
+			in:    Hand{cards: [5]Card{'K', 'T', 'J', 'Q', '3'}},
+			joker: true,
+			want:  'K',
 		},
 
 		"34JQT": {
-			in:   Hand{cards: [5]Card{'3', '4', 'J', 'Q', 'T'}},
-			want: 'Q',
+			in:    Hand{cards: [5]Card{'3', '4', 'J', 'Q', 'T'}},
+			joker: false,
+			want:  'Q',
+		},
+
+		"34JQT jokers wild": {
+			in:    Hand{cards: [5]Card{'3', '4', 'J', 'Q', 'T'}},
+			joker: true,
+			want:  'Q',
+		},
+
+		"34JQ5 jokers wild": {
+			in:    Hand{cards: [5]Card{'3', '4', 'J', 'Q', '5'}},
+			joker: true,
+			want:  'Q',
+		},
+
+		"34J75 jokers wild": {
+			in:    Hand{cards: [5]Card{'3', '4', 'J', '7', '5'}},
+			joker: true,
+			want:  '7',
 		},
 	}
 
@@ -318,7 +356,7 @@ func TestHighCard(t *testing.T) {
 		t.Run(desc, func(t *testing.T) {
 			is := is.New(t)
 
-			got := testCase.in.highCard()
+			got := testCase.in.highCard(testCase.joker)
 			is.Equal(string(got), string(testCase.want))
 		})
 	}
@@ -359,7 +397,7 @@ func TestSecondOrderingRule(t *testing.T) {
 		t.Run(desc, func(t *testing.T) {
 			is := is.New(t)
 
-			got := testCase.in1.secondOrderingRule(testCase.in2)
+			got := testCase.in1.secondOrderingRule(testCase.in2, false)
 			is.Equal(got, testCase.want)
 		})
 	}
@@ -412,7 +450,7 @@ func TestHandStrongerType(t *testing.T) {
 			h2, err := parseHand(testCase.in2)
 			is.NoErr(err)
 
-			got := h1.StrongerThan(h2)
+			got := h1.StrongerThan(h2, false)
 			is.Equal(got, testCase.want)
 		})
 	}

@@ -39,15 +39,23 @@ var mapOfHandType = map[HandType]string{
 	7: "FiveOfAKind",
 }
 
-var strengthRankings = []Card{'A', 'K', 'Q', 'J', 'T', '9', '8', '7', '6', '5', '4', '3', '2'}
+var (
+	strengthRankings = []Card{'A', 'K', 'Q', 'J', 'T', '9', '8', '7', '6', '5', '4', '3', '2'}
+	jokerRankings    = []Card{'A', 'K', 'Q', 'T', '9', '8', '7', '6', '5', '4', '3', '2', 'J'}
+)
 
-func (c Card) StrongerThan(d Card) bool {
+func (c Card) StrongerThan(d Card, jokerRule bool) bool {
 	if d == Empty {
 		return true
 	}
 
-	cIndex := slices.Index(strengthRankings, c)
-	dIndex := slices.Index(strengthRankings, d)
+	measureAgainst := strengthRankings
+	if jokerRule {
+		measureAgainst = jokerRankings
+	}
+
+	cIndex := slices.Index(measureAgainst, c)
+	dIndex := slices.Index(measureAgainst, d)
 
 	return cIndex < dIndex
 }
@@ -68,20 +76,135 @@ StrongerThan implements this section:
 	One pair, where two cards share one label, and the other three cards have a different label from the pair and each other: A23A4
 	High card, where all cards' labels are distinct: 23456
 */
-func (h Hand) StrongerThan(i Hand) Hand {
-	if h.handType > i.handType {
-		return h
+func (h Hand) StrongerThan(i Hand, jokerRule bool) Hand {
+	if !jokerRule {
+		if h.handType > i.handType {
+			return h
+		}
+
+		if h.handType < i.handType {
+			return i
+		}
 	}
 
-	if h.handType < i.handType {
-		return i
+	if jokerRule {
+		jh := h.applyJokerRule()
+		ji := i.applyJokerRule()
+
+		if jh.handType > ji.handType {
+			return h
+		}
+
+		if jh.handType < ji.handType {
+			return i
+		}
 	}
 
-	if h.secondOrderingRule(i) {
+	if h.secondOrderingRule(i, jokerRule) {
 		return h
 	} else {
 		return i
 	}
+}
+
+func (h Hand) applyJokerRule() Hand {
+	// No Jokers in the Hand, so return the same.
+	if h.count('J') == 0 {
+		return h
+	}
+
+	// If there are 5/4/3 of one non-Joker Card, make any Jokers that Card as well, and return the updated Hand.
+	for i := 5; i >= 3; i-- {
+		if xKindResult, xKindCard := h.xOfAKind(i, Empty); xKindResult {
+			if xKindCard != 'J' {
+				return h.replaceJokers(xKindCard)
+			}
+
+			strongest := h.strongestNonJoker()
+
+			return h.replaceJokers(strongest)
+		}
+	}
+
+	// Cover the two pair scenario.
+	if isTwoPair, pairOneCard, pairTwoCard, _ := h.twoPair(); isTwoPair {
+		strongest := pairOneCard
+		if pairTwoCard.StrongerThan(pairOneCard, true) {
+			strongest = pairTwoCard
+		}
+
+		jokerfied := h.replaceJokers(strongest)
+
+		return jokerfied
+	}
+
+	// Cover one pair.
+	if isOnePair, pairCard, _, _, _ := h.onePair(); isOnePair {
+		if pairCard == 'J' {
+			strongest := h.cards[0]
+
+			for i := 1; i < len(h.cards); i++ {
+				if h.cards[i].StrongerThan(strongest, true) {
+					strongest = h.cards[i]
+				}
+			}
+
+			jokerfied := h.replaceJokers(strongest)
+
+			return jokerfied
+		} else {
+			jokerfied := h.replaceJokers(pairCard)
+
+			return jokerfied
+		}
+	}
+
+	// Five different Cards in the Hand, so if there is a Joker, swap it for the strongest card.
+	if h.count('J') > 0 {
+		strongest := h.strongestNonJoker()
+		jokerfied := h.replaceJokers(strongest)
+		return jokerfied
+	}
+
+	// Every card is different and there are no Jokers so return the same Hand.
+	return h
+}
+
+// strongestNonJoker finds the strongest Card that is not a Joker.
+func (h Hand) strongestNonJoker() Card {
+	strongest := Empty
+
+	for i := 0; i < len(h.cards); i++ {
+		if h.cards[i] != 'J' && h.cards[i].StrongerThan(strongest, true) {
+			strongest = h.cards[i]
+		}
+	}
+
+	return strongest
+}
+
+// replaceJokers returns a new Hand where the Jokers have all been replaced with the given Card.
+func (h Hand) replaceJokers(c Card) Hand {
+	if h.count('J') == 5 {
+		return h
+	}
+
+	sb := strings.Builder{}
+
+	for j := 0; j < len(h.cards); j++ {
+		if h.cards[j] == 'J' {
+			sb.WriteRune(rune(c))
+		} else {
+			sb.WriteRune(rune(h.cards[j]))
+		}
+	}
+
+	result, err := parseHand(sb.String())
+	if err != nil {
+		return Hand{}
+	}
+
+	return result
 }
 
 // xOfAKind asserts whether this hand is x-of-a-kind or not.
@@ -157,7 +280,7 @@ func (h Hand) onePair() (bool, Card, Card, Card, Card) {
 }
 
 // highCard returns the high card of the hand, or Err if there is more than one instance of any card in the hand.
-func (h Hand) highCard() Card {
+func (h Hand) highCard(jokerRule bool) Card {
 	highest := Empty
 
 	for i := 0; i < len(h.cards); i++ {
@@ -167,7 +290,7 @@ func (h Hand) highCard() Card {
 			}
 		}
 
-		if h.cards[i].StrongerThan(highest) {
+		if h.cards[i].StrongerThan(highest, jokerRule) {
 			highest = h.cards[i]
 		}
 	}
@@ -180,13 +303,13 @@ secondOrderingRule implements this section:
 
 	If two hands have the same type, a second ordering rule takes effect. Start by comparing the first card in each hand. If these cards are different, the hand with the stronger first card is considered stronger. If the first card in each hand have the same label, however, then move on to considering the second card in each hand. If they differ, the hand with the higher second card wins; otherwise, continue with the third card in each hand, then the fourth, then the fifth.
 */
-func (h Hand) secondOrderingRule(i Hand) bool {
+func (h Hand) secondOrderingRule(i Hand, jokerRule bool) bool {
 	for j := 0; j < len(h.cards); j++ {
 		if h.cards[j] == i.cards[j] {
 			continue
 		}
 
-		return h.cards[j].StrongerThan(i.cards[j])
+		return h.cards[j].StrongerThan(i.cards[j], jokerRule)
 	}
 
 	return false
@@ -258,7 +381,7 @@ func parseHand(input string) (Hand, error) {
 	return h, nil
 }
 
-func Part1(inputLines []string) (int, error) {
+func parseBids(inputLines []string, jokerRule bool) (int, error) {
 	bids := map[Hand]int{}
 
 	for ilIndex := range inputLines {
@@ -286,7 +409,7 @@ func Part1(inputLines []string) (int, error) {
 	}
 
 	slices.SortStableFunc(rankingOfHands, func(a, b Hand) int {
-		result := a.StrongerThan(b)
+		result := a.StrongerThan(b, jokerRule)
 
 		if result == a {
 			return 1
@@ -306,4 +429,8 @@ func Part1(inputLines []string) (int, error) {
 	}
 
 	return totalWinnings, nil
+}
+
+func Part1(inputLines []string) (int, error) {
+	return parseBids(inputLines, false)
 }
