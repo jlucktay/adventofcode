@@ -44,7 +44,7 @@ func TestPart2(t *testing.T) {
 
 	testCases := map[string]struct {
 		in   []string
-		want uint64
+		want int
 	}{
 		"empty": {[]string{}, 0},
 		"simultaneously navigate away from both nodes you're currently on": {
@@ -70,20 +70,20 @@ func TestLCM(t *testing.T) {
 	is := is.New(t)
 
 	testCases := map[string]struct {
-		in   []uint64
-		want uint64
+		in   []int
+		want int
 	}{
-		"empty": {[]uint64{}, 0},
+		"empty": {[]int{}, 0},
 		"basic input": {
-			in:   []uint64{2, 3},
+			in:   []int{2, 3},
 			want: 6,
 		},
 		"wikipedia simple algorithm": {
-			in:   []uint64{3, 4, 6},
+			in:   []int{3, 4, 6},
 			want: 12,
 		},
 		"wikipedia table method": {
-			in:   []uint64{4, 7, 12, 21, 42},
+			in:   []int{4, 7, 12, 21, 42},
 			want: 84,
 		},
 	}

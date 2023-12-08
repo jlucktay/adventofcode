@@ -5,4 +5,5 @@ go 1.21
 require (
 	github.com/lmittmann/tint v1.0.3
 	github.com/matryer/is v1.4.1
+	golang.org/x/exp v0.0.0-20231206192017-f3f8817b8deb
 )

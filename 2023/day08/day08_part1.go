@@ -99,7 +99,7 @@ func parseNode(input string) (Node, error) {
 	return node, nil
 }
 
-func (p Puzzle) getToZZZ(ghostMode bool) (uint64, error) {
+func (p Puzzle) getToZZZ(ghostMode bool) (int, error) {
 	if len(p.nodes) == 0 {
 		return 0, nil
 	}
@@ -124,7 +124,7 @@ func (p Puzzle) getToZZZ(ghostMode bool) (uint64, error) {
 
 		for !strings.HasSuffix(string(ghosts[i].current), "Z") {
 
-			direction := p.directions[ghosts[i].stepsTaken%uint64(len(p.directions))]
+			direction := p.directions[ghosts[i].stepsTaken%len(p.directions)]
 
 			current, currentExists := p.nodes[ghosts[i].current]
 			if !currentExists {
@@ -156,7 +156,7 @@ func (p Puzzle) getToZZZ(ghostMode bool) (uint64, error) {
 		println("ghost", i, "took", ghosts[i].stepsTaken, "steps in total and finished at", ghosts[i].current)
 	}
 
-	stepsTaken := make([]uint64, 0)
+	stepsTaken := make([]int, 0)
 
 	for i := 0; i < len(ghosts); i++ {
 		stepsTaken = append(stepsTaken, ghosts[i].stepsTaken)
@@ -165,7 +165,7 @@ func (p Puzzle) getToZZZ(ghostMode bool) (uint64, error) {
 	return lcm(stepsTaken...), nil
 }
 
-func Part1(inputLines []string) (uint64, error) {
+func Part1(inputLines []string) (int, error) {
 	puzzle, err := parseLines(inputLines)
 	if err != nil {
 		return 0, err

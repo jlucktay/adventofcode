@@ -41,7 +41,7 @@ func TestPart1(t *testing.T) {
 
 	testCases := map[string]struct {
 		in   []string
-		want uint64
+		want int
 	}{
 		"empty":       {[]string{}, 0},
 		"for example": {strings.Split(network, "\n"), 2},

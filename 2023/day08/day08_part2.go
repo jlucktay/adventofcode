@@ -2,14 +2,16 @@
 // https://adventofcode.com/2023/day/8
 package main
 
+import "golang.org/x/exp/constraints"
+
 type Ghost struct {
 	current    Address
-	stepsTaken uint64
+	stepsTaken int
 }
 
 type Ghosts []Ghost
 
-func Part2(inputLines []string) (uint64, error) {
+func Part2(inputLines []string) (int, error) {
 	puzzle, err := parseLines(inputLines)
 	if err != nil {
 		return 0, err
@@ -23,7 +25,7 @@ func Part2(inputLines []string) (uint64, error) {
 	return result, nil
 }
 
-func gcd(a, b uint64) uint64 {
+func gcd[T constraints.Integer](a, b T) T {
 	for b != 0 {
 		a, b = b, a%b
 	}
@@ -31,7 +33,7 @@ func gcd(a, b uint64) uint64 {
 	return a
 }
 
-func lcm(x ...uint64) uint64 {
+func lcm[T constraints.Integer](x ...T) T {
 	if len(x) == 0 {
 		return 0
 	} else if len(x) == 1 {
