@@ -41,7 +41,7 @@ func TestPart1(t *testing.T) {
 
 	testCases := map[string]struct {
 		in   []string
-		want int
+		want uint64
 	}{
 		"empty":       {[]string{}, 0},
 		"for example": {strings.Split(network, "\n"), 2},
@@ -72,13 +72,13 @@ func TestParseLines(t *testing.T) {
 		"for example": {network, Puzzle{
 			directions: []Direction{Right, Left},
 			nodes: map[Address]Node{
-				"AAA": {left: "BBB", right: "CCC"},
-				"BBB": {left: "DDD", right: "EEE"},
-				"CCC": {left: "ZZZ", right: "GGG"},
-				"DDD": {left: "DDD", right: "DDD"},
-				"EEE": {left: "EEE", right: "EEE"},
-				"GGG": {left: "GGG", right: "GGG"},
-				"ZZZ": {left: "ZZZ", right: "ZZZ"},
+				"AAA": {self: "AAA", left: "BBB", right: "CCC"},
+				"BBB": {self: "BBB", left: "DDD", right: "EEE"},
+				"CCC": {self: "CCC", left: "ZZZ", right: "GGG"},
+				"DDD": {self: "DDD", left: "DDD", right: "DDD"},
+				"EEE": {self: "EEE", left: "EEE", right: "EEE"},
+				"GGG": {self: "GGG", left: "GGG", right: "GGG"},
+				"ZZZ": {self: "ZZZ", left: "ZZZ", right: "ZZZ"},
 			},
 		}},
 	}
