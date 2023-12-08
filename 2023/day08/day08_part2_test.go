@@ -70,26 +70,20 @@ func TestLCM(t *testing.T) {
 	is := is.New(t)
 
 	testCases := map[string]struct {
-		in   Ghosts
+		in   []uint64
 		want uint64
 	}{
-		"empty": {Ghosts{}, 0},
+		"empty": {[]uint64{}, 0},
 		"basic input": {
-			in:   Ghosts{Ghost{stepsTaken: 2}, Ghost{stepsTaken: 3}},
+			in:   []uint64{2, 3},
 			want: 6,
 		},
 		"wikipedia simple algorithm": {
-			in:   Ghosts{Ghost{stepsTaken: 3}, Ghost{stepsTaken: 4}, Ghost{stepsTaken: 6}},
+			in:   []uint64{3, 4, 6},
 			want: 12,
 		},
 		"wikipedia table method": {
-			in: Ghosts{
-				Ghost{stepsTaken: 4},
-				Ghost{stepsTaken: 7},
-				Ghost{stepsTaken: 12},
-				Ghost{stepsTaken: 21},
-				Ghost{stepsTaken: 42},
-			},
+			in:   []uint64{4, 7, 12, 21, 42},
 			want: 84,
 		},
 	}
@@ -100,7 +94,7 @@ func TestLCM(t *testing.T) {
 		t.Run(desc, func(t *testing.T) {
 			is := is.New(t)
 
-			got := lcm(testCase.in)
+			got := lcm(testCase.in...)
 			is.Equal(got, testCase.want)
 		})
 	}

@@ -2,10 +2,6 @@
 // https://adventofcode.com/2023/day/8
 package main
 
-import (
-	"slices"
-)
-
 type Ghost struct {
 	current    Address
 	stepsTaken uint64
@@ -27,36 +23,22 @@ func Part2(inputLines []string) (uint64, error) {
 	return result, nil
 }
 
-func lcm(ghosts Ghosts) uint64 {
-	originalValues := make([]uint64, 0)
-	lcmValues := make([]uint64, 0)
-
-	for _, ghost := range ghosts {
-		originalValues = append(originalValues, ghost.stepsTaken)
-		lcmValues = append(lcmValues, ghost.stepsTaken)
+func gcd(a, b uint64) uint64 {
+	for b != 0 {
+		a, b = b, a%b
 	}
 
-	if len(lcmValues) == 0 {
+	return a
+}
+
+func lcm(x ...uint64) uint64 {
+	if len(x) == 0 {
 		return 0
+	} else if len(x) == 1 {
+		return x[0]
+	} else if len(x) == 2 {
+		return x[0] * x[1] / gcd(x[0], x[1])
 	}
 
-	for {
-		compactFodder := make([]uint64, len(lcmValues))
-
-		if length := copy(compactFodder, lcmValues); length != len(lcmValues) {
-			return 0
-		}
-
-		if compacted := slices.Compact(compactFodder); len(compacted) == 1 {
-			return compacted[0]
-		}
-
-		lowestLCMValue := slices.Min(lcmValues)
-		indexOfLowest := slices.Index(lcmValues, lowestLCMValue)
-
-		originalValueToAdd := originalValues[indexOfLowest]
-		newValueToSet := lcmValues[indexOfLowest] + originalValueToAdd
-
-		lcmValues[indexOfLowest] = newValueToSet
-	}
+	return lcm(x[0], lcm(x[1:]...))
 }

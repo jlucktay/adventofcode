@@ -156,7 +156,13 @@ func (p Puzzle) getToZZZ(ghostMode bool) (uint64, error) {
 		println("ghost", i, "took", ghosts[i].stepsTaken, "steps in total and finished at", ghosts[i].current)
 	}
 
-	return lcm(ghosts), nil
+	stepsTaken := make([]uint64, 0)
+
+	for i := 0; i < len(ghosts); i++ {
+		stepsTaken = append(stepsTaken, ghosts[i].stepsTaken)
+	}
+
+	return lcm(stepsTaken...), nil
 }
 
 func Part1(inputLines []string) (uint64, error) {
