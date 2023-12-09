@@ -121,7 +121,7 @@ func TestReduceToZeroCount(t *testing.T) {
 			hist, err := parseLine(testCase.in)
 			is.NoErr(err)
 
-			got := hist.reduceToZeroCount()
+			got := hist.reduceToZeroCount(false)
 			is.Equal(got, testCase.want)
 			is.Equal(len(got), testCase.wantLen)
 		})

@@ -84,7 +84,7 @@ func (h History) nextValue() int {
 		return 0
 	}
 
-	deltas := h.reduceToZeroCount()
+	deltas := h.reduceToZeroCount(false)
 
 	deltaSum := 0
 	for i := 0; i < len(deltas); i++ {
@@ -96,7 +96,7 @@ func (h History) nextValue() int {
 
 // reduceToZeroCount finds how many rows it takes to get to all zeroes, and returns a list of differences between the
 // second last and last elements on each line. The length of this list is the number of rows it took.
-func (h History) reduceToZeroCount() []int {
+func (h History) reduceToZeroCount(extrapolateBackwards bool) []int {
 	if len(h) == 0 {
 		return nil
 	}
@@ -104,7 +104,11 @@ func (h History) reduceToZeroCount() []int {
 	deltas := make([]int, 0)
 
 	if lenH := len(h); lenH >= 2 {
-		deltas = append(deltas, h[lenH-1]-h[lenH-2])
+		if extrapolateBackwards {
+			deltas = append(deltas, h[1]-h[0])
+		} else {
+			deltas = append(deltas, h[lenH-1]-h[lenH-2])
+		}
 	}
 
 	bottomLine := make(History, len(h))
@@ -112,18 +116,30 @@ func (h History) reduceToZeroCount() []int {
 	copy(bottomLine, h)
 
 	for !bottomLine.allZeroes() {
-		for i := 0; i < len(bottomLine)-1; i++ {
-			thisValue := bottomLine[i]
-			nextValue := bottomLine[i+1]
-
-			bottomLine[i] = nextValue - thisValue
+		if extrapolateBackwards {
+			for i := 1; i < len(bottomLine); i++ {
+				prevValue := bottomLine[i-1]
+				thisValue := bottomLine[i]
+				difference := thisValue - prevValue
+				bottomLine[i-1] = difference
+			}
+		} else {
+			for i := 0; i < len(bottomLine)-1; i++ {
+				thisValue := bottomLine[i]
+				nextValue := bottomLine[i+1]
+				bottomLine[i] = nextValue - thisValue
+			}
 		}
 
 		truncateOne := len(bottomLine) - 1
 		bottomLine = bottomLine[:truncateOne]
 
 		if lenBL := len(bottomLine); lenBL >= 2 {
-			deltas = append(deltas, bottomLine[lenBL-1]-bottomLine[lenBL-2])
+			if extrapolateBackwards {
+				deltas = append(deltas, bottomLine[1]-bottomLine[0])
+			} else {
+				deltas = append(deltas, bottomLine[lenBL-1]-bottomLine[lenBL-2])
+			}
 		}
 	}
 
