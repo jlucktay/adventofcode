@@ -5,6 +5,8 @@ package main
 import (
 	"fmt"
 	"strings"
+
+	"go.jlucktay.dev/adventofcode/crunchy"
 )
 
 type Direction uint8
@@ -162,7 +164,7 @@ func (p Puzzle) getToZZZ(ghostMode bool) (int, error) {
 		stepsTaken = append(stepsTaken, ghosts[i].stepsTaken)
 	}
 
-	return lcm(stepsTaken...), nil
+	return crunchy.LCM(stepsTaken...), nil
 }
 
 func Part1(inputLines []string) (int, error) {

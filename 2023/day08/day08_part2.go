@@ -2,8 +2,6 @@
 // https://adventofcode.com/2023/day/8
 package main
 
-import "golang.org/x/exp/constraints"
-
 type Ghost struct {
 	current    Address
 	stepsTaken int
@@ -23,24 +21,4 @@ func Part2(inputLines []string) (int, error) {
 	}
 
 	return result, nil
-}
-
-func gcd[T constraints.Integer](a, b T) T {
-	for b != 0 {
-		a, b = b, a%b
-	}
-
-	return a
-}
-
-func lcm[T constraints.Integer](x ...T) T {
-	if len(x) == 0 {
-		return 0
-	} else if len(x) == 1 {
-		return x[0]
-	} else if len(x) == 2 {
-		return x[0] * x[1] / gcd(x[0], x[1])
-	}
-
-	return lcm(x[0], lcm(x[1:]...))
 }

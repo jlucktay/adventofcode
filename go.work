@@ -8,4 +8,5 @@ use (
 	./2022
 	./2023
 	./aocautoself
+	./crunchy
 )
