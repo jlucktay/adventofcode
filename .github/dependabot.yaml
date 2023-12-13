@@ -1,0 +1,19 @@
+version: 2
+
+updates:
+  # Check for updates to GitHub Actions every month.
+  - package-ecosystem: github-actions
+    # Workflow files stored in the default location of `.github/workflows`
+    directory: '/'
+    schedule:
+      interval: monthly
+    assignees:
+      - jlucktay
+    # Group all of the GHA updates together.
+    groups:
+      github-actions:
+        patterns:
+          - '*'
+    open-pull-requests-limit: 1
+    reviewers:
+      - jlucktay
