@@ -12,15 +12,15 @@ type Pipes struct {
 	start *Tile
 }
 
-func (p Pipes) solve() (int, error) {
+func (p Pipes) SolveForPart1() int {
 	length := 1
 
 	if p.start == nil {
-		return 0, nil
+		return 0
 	}
 
 	if p.start.next == nil {
-		return 1, nil
+		return 1
 	}
 
 	current := p.start.next
@@ -30,7 +30,7 @@ func (p Pipes) solve() (int, error) {
 		length++
 	}
 
-	return length / 2, nil
+	return length / 2
 }
 
 // Tile is one section of pipe, connected in two directions.
@@ -147,7 +147,7 @@ func parsePipes(grid Grid) (Pipes, error) {
 	}
 
 	// Parse the pipes in the loop.
-	connsFromStart, err := pipes.start.lookAroundForConnections(grid)
+	connsFromStart, err := pipes.start.LookAroundForConnections(grid)
 	if err != nil {
 		return Pipes{}, err
 	}
@@ -163,7 +163,7 @@ func parsePipes(grid Grid) (Pipes, error) {
 			return Pipes{}, errors.New("current.prev.next is not current")
 		}
 
-		connections, err := current.lookAroundForConnections(grid)
+		connections, err := current.LookAroundForConnections(grid)
 		if err != nil {
 			return Pipes{}, err
 		}
@@ -189,10 +189,10 @@ func parsePipes(grid Grid) (Pipes, error) {
 	return pipes, nil
 }
 
-// lookAroundForConnections will return a slice of Tiles pointers of length 2, or an error.
-func (t *Tile) lookAroundForConnections(grid Grid) ([]*Tile, error) {
+// LookAroundForConnections will return a slice of Tiles pointers of length 2, or an error.
+func (t *Tile) LookAroundForConnections(grid Grid) ([]*Tile, error) {
 	// Discover (up to) 4 neighbours.
-	neighbours, err := t.getNeighbours(grid)
+	neighbours, err := t.GetNeighbours(grid)
 	if err != nil {
 		return nil, err
 	}
@@ -204,7 +204,7 @@ func (t *Tile) lookAroundForConnections(grid Grid) ([]*Tile, error) {
 		neighbour, neighbourExists := neighbours[direction]
 
 		if neighbourExists {
-			if t.connectsTo(neighbour) {
+			if t.ConnectsTo(neighbour) {
 				result = append(result, neighbour)
 			}
 		}
@@ -217,7 +217,7 @@ func (t *Tile) lookAroundForConnections(grid Grid) ([]*Tile, error) {
 	return result, nil
 }
 
-func (k Kind) connectsTo(d Direction, l Kind) bool {
+func (k Kind) ConnectsTo(d Direction, l Kind) bool {
 	switch k {
 	case Vertical:
 		switch d {
@@ -331,26 +331,26 @@ func (k Kind) connectsTo(d Direction, l Kind) bool {
 	return false
 }
 
-func (t *Tile) connectsTo(u *Tile) bool {
+func (t *Tile) ConnectsTo(u *Tile) bool {
 	switch {
 	case t.y-1 == u.y: // connecting up/north
-		return t.kind.connectsTo(North, u.kind)
+		return t.kind.ConnectsTo(North, u.kind)
 
 	case t.x+1 == u.x: // connecting right/east
-		return t.kind.connectsTo(East, u.kind)
+		return t.kind.ConnectsTo(East, u.kind)
 
 	case t.y+1 == u.y: // connecting down/south
-		return t.kind.connectsTo(South, u.kind)
+		return t.kind.ConnectsTo(South, u.kind)
 
 	case t.x-1 == u.x: // connecting left/west
-		return t.kind.connectsTo(West, u.kind)
+		return t.kind.ConnectsTo(West, u.kind)
 
 	default:
 		return false
 	}
 }
 
-func (t *Tile) getNeighbours(g Grid) (map[Direction]*Tile, error) {
+func (t *Tile) GetNeighbours(g Grid) (map[Direction]*Tile, error) {
 	result := make(map[Direction]*Tile)
 
 	if t.x-1 >= 0 {
@@ -387,5 +387,5 @@ func Part1(inputLines []string) (int, error) {
 		return 0, err
 	}
 
-	return pipes.solve()
+	return pipes.SolveForPart1(), nil
 }

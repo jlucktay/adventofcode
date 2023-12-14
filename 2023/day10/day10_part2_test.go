@@ -97,10 +97,70 @@ In this last example, 10 tiles are enclosed by the loop.
 package main
 
 import (
+	"strings"
 	"testing"
 
 	"github.com/matryer/is"
 )
+
+var forExample = `...........
+.S-------7.
+.|F-----7|.
+.||.....||.
+.||.....||.
+.|L-7.F-J|.
+.|..|.|..|.
+.L--J.L--J.
+...........
+`
+
+var forExampleSqueezed = `..........
+.S------7.
+.|F----7|.
+.||....||.
+.||....||.
+.|L-7F-J|.
+.|..||..|.
+.L--JL--J.
+..........
+`
+
+var largerExample = `.F----7F7F7F7F-7....
+.|F--7||||||||FJ....
+.||.FJ||||||||L7....
+FJL7L7LJLJ||LJ.L-7..
+L--J.L7...LJS7F-7L7.
+....F-J..F7FJ|L7L7L7
+....L7.F7||L7|.L7L7|
+.....|FJLJ|FJ|F7|.LJ
+....FJL-7.||.||||...
+....L---J.LJ.LJLJ...
+`
+
+var manyBitsOfJunk = `FF7FSF7F7F7F7F7F---7
+L|LJ||||||||||||F--J
+FL-7LJLJ||||||LJL-77
+F--JF--7||LJLJ7F7FJ-
+L---JF-JLJ.||-FJLJJ7
+|F|F-JF---7F7-L7L|7|
+|FFJF7L7F-JF7|JL---7
+7-L-JL7||F7|L7F-7F7|
+L.L7LFJ|||||FJL7||LJ
+L7JLJL-JLJLJL--JLJ.L
+`
+
+var trimmedSquareLoop = `.S-7.
+.|.|.
+.L-J.
+.....
+`
+
+var loopWithEdgeOnRightSide = `F--7.
+|S-J.
+||...
+LJ...
+.....
+`
 
 func TestPart2(t *testing.T) {
 	is := is.New(t)
@@ -109,7 +169,13 @@ func TestPart2(t *testing.T) {
 		in   []string
 		want int
 	}{
-		"empty":                {[]string{}, 0},
+		"empty":                        {[]string{}, 0},
+		"for example":                  {strings.Split(forExample, "\n"), 4},
+		"for example squeezed":         {strings.Split(forExampleSqueezed, "\n"), 4},
+		"larger example":               {strings.Split(largerExample, "\n"), 8},
+		"many bits of junk":            {strings.Split(manyBitsOfJunk, "\n"), 10},
+		"trimmed square loop":          {strings.Split(trimmedSquareLoop, "\n"), 1},
+		"loop with edge on right side": {strings.Split(loopWithEdgeOnRightSide, "\n"), 0},
 	}
 
 	for desc, testCase := range testCases {
