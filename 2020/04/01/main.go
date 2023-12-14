@@ -2,13 +2,12 @@ package main
 
 import (
 	"fmt"
-	"io/ioutil"
 	"os"
 	"strings"
 )
 
 func main() {
-	rawInput, errRead := ioutil.ReadFile("../input.txt")
+	rawInput, errRead := os.ReadFile("../input.txt")
 	if errRead != nil {
 		fmt.Fprintf(os.Stderr, "could not read file: %v", errRead)
 	}

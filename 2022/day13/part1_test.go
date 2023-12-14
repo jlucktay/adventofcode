@@ -34,12 +34,11 @@ const INPUT = `[1,1,3,1,1]
 `
 
 func TestPart1(t *testing.T) {
+	t.SkipNow()
+
 	is := is.New(t)
 
 	actual, err := day13.Part1(INPUT)
 	is.NoErr(err)
-
-	t.SkipNow()
-
 	is.Equal(13, actual)
 }

@@ -1,3 +1,14 @@
+issues:
+  # Maximum issues count per one linter.
+  # Set to 0 to disable.
+  # Default: 50
+  max-issues-per-linter: 0
+
+  # Maximum count of issues with the same text.
+  # Set to 0 to disable.
+  # Default: 3
+  max-same-issues: 0
+
 linters-settings:
   gci:
     # Section configuration to compare against.
@@ -6,13 +17,23 @@ linters-settings:
     # If `custom-order` is `true`, it follows the order of `sections` option.
     # Default: ["standard", "default"]
     sections:
-      - standard # Standard section: captures all standard packages.
-      - default # Default section: contains all imports that could not be matched to another section type.
-      - prefix(go.jlucktay.dev/adventofcode) # Custom section: groups all imports with the specified Prefix.
-      - prefix(go.jlucktay.dev/adventofcode/2022) # Custom section: groups all imports with the specified Prefix.
-      - prefix(go.jlucktay.dev/adventofcode/2023) # Custom section: groups all imports with the specified Prefix.
-      - blank # Blank section: contains all blank imports. This section is not present unless explicitly enabled.
-      - dot # Dot section: contains all dot imports. This section is not present unless explicitly enabled.
+      # Standard section: captures all standard packages.
+      - standard
+      # Default section: contains all imports that could not be matched to another section type.
+      - default
+      # Custom section: groups all imports with the specified Prefix.
+      - prefix(go.jlucktay.dev/adventofcode)
+      - prefix(go.jlucktay.dev/adventofcode/2017)
+      - prefix(go.jlucktay.dev/adventofcode/2018)
+      - prefix(go.jlucktay.dev/adventofcode/2020)
+      - prefix(go.jlucktay.dev/adventofcode/2022)
+      - prefix(go.jlucktay.dev/adventofcode/2023)
+      - prefix(go.jlucktay.dev/adventofcode/aocautoself)
+      - prefix(go.jlucktay.dev/adventofcode/crunchy)
+      # Blank section: contains all blank imports. This section is not present unless explicitly enabled.
+      - blank
+      # Dot section: contains all dot imports. This section is not present unless explicitly enabled.
+      - dot
 
     # Skip generated files.
     # Default: true

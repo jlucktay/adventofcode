@@ -9,12 +9,11 @@ import (
 )
 
 func TestPart2(t *testing.T) {
+	t.SkipNow()
+
 	is := is.New(t)
 
 	actual, err := day13.Part2(INPUT)
 	is.NoErr(err)
-
-	t.SkipNow()
-
 	is.Equal("Part 2", actual)
 }

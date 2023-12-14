@@ -2,9 +2,7 @@ package main
 
 import (
 	"fmt"
-	"io/ioutil"
 	"os"
-	"regexp"
 	"strings"
 )
 
@@ -36,10 +34,8 @@ const (
 	CountryID = "cid"
 )
 
-var validBirthYear = regexp.MustCompile(``)
-
 func main() {
-	rawInput, errRead := ioutil.ReadFile("../input.txt")
+	rawInput, errRead := os.ReadFile("../input.txt")
 	if errRead != nil {
 		fmt.Fprintf(os.Stderr, "could not read file: %v\n", errRead)
 	}

@@ -1,15 +1,15 @@
 package aoc201801
 
 import (
-	"io/ioutil"
 	"log"
+	"os"
 	"strconv"
 	"strings"
 )
 
 // GetInput returns the content of 'input.txt' as a string
 func GetInput() string {
-	rawInput, err := ioutil.ReadFile("../input.txt")
+	rawInput, err := os.ReadFile("../input.txt")
 	if err != nil {
 		log.Fatal(err)
 	}

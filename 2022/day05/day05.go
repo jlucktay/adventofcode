@@ -37,25 +37,25 @@ func (cd *crateDeque) popFirst() (rune, bool) {
 	return element, true
 }
 
-func (cd *crateDeque) getLast() (rune, bool) {
-	if cd.empty() {
-		return 0, false
-	}
+// func (cd *crateDeque) getLast() (rune, bool) {
+// 	if cd.empty() {
+// 		return 0, false
+// 	}
+//
+// 	return (*cd)[len(*cd)-1], true
+// }
 
-	return (*cd)[len(*cd)-1], true
-}
-
-func (cd *crateDeque) popLast() (rune, bool) {
-	if cd.empty() {
-		return 0, false
-	}
-
-	index := len(*cd) - 1
-	element := (*cd)[index]
-	*cd = (*cd)[:index]
-
-	return element, true
-}
+// func (cd *crateDeque) popLast() (rune, bool) {
+// 	if cd.empty() {
+// 		return 0, false
+// 	}
+//
+// 	index := len(*cd) - 1
+// 	element := (*cd)[index]
+// 	*cd = (*cd)[:index]
+//
+// 	return element, true
+// }
 
 func (cd *crateDeque) empty() bool {
 	return len(*cd) == 0

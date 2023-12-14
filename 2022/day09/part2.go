@@ -136,12 +136,16 @@ func (lr *LongRope) ParseCommands(input string) error {
 
 			for index := range lr.knots {
 				if lr.KnotMustMove(index) {
-					lr.KnotCatchUp(index)
+					if err := lr.KnotCatchUp(index); err != nil {
+						return err
+					}
 				}
 			}
 
 			if lr.KnotMustMove(len(lr.knots)) {
-				lr.KnotCatchUp(len(lr.knots))
+				if err := lr.KnotCatchUp(len(lr.knots)); err != nil {
+					return err
+				}
 			}
 		}
 	}

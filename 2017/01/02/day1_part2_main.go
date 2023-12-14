@@ -4,13 +4,13 @@ package main
 
 import (
 	"fmt"
-	"io/ioutil"
 	"log"
+	"os"
 	"strings"
 )
 
 func main() {
-	input, err := ioutil.ReadFile("../input.txt")
+	input, err := os.ReadFile("../input.txt")
 	if err != nil {
 		log.Fatal(err)
 	}
