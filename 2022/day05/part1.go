@@ -2,6 +2,7 @@ package day05
 
 import (
 	"bufio"
+	"container/list"
 	"errors"
 	"fmt"
 	"regexp"
@@ -15,7 +16,8 @@ func TopCrate9000(input string) (string, error) {
 	scanner := bufio.NewScanner(strings.NewReader(input))
 	afterSeperator := false
 
-	crateDeques := make([]crateDeque, 0)
+	crateStacks := make([]*list.List, 0)
+	var err error
 
 	for scanner.Scan() {
 		line := scanner.Text()
@@ -26,17 +28,17 @@ func TopCrate9000(input string) (string, error) {
 		}
 
 		if !afterSeperator {
-			if err := parseLineOfCrates(&crateDeques, line); err != nil {
+			if crateStacks, err = parseLineOfCrates(crateStacks, line); err != nil {
 				return "", fmt.Errorf("parsing crates '%s': %w", line, err)
 			}
 		} else {
 			// Below the seperator, parse 'move X from Y to Z'
-			qty, from, to, err := parseMoveOrders(&crateDeques, line)
+			qty, from, to, err := parseMoveOrders(line)
 			if err != nil {
 				return "", fmt.Errorf("parsing move orders '%s': %w", line, err)
 			}
 
-			if err := crateMover9000(&crateDeques, qty, from, to); err != nil {
+			if crateStacks, err = crateMover9000(crateStacks, qty, from, to); err != nil {
 				return "", fmt.Errorf("moving crates with 9000: %w", err)
 			}
 		}
@@ -47,19 +49,25 @@ func TopCrate9000(input string) (string, error) {
 	}
 
 	finalOrder := ""
-	for i := 0; i < len(crateDeques); i++ {
-		firstCrate, ok := crateDeques[i].getFirst()
-		if !ok {
+
+	for i := 0; i < len(crateStacks); i++ {
+		firstCrate := crateStacks[i].Front()
+		if firstCrate == nil {
 			return "", fmt.Errorf("getting first from stack #%d", i)
 		}
 
-		finalOrder += string(firstCrate)
+		fcv, ok := firstCrate.Value.(rune)
+		if !ok {
+			return "", fmt.Errorf("type asserting on first from stack #%d", i)
+		}
+
+		finalOrder += string(fcv)
 	}
 
 	return finalOrder, nil
 }
 
-func parseLineOfCrates(incoming *[]crateDeque, line string) error {
+func parseLineOfCrates(incoming []*list.List, line string) ([]*list.List, error) {
 	lineSegment := line[0:3]
 	crateStackIndex := 0
 	lineOffset := 0
@@ -70,15 +78,15 @@ func parseLineOfCrates(incoming *[]crateDeque, line string) error {
 		if len(trimmed) > 0 {
 			r, _ := utf8.DecodeRuneInString(trimmed)
 			if r == utf8.RuneError {
-				return fmt.Errorf("decoding rune from '%v'", trimmed)
+				return nil, fmt.Errorf("decoding rune from '%v'", trimmed)
 			}
 
-			for len(*incoming) < crateStackIndex+1 {
-				*incoming = append(*incoming, make(crateDeque, 0))
+			for len(incoming) < crateStackIndex+1 {
+				incoming = append(incoming, list.New())
 			}
 
 			if unicode.IsLetter(r) {
-				(*incoming)[crateStackIndex].append(r)
+				incoming[crateStackIndex].PushBack(r)
 			} else if unicode.IsNumber(r) {
 				break
 			}
@@ -95,10 +103,10 @@ func parseLineOfCrates(incoming *[]crateDeque, line string) error {
 		lineOffset++
 	}
 
-	return nil
+	return incoming, nil
 }
 
-func parseMoveOrders(crates *[]crateDeque, orders string) (int, int, int, error) {
+func parseMoveOrders(orders string) (int, int, int, error) {
 	pattern := `^move ([0-9]+) from ([0-9]+) to ([0-9]+)$`
 	regex, err := regexp.Compile(pattern)
 	if err != nil {
@@ -114,33 +122,34 @@ func parseMoveOrders(crates *[]crateDeque, orders string) (int, int, int, error)
 		return 0, 0, 0, errors.New("regex SNAFU")
 	}
 
-	moveQuantity, err := strconv.ParseInt(found[1], 10, 32)
+	moveQuantity, err := strconv.Atoi(found[1])
 	if err != nil {
 		return 0, 0, 0, fmt.Errorf("parsing int from '%s': %w", found[1], err)
 	}
 
-	fromStack, err := strconv.ParseInt(found[2], 10, 32)
+	fromStack, err := strconv.Atoi(found[2])
 	if err != nil {
 		return 0, 0, 0, fmt.Errorf("parsing int from '%s': %w", found[2], err)
 	}
 
-	toStack, err := strconv.ParseInt(found[3], 10, 32)
+	toStack, err := strconv.Atoi(found[3])
 	if err != nil {
 		return 0, 0, 0, fmt.Errorf("parsing int from '%s': %w", found[3], err)
 	}
 
-	return int(moveQuantity), int(fromStack), int(toStack), nil
+	return moveQuantity, fromStack, toStack, nil
 }
 
-func crateMover9000(stacks *[]crateDeque, qty, from, to int) error {
+func crateMover9000(stacks []*list.List, qty, from, to int) ([]*list.List, error) {
 	for i := 0; i < qty; i++ {
-		crate, ok := (*stacks)[from-1].popFirst()
-		if !ok {
-			return fmt.Errorf("getting first from stack #%d", from)
+		crate := stacks[from-1].Front()
+		if crate == nil {
+			return nil, fmt.Errorf("getting first from stack #%d", from)
 		}
 
-		(*stacks)[to-1].prepend(crate)
+		stacks[from-1].Remove(crate)
+		stacks[to-1].PushFront(crate.Value)
 	}
 
-	return nil
+	return stacks, nil
 }
