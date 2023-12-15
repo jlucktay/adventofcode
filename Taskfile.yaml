@@ -1,0 +1,225 @@
+# https://taskfile.dev
+
+version: 3
+
+output: prefixed
+
+run: when_changed
+
+# Bash allows you to change the values of shell options:
+# https://www.gnu.org/software/bash/manual/html_node/The-Set-Builtin.html
+set:
+  # Exit immediately if a command returns a non-zero status.
+  - errexit
+  # Treat unset variables as an error when substituting.
+  - nounset
+  # The return value of a pipeline is the value of the last (rightmost) command to exit with a non-zero status, or zero
+  # if all commands in the pipeline exit successfully.
+  - pipefail
+
+# Bash also allows you to change additional shell optional behavior:
+# https://www.gnu.org/software/bash/manual/html_node/The-Shopt-Builtin.html
+shopt:
+  # If set, the pattern ** used in a name expansion context will match all files and zero or more directories and
+  # subdirectories. If the pattern is followed by a '/', only directories and subdirectories match.
+  - globstar
+
+vars:
+  # Search underneath the repo's root directory for any sub-directories containing a 'go.mod' file.
+  GO_MODULES:
+    sh: find {{.ROOT_DIR}} -name 'go.mod' -type f -execdir pwd \;
+
+env:
+  GOBIN: '{{.ROOT_DIR}}/hack/gobin'
+
+tasks:
+  ###
+  ### Lint each Go module and track checksums separately
+  ###
+  go:lint:
+    deps:
+      - go:lint:gofumpt
+      - go:lint:golangci
+      - go:lint:vet
+    desc: Lint each Go module separately.
+
+  go:lint:gofumpt:
+    cmds:
+      - for: { var: GO_MODULES }
+        task: go:cmd
+        vars:
+          COMMAND: '"$GOBIN/gofumpt" -l -extra .'
+          MODULE: '{{.ITEM}}'
+          PREFIX: lint-gofumpt
+    deps:
+      - go:tool:gofumpt
+    desc: Enforce a stricter format than gofmt, while being backwards compatible.
+    # TODO(jlucktay): watch https://github.com/mvdan/gofumpt/issues/114 for exit status changes, to enforce this.
+    dir: '{{.ROOT_DIR}}'
+    requires:
+      vars:
+        - GO_MODULES
+
+  go:lint:golangci:
+    cmds:
+      - for: { var: GO_MODULES }
+        task: go:cmd
+        vars:
+          COMMAND: '"$GOBIN/golangci-lint" run --color=always'
+          MODULE: '{{.ITEM}}'
+          PREFIX: lint-golangci
+    deps:
+      - go:tool:golangci-lint
+    desc: golangci-lint is a Go linters aggregator.
+    dir: '{{.ROOT_DIR}}'
+    requires:
+      vars:
+        - GO_MODULES
+
+  go:lint:vet:
+    cmds:
+      - for: { var: GO_MODULES }
+        task: go:cmd
+        vars:
+          COMMAND: go vet ./...
+          MODULE: '{{.ITEM}}'
+    desc: Vet examines Go source code and reports suspicious constructs.
+    dir: '{{.ROOT_DIR}}'
+    preconditions:
+      - sh: command -v go
+        msg: Go toolchain not found -> https://go.dev/doc/install
+    requires:
+      vars:
+        - GO_MODULES
+
+  ###
+  ### Test each Go module and track checksums separately
+  ###
+  go:test:
+    cmds:
+      - for: { var: GO_MODULES }
+        task: go:cmd
+        vars:
+          COMMAND: go test --count=100 --failfast --race --vet="" ./...
+          MODULE: '{{.ITEM}}'
+    deps:
+      - go:lint
+    desc: Run tests for each Go module separately.
+    dir: '{{.ROOT_DIR}}'
+    preconditions:
+      - sh: command -v go
+        msg: Go toolchain not found -> https://go.dev/doc/install
+    requires:
+      vars:
+        - GO_MODULES
+
+  go:test:cover:
+    cmds:
+      - for: { var: GO_MODULES }
+        task: go:cmd
+        vars:
+          COMMAND: go test --count=1 --coverprofile="cover.{{base .ITEM}}.out" --failfast --race --vet="" ./...
+          MODULE: '{{.ITEM}}'
+          PREFIX: test-cover
+    deps:
+      - go:lint
+    desc: Run tests and save a coverage profile for each Go module separately.
+    dir: '{{.ROOT_DIR}}'
+    preconditions:
+      - sh: command -v go
+        msg: Go toolchain not found -> https://go.dev/doc/install
+    requires:
+      vars:
+        - GO_MODULES
+
+  ###
+  ### Generic Go command/module runner
+  ###
+  go:cmd:
+    cmd: '{{.COMMAND}}'
+    desc: Run '{{.COMMAND}}' on a single Go module.
+    dir: '{{.MODULE}}'
+    internal: true
+    label: >-
+      {{base .MODULE}}:
+      {{if .PREFIX -}}
+      {{.PREFIX}}
+      {{- else -}}
+      {{trimPrefix "$GOBIN/" (index (splitList " " (replace "\"" " " .COMMAND)) 1)}}
+      {{- end}}
+    prefix: >-
+      {{base .MODULE}}:
+      {{if .PREFIX -}}
+      {{.PREFIX}}
+      {{- else -}}
+      {{trimPrefix "$GOBIN/" (index (splitList " " (replace "\"" " " .COMMAND)) 1)}}
+      {{- end}}
+    requires:
+      vars:
+        - COMMAND
+        - MODULE
+    sources:
+      - '**/go.{mod,sum}'
+      - '**/*.go'
+
+  ###
+  ### Install Go tools under $GOBIN
+  ###
+  go:tool:gofumpt:
+    cmd: go install mvdan.cc/gofumpt@latest
+    desc: Compile and install 'gofumpt' under '$GOBIN'.
+    preconditions:
+      - sh: command -v go
+        msg: Go toolchain not found -> https://go.dev/doc/install
+    status:
+      - test -x "$GOBIN/gofumpt"
+
+  go:tool:golangci-lint:
+    cmd: |
+      curl --fail --location --show-error --silent \
+        https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh \
+        | sh -s -- -b "$GOBIN"
+    desc: Install 'golangci-lint' per 'https://golangci-lint.run/usage/install/' docs under '$GOBIN'.
+    status:
+      - test -x "$GOBIN/golangci-lint"
+
+  ###
+  ### Clean up build output and temporary tools
+  ###
+  go:clean:
+    deps:
+      - go:clean:cover
+      - go:clean:go
+      - go:clean:hack
+    desc: Clean up any Go test coverage, build output, and tool binaries under the 'hack' sub-directory.
+
+  go:clean:cover:
+    cmd: 'rm -fv {,**/}cover.*.out'
+    desc: Delete Go test coverage files.
+    dir: '{{.ROOT_DIR}}'
+    status:
+      # If zero coverage files are found, this status will exit with a zero, so the command won't run.
+      - 'exit "$(find . -name "cover.*.out" -type f | wc -l | xargs )"'
+
+  go:clean:go:
+    cmds:
+      - for: { var: GO_MODULES }
+        task: go:cmd
+        vars:
+          COMMAND: go clean
+          MODULE: '{{.ITEM}}'
+    desc: Clean removes object files from package source directories.
+    dir: '{{.ROOT_DIR}}'
+    preconditions:
+      - sh: command -v go
+        msg: Go toolchain not found -> https://go.dev/doc/install
+    requires:
+      vars:
+        - GO_MODULES
+
+  go:clean:hack:
+    cmd: rm -rf "$GOBIN"
+    desc: Delete all temporary Go tool binaries.
+    dir: '{{.ROOT_DIR}}'
+    status:
+      - '! test -d $GOBIN'
