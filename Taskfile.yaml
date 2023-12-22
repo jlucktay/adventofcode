@@ -118,7 +118,9 @@ tasks:
       - for: { var: GO_MODULES }
         task: go:cmd
         vars:
-          COMMAND: go test --count=1 --coverprofile="cover.{{base .ITEM}}.out" --failfast --race --vet="" ./...
+          COMMAND: >-
+            go test --count=1 --covermode=atomic --coverprofile="cover.{{base .ITEM}}.out"
+            --failfast --race --vet="" ./...
           MODULE: '{{.ITEM}}'
           PREFIX: test-cover
     deps:
