@@ -17,9 +17,6 @@ jobs:
 
     runs-on: ubuntu-latest
 
-    outputs:
-      coverage-files: ${{ steps.test-coverage-files.outputs.list }}
-
     steps:
       - uses: actions/checkout@v4
 
@@ -31,10 +28,11 @@ jobs:
 
       - run: task go:test:cover
 
-      - id: test-coverage-files
-        run: |
-          cover_files=$(find . -type f -iname "cover.*.out" -print0 | xargs -0)
-          echo "list='$cover_files'" >> "$GITHUB_OUTPUT"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: test-coverage-files
+          path: '**/cover.*.out'
+          if-no-files-found: error
 
   upload-code-coverage:
     name: Upload coverage to codecov
@@ -44,9 +42,21 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: test-coverage-files
+
+      - name: Display structure of downloaded files
+        run: ls -R
+
+      - id: list-coverage-files
+        run: |
+          coverage_files=$(find . -type f -iname "cover.*.out" | paste -s -d , -)
+          echo "list='$coverage_files'" >> "$GITHUB_OUTPUT"
+
       - uses: codecov/codecov-action@v3
         with:
           fail_ci_if_error: true
-          files: ${{ needs.test-cover.outputs.coverage-files }}
+          files: ${{ steps.list-coverage-files.outputs.list }}
           token: ${{ secrets.CODECOV_TOKEN }}
           verbose: true
