@@ -24,7 +24,7 @@ jobs:
         with:
           go-version-file: go.work
 
-      - uses: arduino/setup-task@v1
+      - uses: arduino/setup-task@v2
 
       - run: task go:test:cover
 
