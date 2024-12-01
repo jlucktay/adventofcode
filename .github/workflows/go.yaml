@@ -33,7 +33,7 @@ jobs:
           coverage_files=$(find . -type f -iname "cover.*.out" | paste -s -d , -)
           echo "list=$coverage_files" >> "$GITHUB_OUTPUT"
 
-      - uses: codecov/codecov-action@v4
+      - uses: codecov/codecov-action@v5
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           files: ${{ steps.coverage-files.outputs.list }}
