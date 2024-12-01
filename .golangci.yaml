@@ -28,6 +28,7 @@ linters-settings:
       - prefix(go.jlucktay.dev/adventofcode/2020)
       - prefix(go.jlucktay.dev/adventofcode/2022)
       - prefix(go.jlucktay.dev/adventofcode/2023)
+      - prefix(go.jlucktay.dev/adventofcode/2024)
       - prefix(go.jlucktay.dev/adventofcode/aocautoself)
       - prefix(go.jlucktay.dev/adventofcode/crunchy)
       # Blank section: contains all blank imports. This section is not present unless explicitly enabled.
