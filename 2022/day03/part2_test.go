@@ -79,7 +79,7 @@ six
 
 			_, _, err := day03.SplitThreeLines(testInput.str, testInput.eof)
 
-			is.True(errors.Is(bufio.ErrFinalToken, err) || err == nil)
+			is.True(errors.Is(err, bufio.ErrFinalToken) || err == nil)
 		})
 	}
 }
