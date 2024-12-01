@@ -11,6 +11,6 @@ import (
 func TestAbsolute(t *testing.T) {
 	is := is.New(t)
 
-	is.Equal(crunchy.AbsoluteDiff(42, 27), 15)
-	is.Equal(crunchy.AbsoluteDiff(27, 42), 15)
+	is.Equal(crunchy.AbsDiff(42, 27), 15)
+	is.Equal(crunchy.AbsDiff(27, 42), 15)
 }
