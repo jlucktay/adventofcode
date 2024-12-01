@@ -45,7 +45,8 @@ tasks:
 
   go:lint:gofumpt:
     cmds:
-      - for: { var: GO_MODULES }
+      - for:
+          var: GO_MODULES
         task: go:cmd
         vars:
           COMMAND: '"$GOBIN/gofumpt" -l -extra .'
@@ -62,7 +63,8 @@ tasks:
 
   go:lint:golangci:
     cmds:
-      - for: { var: GO_MODULES }
+      - for:
+          var: GO_MODULES
         task: go:cmd
         vars:
           COMMAND: '"$GOBIN/golangci-lint" run --color=always'
@@ -78,7 +80,8 @@ tasks:
 
   go:lint:vet:
     cmds:
-      - for: { var: GO_MODULES }
+      - for:
+          var: GO_MODULES
         task: go:cmd
         vars:
           COMMAND: go vet ./...
@@ -97,7 +100,8 @@ tasks:
   ###
   go:test:
     cmds:
-      - for: { var: GO_MODULES }
+      - for:
+          var: GO_MODULES
         task: go:cmd
         vars:
           COMMAND: go test --count=100 --failfast --race --vet="" ./...
@@ -115,7 +119,8 @@ tasks:
 
   go:test:cover:
     cmds:
-      - for: { var: GO_MODULES }
+      - for:
+          var: GO_MODULES
         task: go:cmd
         vars:
           COMMAND: >-
@@ -205,7 +210,8 @@ tasks:
 
   go:clean:go:
     cmds:
-      - for: { var: GO_MODULES }
+      - for:
+          var: GO_MODULES
         task: go:cmd
         vars:
           COMMAND: go clean
