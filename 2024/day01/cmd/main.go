@@ -33,4 +33,12 @@ func main() {
 	}
 
 	slog.Info("part 1", slog.Int("result", part1))
+
+	part2, err := day01.ListSimilarity(string(input))
+	if err != nil {
+		slog.Error("part 2", slog.Any("err", err))
+		os.Exit(1)
+	}
+
+	slog.Info("part 2", slog.Int("result", part2))
 }
