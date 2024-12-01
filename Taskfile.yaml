@@ -29,9 +29,6 @@ vars:
   GO_MODULES:
     sh: find {{.ROOT_DIR}} -name 'go.mod' -type f -execdir pwd \;
 
-env:
-  GOBIN: '{{.ROOT_DIR}}/hack/gobin'
-
 tasks:
   ###
   ### Lint each Go module and track checksums separately
@@ -44,16 +41,17 @@ tasks:
     desc: Lint each Go module separately.
 
   go:lint:gofumpt:
+    preconditions:
+      - sh: command -v gofumpt
+        msg: 'Required CLI command `gofumpt` missing. Please install it: https://github.com/mvdan/gofumpt'
     cmds:
       - for:
           var: GO_MODULES
         task: go:cmd
         vars:
-          COMMAND: '"$GOBIN/gofumpt" -l -extra .'
+          COMMAND: gofumpt -l -extra .
           MODULE: '{{.ITEM}}'
           PREFIX: lint-gofumpt
-    deps:
-      - go:tool:gofumpt
     desc: Enforce a stricter format than gofmt, while being backwards compatible.
     # TODO(jlucktay): watch https://github.com/mvdan/gofumpt/issues/114 for exit status changes, to enforce this.
     dir: '{{.ROOT_DIR}}'
@@ -62,16 +60,17 @@ tasks:
         - GO_MODULES
 
   go:lint:golangci:
+    preconditions:
+      - sh: command -v golangci-lint
+        msg: 'Required CLI command `golangci-lint` missing. Please install it: https://golangci-lint.run'
     cmds:
       - for:
           var: GO_MODULES
         task: go:cmd
         vars:
-          COMMAND: '"$GOBIN/golangci-lint" run --color=always'
+          COMMAND: golangci-lint run ./... --color=always
           MODULE: '{{.ITEM}}'
           PREFIX: lint-golangci
-    deps:
-      - go:tool:golangci-lint
     desc: golangci-lint is a Go linters aggregator.
     dir: '{{.ROOT_DIR}}'
     requires:
@@ -152,14 +151,14 @@ tasks:
       {{if .PREFIX -}}
       {{.PREFIX}}
       {{- else -}}
-      {{trimPrefix "$GOBIN/" (index (splitList " " (replace "\"" " " .COMMAND)) 1)}}
+      {{index (splitList " " (replace "\"" " " .COMMAND)) 1}}
       {{- end}}
     prefix: >-
       {{base .MODULE}}:
       {{if .PREFIX -}}
       {{.PREFIX}}
       {{- else -}}
-      {{trimPrefix "$GOBIN/" (index (splitList " " (replace "\"" " " .COMMAND)) 1)}}
+      {{index (splitList " " (replace "\"" " " .COMMAND)) 1}}
       {{- end}}
     requires:
       vars:
@@ -170,34 +169,12 @@ tasks:
       - '**/*.go'
 
   ###
-  ### Install Go tools under $GOBIN
-  ###
-  go:tool:gofumpt:
-    cmd: go install mvdan.cc/gofumpt@latest
-    desc: Compile and install 'gofumpt' under '$GOBIN'.
-    preconditions:
-      - sh: command -v go
-        msg: Go toolchain not found -> https://go.dev/doc/install
-    status:
-      - test -x "$GOBIN/gofumpt"
-
-  go:tool:golangci-lint:
-    cmd: |
-      curl --fail --location --show-error --silent \
-        https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh \
-        | sh -s -- -b "$GOBIN"
-    desc: Install 'golangci-lint' per 'https://golangci-lint.run/usage/install/' docs under '$GOBIN'.
-    status:
-      - test -x "$GOBIN/golangci-lint"
-
-  ###
   ### Clean up build output and temporary tools
   ###
   go:clean:
     deps:
       - go:clean:cover
       - go:clean:go
-      - go:clean:hack
     desc: Clean up any Go test coverage, build output, and tool binaries under the 'hack' sub-directory.
 
   go:clean:cover:
@@ -224,10 +201,3 @@ tasks:
     requires:
       vars:
         - GO_MODULES
-
-  go:clean:hack:
-    cmd: rm -rf "$GOBIN"
-    desc: Delete all temporary Go tool binaries.
-    dir: '{{.ROOT_DIR}}'
-    status:
-      - '! test -d $GOBIN'
