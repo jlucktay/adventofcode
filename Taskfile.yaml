@@ -175,7 +175,7 @@ tasks:
     deps:
       - go:clean:cover
       - go:clean:go
-    desc: Clean up any Go test coverage, build output, and tool binaries under the 'hack' sub-directory.
+    desc: Clean up any Go test coverage, and build output.
 
   go:clean:cover:
     cmd: 'rm -fv {,**/}cover.*.out'
@@ -201,3 +201,10 @@ tasks:
     requires:
       vars:
         - GO_MODULES
+
+  ###
+  ### Templates for a new day
+  ###
+  go:template:
+    desc: Make a copy of some code templates for today's Advent.
+    cmd: go run ./template/helper/main.go
