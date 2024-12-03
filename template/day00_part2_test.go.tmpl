@@ -2,17 +2,17 @@
 For example...
 */
 
-package day00_test
+package day{{printf "%02d" .Day}}_test
 
 import (
 	"testing"
 
 	"github.com/matryer/is"
 
-	day00 "go.jlucktay.dev/adventofcode/template"
+	"go.jlucktay.dev/adventofcode/{{.Year}}/day{{printf "%02d" .Day}}"
 )
 
-func TestPart1(t *testing.T) {
+func TestPart2(t *testing.T) {
 	is := is.New(t)
 
 	testCases := map[string]struct {
@@ -26,7 +26,7 @@ func TestPart1(t *testing.T) {
 		t.Run(desc, func(t *testing.T) {
 			is := is.New(t)
 
-			got, err := day00.Part1(testCase.in)
+			got, err := day{{printf "%02d" .Day}}.Part2(testCase.in)
 			is.NoErr(err)
 			is.Equal(got, testCase.want)
 		})

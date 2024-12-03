@@ -1,6 +1,6 @@
-// Package day00 for Advent of Code <year>, day <day>, part 1.
-// https://adventofcode.com/<year>/day/<day>
-package day00
+// Package day{{printf "%02d" .Day}} for Advent of Code {{.Year}}, day {{.Day}}, part 1.
+// https://adventofcode.com/{{.Year}}/day/{{.Day}}
+package day{{printf "%02d" .Day}}
 
 func Part1(input string) (int, error) {
 	_, err := parseInput(input)

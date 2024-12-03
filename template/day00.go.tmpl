@@ -1,6 +1,6 @@
-// Package day00 for Advent of Code <year>, day <day>.
-// https://adventofcode.com/<year>/day/<day>
-package day00
+// Package day{{printf "%02d" .Day}} for Advent of Code {{.Year}}, day {{.Day}}.
+// https://adventofcode.com/{{.Year}}/day/{{.Day}}
+package day{{printf "%02d" .Day}}
 
 import (
 	"bufio"
@@ -22,6 +22,8 @@ func parseInput(input string) (struct{}, error) {
 		// ...
 		// go through input line by line and roll up into result
 		// ...
+
+    _ = xLine
 	}
 
 	// ...

@@ -7,7 +7,7 @@ import (
 
 	"github.com/lmittmann/tint"
 
-	day00 "go.jlucktay.dev/adventofcode/template"
+	"go.jlucktay.dev/adventofcode/{{.Year}}/day{{printf "%02d" .Day}}"
 )
 
 func main() {
@@ -24,7 +24,7 @@ func main() {
 		os.Exit(1)
 	}
 
-	part1, err := day00.Part1(string(input))
+	part1, err := day{{printf "%02d" .Day}}.Part1(string(input))
 	if err != nil {
 		slog.Error("part 1", slog.Any("err", err))
 		os.Exit(1)
@@ -32,7 +32,7 @@ func main() {
 
 	slog.Info("part 1", slog.Int("result", part1))
 
-	part2, err := day00.Part2(string(input))
+	part2, err := day{{printf "%02d" .Day}}.Part2(string(input))
 	if err != nil {
 		slog.Error("part 2", slog.Any("err", err))
 		os.Exit(1)
