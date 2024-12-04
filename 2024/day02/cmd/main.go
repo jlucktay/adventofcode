@@ -18,9 +18,7 @@ func main() {
 				&tint.Options{TimeFormat: time.RFC3339},
 			)))
 
-	const inputTxt = "input.txt"
-
-	input, err := os.ReadFile(inputTxt)
+	input, err := os.ReadFile("input.txt")
 	if err != nil {
 		slog.Error("reading file", slog.Any("err", err))
 		os.Exit(1)
@@ -33,4 +31,16 @@ func main() {
 	}
 
 	slog.Info("part 1", slog.Int("result", part1))
+
+	if part1 == 0 {
+		return
+	}
+
+	part2, err := day02.Part2(string(input))
+	if err != nil {
+		slog.Error("part 2", slog.Any("err", err))
+		os.Exit(1)
+	}
+
+	slog.Info("part 2", slog.Int("result", part2))
 }
