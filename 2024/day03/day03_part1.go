@@ -3,7 +3,7 @@
 package day03
 
 func Part1(input string) (int, error) {
-	parsed, err := parseInput(input)
+	parsed, err := parseInput(input, false)
 	if err != nil {
 		return 0, err
 	}
