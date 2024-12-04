@@ -32,6 +32,10 @@ func main() {
 
 	slog.Info("part 1", slog.Int("result", part1))
 
+	if part1 == 0 {
+		return
+	}
+
 	part2, err := day03.Part2(string(input))
 	if err != nil {
 		slog.Error("part 2", slog.Any("err", err))
