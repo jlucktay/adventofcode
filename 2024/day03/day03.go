@@ -5,30 +5,41 @@ package day03
 import (
 	"bufio"
 	"bytes"
-	"slices"
-	"strings"
+	"regexp"
+	"strconv"
 )
 
-func parseInput(input string) (struct{}, error) {
+type Multiplication struct {
+	left, right int
+}
+
+type Multiplications []Multiplication
+
+func parseInput(input string) (Multiplications, error) {
 	buffer := bytes.NewBufferString(input)
 	scanner := bufio.NewScanner(buffer)
 
-	result := struct{}{}
+	re := regexp.MustCompile(`mul\(([0-9]{1,3}),([0-9]{1,3})\)`)
+
+	result := make(Multiplications, 0)
 
 	for scanner.Scan() {
-		xLine := strings.Split(scanner.Text(), " ")
-		xLine = slices.DeleteFunc(xLine, func(s string) bool { return s == "" })
+		scanned := re.FindAllStringSubmatch(scanner.Text(), -1)
 
-		// ...
-		// go through input line by line and roll up into result
-		// ...
+		for _, reMatch := range scanned {
+			l, err := strconv.Atoi(reMatch[1])
+			if err != nil {
+				return nil, err
+			}
 
-		_ = xLine
+			r, err := strconv.Atoi(reMatch[2])
+			if err != nil {
+				return nil, err
+			}
+
+			result = append(result, Multiplication{left: l, right: r})
+		}
 	}
-
-	// ...
-	// validate parsed result
-	// ...
 
 	return result, nil
 }

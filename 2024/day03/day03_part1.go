@@ -3,15 +3,15 @@
 package day03
 
 func Part1(input string) (int, error) {
-	_, err := parseInput(input)
+	parsed, err := parseInput(input)
 	if err != nil {
 		return 0, err
 	}
 
 	result := 0
 
-	for range 27 {
-		result += 42
+	for _, multi := range parsed {
+		result += multi.left * multi.right
 	}
 
 	return result, nil
