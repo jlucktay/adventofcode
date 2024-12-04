@@ -26,6 +26,8 @@ jobs:
 
       - uses: arduino/setup-task@v2
 
+      - uses: luisnquin/setup-gofumpt@v2
+
       - run: task go:test:cover
 
       - id: coverage-files
