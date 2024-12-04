@@ -61,13 +61,41 @@ func main() {
 		Year: now.Year(),
 	}
 
+	envDay := os.Getenv("AOC_DAY")
+	if envDay != "" {
+		convDay, err := strconv.Atoi(envDay)
+		if err != nil {
+			slog.Error("converting AOC_DAY environment variable",
+				slog.Any("err", err),
+				slog.String("raw", envDay))
+
+			os.Exit(1)
+		}
+
+		td.Day = convDay
+	}
+
+	envYear := os.Getenv("AOC_YEAR")
+	if envYear != "" {
+		convYear, err := strconv.Atoi(envYear)
+		if err != nil {
+			slog.Error("converting AOC_YEAR environment variable",
+				slog.Any("err", err),
+				slog.String("raw", envYear))
+
+			os.Exit(1)
+		}
+
+		td.Year = convYear
+	}
+
 	for _, t := range tmpl.Templates() {
-		dayLZ := fmt.Sprintf("%02d", now.Day())
+		dayLZ := fmt.Sprintf("%02d", td.Day)
 
 		targetFilename := strings.TrimSuffix(t.Name(), ".tmpl")
 		targetFilename = strings.ReplaceAll(targetFilename, "00", dayLZ)
 
-		targetDirectory := filepath.Join(gitTop, strconv.Itoa(now.Year()), "day"+dayLZ)
+		targetDirectory := filepath.Join(gitTop, strconv.Itoa(td.Year), "day"+dayLZ)
 
 		if strings.HasSuffix(targetFilename, "main.go") {
 			targetDirectory = filepath.Join(targetDirectory, "cmd")
