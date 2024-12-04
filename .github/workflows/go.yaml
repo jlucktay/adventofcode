@@ -28,6 +28,8 @@ jobs:
 
       - uses: luisnquin/setup-gofumpt@v2
 
+      - uses: golangci/golangci-lint-action@v6
+
       - run: task go:test:cover
 
       - id: coverage-files
