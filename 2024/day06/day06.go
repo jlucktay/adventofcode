@@ -17,7 +17,7 @@ func parseInput(input string) (Map, error) {
 		guardX:    -1,
 		guardY:    -1,
 		floorPlan: make([][]MapPoint, 0),
-		visited:   make(map[[2]int]struct{}),
+		visited:   make(map[[2]int]map[MapPoint]struct{}),
 	}
 
 	mapRow := 0

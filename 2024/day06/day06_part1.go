@@ -39,6 +39,8 @@ var (
 
 	OutOfBounds = MapPoint{unicode.MaxRune}
 
+	Visited = MapPoint{'X'}
+
 	MapPoints      = enum.New(Empty, Obstruction, GuardNorth, GuardEast, GuardSouth, GuardWest, OutOfBounds)
 	GuardMapPoints = enum.New(GuardNorth, GuardEast, GuardSouth, GuardWest)
 )
@@ -63,7 +65,7 @@ type Map struct {
 
 	floorPlan [][]MapPoint
 
-	visited map[[2]int]struct{}
+	visited map[[2]int]map[MapPoint]struct{}
 }
 
 func (m Map) String() string {
@@ -92,7 +94,11 @@ func (m *Map) FollowProtocol() error {
 	case OutOfBounds:
 		slog.Debug("case OutOfBounds")
 
-		m.visited[[2]int{m.guardX, m.guardY}] = struct{}{}
+		if m.visited[[2]int{m.guardX, m.guardY}] == nil {
+			m.visited[[2]int{m.guardX, m.guardY}] = make(map[MapPoint]struct{})
+		}
+
+		m.visited[[2]int{m.guardX, m.guardY}][Visited] = struct{}{}
 
 		return ErrOutOfBounds
 
@@ -108,7 +114,12 @@ func (m *Map) FollowProtocol() error {
 		currentGuardFacing := m.floorPlan[m.guardY][m.guardX]
 		nextX, nextY := m.getInFront()
 		m.floorPlan[m.guardY][m.guardX] = Empty
-		m.visited[[2]int{m.guardX, m.guardY}] = struct{}{}
+
+		if m.visited[[2]int{m.guardX, m.guardY}] == nil {
+			m.visited[[2]int{m.guardX, m.guardY}] = make(map[MapPoint]struct{})
+		}
+
+		m.visited[[2]int{m.guardX, m.guardY}][Visited] = struct{}{}
 
 		// Next guard position becomes the guard rune facing the same direction.
 		m.floorPlan[nextY][nextX] = currentGuardFacing
