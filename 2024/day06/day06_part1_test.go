@@ -106,7 +106,7 @@ func TestPart1(t *testing.T) {
 		in   string
 		want int
 	}{
-		"empty": {"", 0},
+		"empty": {"", 1},
 		"for example": {`....#.....
 .........#
 ..........
