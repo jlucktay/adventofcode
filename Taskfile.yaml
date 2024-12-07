@@ -137,6 +137,32 @@ tasks:
       vars:
         - GO_MODULES
 
+  go:test:today:
+    desc: Run tests for today's Advent only.
+    vars:
+      TODAY: '{{now | date "2006"}}/day{{now | date "02"}}'
+      TODAY_DIR: '{{.ROOT_DIR}}/{{.TODAY}}'
+    label: '{{.TODAY}}: test'
+    deps:
+      - task: go:lint:gofumpt
+        vars:
+          GO_MODULES: '{{.TODAY_DIR}}'
+      - task: go:lint:golangci
+        vars:
+          GO_MODULES: '{{.TODAY_DIR}}'
+      - task: go:lint:vet
+        vars:
+          GO_MODULES: '{{.TODAY_DIR}}'
+    preconditions:
+      - sh: command -v go
+        msg: Go toolchain not found -> https://go.dev/doc/install
+    dir: '{{.TODAY_DIR}}'
+    method: checksum
+    sources:
+      - '**/go.{mod,sum}'
+      - '**/*.go'
+    cmd: go test --count=10 --failfast --race --timeout=10s --vet="" ./...
+
   ###
   ### Generic Go command/module runner
   ###
