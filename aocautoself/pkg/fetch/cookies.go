@@ -24,7 +24,7 @@ func FirefoxCookie() (*http.Cookie, error) {
 			continue
 		}
 
-		cookies, err := cookieStore.ReadCookies(kooky.Valid, kooky.Domain(cookieDomain), kooky.Name(cookieName))
+		cookies, err := cookieStore.ReadCookies(kooky.Valid, kooky.DomainHasSuffix(cookieDomain), kooky.Name(cookieName))
 		if err != nil {
 			return nil, fmt.Errorf("reading cookies: %w", err)
 		} else if len(cookies) != 1 {
