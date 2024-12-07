@@ -174,14 +174,14 @@ tasks:
         - COMMAND
         - MODULE
     label: >-
-      {{base .MODULE}}:
+      {{osBase (osDir .MODULE)}}/{{osBase .MODULE}}:
       {{if .PREFIX -}}
       {{.PREFIX}}
       {{- else -}}
       {{index (splitList " " (replace "\"" " " .COMMAND)) 1}}
       {{- end}}
     prefix: >-
-      {{base .MODULE}}:
+      {{osBase (osDir .MODULE)}}/{{osBase .MODULE}}:
       {{if .PREFIX -}}
       {{.PREFIX}}
       {{- else -}}
