@@ -42,5 +42,5 @@ func main() {
 		os.Exit(1)
 	}
 
-	slog.Info("part 2", slog.Int("result", part2))
+	slog.Info("part 2", slog.Uint64("result", part2))
 }

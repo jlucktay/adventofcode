@@ -2,7 +2,13 @@
 // https://adventofcode.com/2024/day/7
 package day07
 
-import "github.com/orsinium-labs/enum"
+import (
+	"errors"
+	"fmt"
+	"strconv"
+
+	"github.com/orsinium-labs/enum"
+)
 
 func Part1(input string) (uint64, error) {
 	xEq, err := parseInput(input)
@@ -13,7 +19,9 @@ func Part1(input string) (uint64, error) {
 	result := uint64(0)
 
 	for _, eq := range xEq {
-		if attemptResult, found := attempt(eq.desiredResult, eq.numbers[1:], eq.numbers[0]); found && attemptResult > 0 {
+		if attemptResult, found, err := attempt(eq.desiredResult, eq.numbers[1:], eq.numbers[0], false); err == nil &&
+			found && attemptResult > 0 {
+
 			result += eq.desiredResult
 		}
 	}
@@ -27,15 +35,25 @@ var (
 	Add  = Operator{'+'}
 	Mult = Operator{'*'}
 
-	Operators = enum.New(Add, Mult)
+	Operators = enum.New(Add, Mult, Concat)
 )
 
-func attempt(desired uint64, inputs []uint64, subtotal uint64) (uint64, bool) {
+var (
+	ErrSubtotalExceedDesired = errors.New("subtotal exceeds desired")
+	ErrUnknownOperator       = errors.New("unknown operator")
+	ErrExhausted             = errors.New("exhausted known operators")
+)
+
+func attempt(desired uint64, inputs []uint64, subtotal uint64, part2 bool) (uint64, bool, error) {
 	if subtotal > desired {
-		return 0, false
+		return 0, false, fmt.Errorf("%w: %d > %d", ErrSubtotalExceedDesired, subtotal, desired)
 	}
 
 	for _, op := range Operators.Members() {
+		if !part2 && op == Concat {
+			continue
+		}
+
 		iterTotal := subtotal
 
 		switch op {
@@ -45,20 +63,30 @@ func attempt(desired uint64, inputs []uint64, subtotal uint64) (uint64, bool) {
 		case Mult:
 			iterTotal *= inputs[0]
 
+		case Concat:
+			strCombined := fmt.Sprintf("%d%d", iterTotal, inputs[0])
+
+			combinedNumber, err := strconv.ParseUint(strCombined, 10, 64)
+			if err != nil {
+				return 0, false, fmt.Errorf("parsing new number from '%s': %w", strCombined, err)
+			}
+
+			iterTotal = combinedNumber
+
 		default:
-			return 0, false
+			return 0, false, fmt.Errorf("%w: %s", ErrUnknownOperator, string(op.Value))
 		}
 
 		if iterTotal == desired && len(inputs) == 1 {
-			return iterTotal, true
+			return iterTotal, true, nil
 		}
 
 		if len(inputs) > 1 {
-			if result, found := attempt(desired, inputs[1:], iterTotal); found {
-				return result, true
+			if result, found, err := attempt(desired, inputs[1:], iterTotal, part2); found {
+				return result, true, err
 			}
 		}
 	}
 
-	return 0, false
+	return 0, false, fmt.Errorf("%w: %v", ErrExhausted, Operators.Values())
 }
