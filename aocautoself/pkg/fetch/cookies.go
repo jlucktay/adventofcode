@@ -5,9 +5,9 @@ import (
 	"net/http"
 	"regexp"
 
-	"github.com/zellyn/kooky"
+	"github.com/browserutils/kooky"
 
-	_ "github.com/zellyn/kooky/browser/firefox"
+	_ "github.com/browserutils/kooky/browser/firefox"
 )
 
 const (
