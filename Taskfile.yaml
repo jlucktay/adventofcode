@@ -98,6 +98,15 @@ tasks:
   ### Test each Go module and track checksums separately
   ###
   go:test:
+    desc: Run tests for each Go module separately.
+    requires:
+      vars:
+        - GO_MODULES
+    deps:
+      - go:lint
+    preconditions:
+      - sh: command -v go
+        msg: Go toolchain not found -> https://go.dev/doc/install
     cmds:
       - for:
           var: GO_MODULES
@@ -105,16 +114,6 @@ tasks:
         vars:
           COMMAND: go test --count=100 --failfast --race --timeout=10s --vet="" ./...
           MODULE: '{{.ITEM}}'
-    deps:
-      - go:lint
-    desc: Run tests for each Go module separately.
-    dir: '{{.ROOT_DIR}}'
-    preconditions:
-      - sh: command -v go
-        msg: Go toolchain not found -> https://go.dev/doc/install
-    requires:
-      vars:
-        - GO_MODULES
 
   go:test:cover:
     cmds:
@@ -142,10 +141,12 @@ tasks:
   ### Generic Go command/module runner
   ###
   go:cmd:
-    cmd: '{{.COMMAND}}'
     desc: Run '{{.COMMAND}}' on a single Go module.
-    dir: '{{.MODULE}}'
     internal: true
+    requires:
+      vars:
+        - COMMAND
+        - MODULE
     label: >-
       {{base .MODULE}}:
       {{if .PREFIX -}}
@@ -160,13 +161,11 @@ tasks:
       {{- else -}}
       {{index (splitList " " (replace "\"" " " .COMMAND)) 1}}
       {{- end}}
-    requires:
-      vars:
-        - COMMAND
-        - MODULE
     sources:
       - '**/go.{mod,sum}'
       - '**/*.go'
+    dir: '{{.MODULE}}'
+    cmd: '{{.COMMAND}}'
 
   ###
   ### Clean up build output and temporary tools
