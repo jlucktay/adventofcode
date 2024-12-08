@@ -10,15 +10,17 @@
 
 ## Misc
 
-- Define `Day` and `DayDesc` structs, and fill them up with all of the things
-- CLI arg(s)
+- Define `Day` and `DayDesc` structs, and fill them up with all the things
+- CLI argument(s)
   - year
   - date(s)
 - each day has 2 parts
   - initially, only part 1 will be visible
   - an unauthenticated HTTP request won't ever see part 2
     - add functionality to allow a session cookie value to be specified
-      - see `cookiemonster` sub-directory for a one-shot script that can pull the appropriate cookie out
+      - ~~see `cookiemonster` subdirectory for a one-shot script that can pull the appropriate cookie out~~
+      - ✅ achieved with `browserutils/kooky` package
+- grab every code block from the puzzle description page and make it into a table test input with `//go:embed`
 
 ## Modular bits
 
@@ -30,9 +32,9 @@
       - this would also allow us to fetch puzzle inputs, since they are user-specific
   - outputs:
     - Day
-- Refine a `DayDesc` from the raw `Day` into sub-components:
+- Refine a `DayDesc` from the raw `Day` into subcomponents:
   - intro
-    - everything from the start up to the test case example(s)
+    - everything from the start, up to the test case example(s)
   - test case example(s)
     - the first line that ends with a `:` up to the second-last line
   - stinger
@@ -40,9 +42,3 @@
 - Arrange and execute text template, based on `Day` input
 - Write template output to disk
   - implement the `Writer`(?) interface
-
-## CI integrations
-
-- Webhooks to Slack channel
-  - [Code Climate](https://codeclimate.com/repos/5aa8f4157cee18029e006596/settings/integrations/slack/edit)
-  - [Scrutinizer](https://scrutinizer-ci.com/g/jlucktay/adventofcode/settings/service-hooks/slack)
