@@ -232,4 +232,9 @@ tasks:
   ###
   go:template:
     desc: Make a copy of some code templates for today's Advent.
-    cmd: go run ./template/helper/main.go
+    summary: >-
+      Set 'AOC_DAY=n' and/or 'AOC_YEAR=n' (where n is a valid integer) to
+      override default behaviour of templating for today's date.
+    cmds:
+      - go run ./template/helper/main.go
+      - code {{now | date "2006"}}/day{{now | date "02"}}/{cmd/main,day{{now | date "02"}}*}.go
