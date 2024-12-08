@@ -22,6 +22,11 @@
 
 ## Templates
 
+Stored in [the `template` directory](template/) and rendered on-demand by `task go:template`.
+
+The year and day that the `go:template` task renders for can be overridden by setting the `AOC_YEAR` and `AOC_DAY`
+variables when calling the task.
+
 ## `crunchy` Library
 
 This is where the reusable maths live.
