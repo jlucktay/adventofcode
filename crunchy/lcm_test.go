@@ -19,6 +19,10 @@ func TestLCM(t *testing.T) {
 			in:   []int{},
 			want: 0,
 		},
+		"single input": {
+			in:   []int{42},
+			want: 42,
+		},
 		"basic input": {
 			in:   []int{2, 3},
 			want: 6,
