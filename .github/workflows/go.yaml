@@ -34,13 +34,4 @@ jobs:
 
       - run: task go:test:cover
 
-      - id: coverage-files
-        run: |
-          coverage_files=$(find . -type f -iname "cover.*.out" | paste -s -d , -)
-          echo "list=$coverage_files" >> "$GITHUB_OUTPUT"
-
-      - uses: codecov/codecov-action@v5
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          files: ${{ steps.coverage-files.outputs.list }}
-          fail_ci_if_error: true
+      - uses: k1LoW/octocov-action@v1
