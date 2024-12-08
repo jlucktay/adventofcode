@@ -19,6 +19,7 @@ on:
 
 jobs:
   test-cover:
+    # This step name is linked in the '.octocov.yml' configuration file.
     name: Test coverage
 
     runs-on: ubuntu-latest
