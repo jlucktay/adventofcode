@@ -12,7 +12,7 @@ func Part1(input string) (int, error) {
 		return 0, err
 	}
 
-	ag.plotAntinodes()
+	ag.plotAntinodes(false)
 
 	return len(ag.thingDirectory[Antinode]), nil
 }
@@ -68,7 +68,7 @@ func (ag *AntennaGrid) plotPairs(gpt GridPointThing, primary [2]int, secondaries
 	}
 }
 
-func (ag *AntennaGrid) plotAntinodes() {
+func (ag *AntennaGrid) plotAntinodes(part2 bool) {
 	for gpt, gptLocations := range ag.thingDirectory {
 		if gpt == Empty || gpt == Antinode {
 			continue
@@ -79,6 +79,14 @@ func (ag *AntennaGrid) plotAntinodes() {
 			continue
 		}
 
-		ag.plotPairs(gpt, gptLocations[0], gptLocations[1:])
+		var recursive func(GridPointThing, [2]int, [][2]int)
+
+		if part2 {
+			recursive = ag.plotAlongLine
+		} else {
+			recursive = ag.plotPairs
+		}
+
+		recursive(gpt, gptLocations[0], gptLocations[1:])
 	}
 }
