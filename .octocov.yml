@@ -14,6 +14,8 @@ testExecutionTime:
 diff:
   datastores:
     - artifact://${GITHUB_REPOSITORY}
+body:
+  if: is_pull_request
 comment:
   if: is_pull_request
 summary:
@@ -24,3 +26,4 @@ report:
     - artifact://${GITHUB_REPOSITORY}
 push:
   if: true
+  message: Update pushed by Octocov
