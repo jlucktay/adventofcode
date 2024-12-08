@@ -17,7 +17,7 @@ testExecutionTime:
     path: docs/time.svg
   steps:
     # This step name is linked to the '.github/workflows/go.yaml' Actions file.
-    - Test coverage
+    - Run task to gather Go test coverage
 diff:
   datastores:
     - artifact://${GITHUB_REPOSITORY}
