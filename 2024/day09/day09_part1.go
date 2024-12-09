@@ -67,12 +67,16 @@ func (d Disk) compact() {
 	}
 }
 
-func (d Disk) checksum() int64 {
+func (d Disk) checksum(part2 bool) int64 {
 	result := int64(0)
 
-	for i := int64(0); i < int64(len(d))-1; i++ {
+	for i := int64(0); i < int64(len(d)); i++ {
 		if d[i] == -1 {
-			break
+			if part2 {
+				continue
+			} else {
+				break
+			}
 		}
 
 		result += i * d[i]
@@ -89,5 +93,5 @@ func Part1(input string) (int64, error) {
 
 	d.compact()
 
-	return d.checksum(), nil
+	return d.checksum(false), nil
 }
