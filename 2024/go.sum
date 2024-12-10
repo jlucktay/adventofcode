@@ -1,3 +1,5 @@
+github.com/RyanCarrier/dijkstra/v2 v2.0.2 h1:DIOg/a7XDR+KmlDkNSX9ggDY6sNLrG+EBGvZUjfgi+A=
+github.com/RyanCarrier/dijkstra/v2 v2.0.2/go.mod h1:XwpYN7nC1LPwL3HkaavzB+VGaHRndSsZy/whsFy1AEI=
 github.com/lmittmann/tint v1.0.5 h1:NQclAutOfYsqs2F1Lenue6OoWCajs5wJcP3DfWVpePw=
 github.com/lmittmann/tint v1.0.5/go.mod h1:HIS3gSy7qNwGCj+5oRjAutErFBl4BzdQP6cJZ0NfMwE=
 github.com/matryer/is v1.4.1 h1:55ehd8zaGABKLXQUe2awZ99BD/PTc2ls+KV/dXphgEQ=
