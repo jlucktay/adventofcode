@@ -7,7 +7,7 @@ require (
 	github.com/lmittmann/tint v1.0.5
 	github.com/matryer/is v1.4.1
 	github.com/orsinium-labs/enum v1.4.0
-	go.jlucktay.dev/adventofcode/crunchy v0.0.0-20241205213858-57421e6d4282
+	go.jlucktay.dev/adventofcode/crunchy v0.0.0-20241210201440-539a928fa35e
 )
 
-require golang.org/x/exp v0.0.0-20241204233417-43b7b7cde48d // indirect
+require golang.org/x/exp v0.0.0-20241210194714-1829a127f884 // indirect
