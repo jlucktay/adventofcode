@@ -238,3 +238,29 @@ tasks:
     cmds:
       - go run ./template/helper/main.go
       - code {{now | date "2006"}}/day{{now | date "02"}}/{cmd/main,day{{now | date "02"}}*}.go
+
+  ###
+  ### Per-module maintenance
+  ###
+  go:mod:update-all:
+    desc: Update dependencies within each Go module.
+    cmds:
+      - for:
+          var: GO_MODULES
+        task: go:mod:update
+        vars:
+          MODULE: '{{.ITEM}}'
+
+  go:mod:update:
+    desc: Update dependencies for a single Go module.
+    requires:
+      vars:
+        - MODULE
+    vars:
+      TASK_LP: '{{osBase (osDir .MODULE)}}/{{osBase .MODULE}}: go:mod:update'
+    dir: '{{.MODULE}}'
+    label: '{{.TASK_LP}}'
+    prefix: '{{.TASK_LP}}'
+    cmds:
+      - go get -u -v ./...
+      - go mod tidy
