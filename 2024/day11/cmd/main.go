@@ -8,12 +8,7 @@ import (
 	"github.com/lmittmann/tint"
 
 	"go.jlucktay.dev/adventofcode/2024/day11"
-
-	_ "embed"
 )
-
-//go:embed input.txt
-var input string
 
 func main() {
 	slog.SetDefault(

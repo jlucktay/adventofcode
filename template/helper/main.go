@@ -101,7 +101,7 @@ func main() {
 
 		templateTargetDir := targetDirectory
 
-		if strings.HasSuffix(targetFilename, "main.go") {
+		if strings.HasSuffix(targetFilename, "main.go") || strings.HasSuffix(targetFilename, "embed.go") {
 			templateTargetDir = filepath.Join(templateTargetDir, "cmd")
 		}
 
@@ -141,6 +141,13 @@ func main() {
 		}
 	}
 
+	inputTxtFilePath := filepath.Join(targetDirectory, "cmd", "input.txt")
+
+	if _, err := os.Stat(inputTxtFilePath); err == nil {
+		slog.Warn("input file already exists, exiting", slog.String("target", inputTxtFilePath))
+		return
+	}
+
 	ffxCookie, err := fetch.FirefoxCookie()
 	if err != nil {
 		slog.Error("getting cookie from Firefox",
@@ -150,7 +157,7 @@ func main() {
 	}
 
 	slog.Info("fetching input for day",
-		slog.Int("day", td.Day), slog.Int("tear", td.Year))
+		slog.Int("day", td.Day), slog.Int("year", td.Year))
 
 	inputTxt, err := fetch.Input(context.TODO(), ffxCookie, td.Year, td.Day)
 	if err != nil {
@@ -160,11 +167,9 @@ func main() {
 		os.Exit(1)
 	}
 
-	inputTxtFilePath := filepath.Join(targetDirectory, "cmd", "input.txt")
-
 	slog.Info("writing today's input to file",
 		slog.String("path", inputTxtFilePath),
-		slog.Int("day", td.Day), slog.Int("tear", td.Year))
+		slog.Int("day", td.Day), slog.Int("year", td.Year))
 
 	if err := os.WriteFile(inputTxtFilePath, []byte(inputTxt), 0o640); err != nil {
 		slog.Error("writing input text to file",
@@ -175,5 +180,5 @@ func main() {
 
 	slog.Info("input written to file OK",
 		slog.String("path", inputTxtFilePath),
-		slog.Int("day", td.Day), slog.Int("tear", td.Year))
+		slog.Int("day", td.Day), slog.Int("year", td.Year))
 }

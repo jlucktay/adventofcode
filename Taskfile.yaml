@@ -123,7 +123,7 @@ tasks:
         vars:
           COMMAND: >-
             go test --count=1 --covermode=atomic --coverprofile="cover.{{base .ITEM}}.out"
-            --failfast --race --vet="" ./...
+            --failfast --race --tags=skip_embed --vet="" ./...
           MODULE: '{{.ITEM}}'
           PREFIX: test-cover
     deps:

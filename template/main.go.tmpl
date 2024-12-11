@@ -8,12 +8,7 @@ import (
 	"github.com/lmittmann/tint"
 
 	"go.jlucktay.dev/adventofcode/{{.Year}}/day{{printf "%02d" .Day}}"
-
-	_ "embed"
 )
-
-//go:embed input.txt
-var input string
 
 func main() {
 	slog.SetDefault(
