@@ -3,6 +3,7 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"log/slog"
 	"os"
@@ -14,6 +15,8 @@ import (
 	"time"
 
 	"github.com/lmittmann/tint"
+
+	"go.jlucktay.dev/adventofcode/aocautoself/pkg/fetch"
 )
 
 type tmplData struct {
@@ -89,29 +92,30 @@ func main() {
 		td.Year = convYear
 	}
 
-	for _, t := range tmpl.Templates() {
-		dayLZ := fmt.Sprintf("%02d", td.Day)
+	dayLZ := fmt.Sprintf("%02d", td.Day)
+	targetDirectory := filepath.Join(gitTop, strconv.Itoa(td.Year), "day"+dayLZ)
 
+	for _, t := range tmpl.Templates() {
 		targetFilename := strings.TrimSuffix(t.Name(), ".tmpl")
 		targetFilename = strings.ReplaceAll(targetFilename, "00", dayLZ)
 
-		targetDirectory := filepath.Join(gitTop, strconv.Itoa(td.Year), "day"+dayLZ)
+		templateTargetDir := targetDirectory
 
 		if strings.HasSuffix(targetFilename, "main.go") {
-			targetDirectory = filepath.Join(targetDirectory, "cmd")
+			templateTargetDir = filepath.Join(templateTargetDir, "cmd")
 		}
 
-		targetDirFile := filepath.Join(targetDirectory, targetFilename)
+		targetDirFile := filepath.Join(templateTargetDir, targetFilename)
 
 		if _, err := os.Stat(targetDirFile); err == nil {
 			slog.Warn("target already exists, continuing with next template", slog.String("target", targetDirFile))
 			continue
 		}
 
-		if err := os.MkdirAll(targetDirectory, 0o750); err != nil {
+		if err := os.MkdirAll(templateTargetDir, 0o750); err != nil {
 			slog.Error("making target directories",
 				slog.Any("err", err),
-				slog.String("target", targetDirectory))
+				slog.String("target", templateTargetDir))
 
 			os.Exit(1)
 		}
@@ -136,4 +140,40 @@ func main() {
 			os.Exit(1)
 		}
 	}
+
+	ffxCookie, err := fetch.FirefoxCookie()
+	if err != nil {
+		slog.Error("getting cookie from Firefox",
+			slog.Any("err", err))
+
+		os.Exit(1)
+	}
+
+	slog.Info("fetching input for day",
+		slog.Int("day", td.Day), slog.Int("tear", td.Year))
+
+	inputTxt, err := fetch.Input(context.TODO(), ffxCookie, td.Year, td.Day)
+	if err != nil {
+		slog.Error("getting input text from AOC",
+			slog.Any("err", err))
+
+		os.Exit(1)
+	}
+
+	inputTxtFilePath := filepath.Join(targetDirectory, "cmd", "input.txt")
+
+	slog.Info("writing today's input to file",
+		slog.String("path", inputTxtFilePath),
+		slog.Int("day", td.Day), slog.Int("tear", td.Year))
+
+	if err := os.WriteFile(inputTxtFilePath, []byte(inputTxt), 0o640); err != nil {
+		slog.Error("writing input text to file",
+			slog.Any("err", err))
+
+		os.Exit(1)
+	}
+
+	slog.Info("input written to file OK",
+		slog.String("path", inputTxtFilePath),
+		slog.Int("day", td.Day), slog.Int("tear", td.Year))
 }

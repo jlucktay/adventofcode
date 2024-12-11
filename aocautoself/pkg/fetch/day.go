@@ -15,7 +15,7 @@ import (
 
 // Day will perform the necessary HTTP magic to get an Advent of Code day for the given year and date.
 func Day(ctx context.Context, session *http.Cookie, year, day int) (*model.Day, error) {
-	details, err := getFromWeb(ctx, year, day, session)
+	details, err := getFromWeb(ctx, year, day, awrDay, session)
 	if err != nil {
 		return nil, err
 	}
