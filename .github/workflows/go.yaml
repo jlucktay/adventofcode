@@ -7,8 +7,11 @@ on:
     branches:
       - main
     paths:
-      - '**/go.{mod,sum}'
+      - .github/workflows/go.yaml
+      - .golangci.yaml
+      - Taskfile.yaml
       - '**/*.go'
+      - '**/go.{mod,sum}'
 
   pull_request:
     branches:
