@@ -68,7 +68,7 @@ tasks:
           var: GO_MODULES
         task: go:cmd
         vars:
-          COMMAND: golangci-lint run ./... --color=always
+          COMMAND: golangci-lint run --build-tags=skip_embed --color=always ./...
           MODULE: '{{.ITEM}}'
           PREFIX: lint-golangci
     desc: golangci-lint is a Go linters aggregator.
@@ -83,7 +83,7 @@ tasks:
           var: GO_MODULES
         task: go:cmd
         vars:
-          COMMAND: go vet ./...
+          COMMAND: go vet --tags=skip_embed ./...
           MODULE: '{{.ITEM}}'
     desc: Vet examines Go source code and reports suspicious constructs.
     dir: '{{.ROOT_DIR}}'
@@ -122,8 +122,8 @@ tasks:
         task: go:cmd
         vars:
           COMMAND: >-
-            go test --count=1 --covermode=atomic --coverprofile="cover.{{base .ITEM}}.out"
-            --failfast --race --tags=skip_embed --vet="" ./...
+            go test --count=1 --covermode=atomic --coverprofile="cover.{{base .ITEM}}.out" --failfast --race
+            --tags=skip_embed --vet="" ./...
           MODULE: '{{.ITEM}}'
           PREFIX: test-cover
     deps:
