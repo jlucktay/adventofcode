@@ -29,6 +29,9 @@ vars:
   GO_MODULES:
     sh: find {{.ROOT_DIR}} -name 'go.mod' -type f -execdir pwd \;
 
+  TODAY: '{{now | date "2006"}}/day{{now | date "02"}}'
+  TODAY_DIR: '{{.ROOT_DIR}}/{{.TODAY}}'
+
 tasks:
   ###
   ### Lint each Go module and track checksums separately
@@ -139,9 +142,6 @@ tasks:
 
   go:test:today:
     desc: Run tests for today's Advent only.
-    vars:
-      TODAY: '{{now | date "2006"}}/day{{now | date "02"}}'
-      TODAY_DIR: '{{.ROOT_DIR}}/{{.TODAY}}'
     label: '{{.TODAY}}: test'
     deps:
       - task: go:lint:gofumpt
@@ -162,6 +162,20 @@ tasks:
       - '**/go.{mod,sum}'
       - '**/*.go'
     cmd: go test --count=10 --failfast --race --timeout=10s --vet="" ./...
+
+  go:run:today:
+    desc: Run today's Advent only.
+    label: '{{.TODAY}}: run'
+    deps:
+      - task: go:test:today
+    dir: '{{.TODAY_DIR}}'
+    method: checksum
+    sources:
+      - '**/go.{mod,sum}'
+      - '**/*.go'
+    cmds:
+      - go build -o day{{now | date "02"}} ./cmd/
+      - ./day{{now | date "02"}}
 
   ###
   ### Generic Go command/module runner
@@ -237,6 +251,9 @@ tasks:
       override default behaviour of templating for today's date.
     cmds:
       - go run ./template/helper/main.go
+      - git unstage
+      - git add {{now | date "2006"}}/day{{now | date "02"}}
+      - git unstage *part2*
       - code {{now | date "2006"}}/day{{now | date "02"}}/{cmd/main,day{{now | date "02"}}*}.go
 
   ###
