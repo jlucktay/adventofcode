@@ -47,7 +47,7 @@ func main() {
 
 	tmplDir := filepath.Join(gitTop, "template")
 
-	tmplFiles := filepath.Join(tmplDir, "*.go.tmpl")
+	tmplFiles := filepath.Join(tmplDir, "*.tmpl")
 
 	tmpl, err := template.ParseGlob(tmplFiles)
 	if err != nil {
