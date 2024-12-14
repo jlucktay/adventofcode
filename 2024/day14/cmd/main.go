@@ -19,14 +19,14 @@ func main() {
 				&tint.Options{TimeFormat: time.RFC3339},
 			)))
 
-	part1Bounds := image.Rectangle{
+	bounds := image.Rectangle{
 		Min: image.Point{0, 0},
 		Max: image.Point{101, 103},
 	}
 	part1Duration := 100
 
 	startPart1 := time.Now()
-	part1, err := day14.Part1(input, part1Bounds, part1Duration)
+	part1, err := day14.Part1(input, bounds, part1Duration)
 	finishPart1 := time.Since(startPart1)
 	if err != nil {
 		slog.Error("part 1", slog.Any("err", err))
@@ -39,8 +39,10 @@ func main() {
 		return
 	}
 
+	part2Duration := 1_000_000
+
 	startPart2 := time.Now()
-	part2, err := day14.Part2(input)
+	part2, err := day14.Part2(input, bounds, part2Duration)
 	finishPart2 := time.Since(startPart2)
 	if err != nil {
 		slog.Error("part 2", slog.Any("err", err))
