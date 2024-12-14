@@ -29,7 +29,15 @@ vars:
   GO_MODULES:
     sh: find {{.ROOT_DIR}} -name 'go.mod' -type f -execdir pwd \;
 
-  TODAY: '{{now | date "2006"}}/day{{now | date "02"}}'
+  YEAR: '{{default (now | date "2006") (env "AOC_YEAR")}}'
+  DAY: >-
+    day
+    {{- if (env "AOC_DAY")}}
+    {{- (printf "%02d" (atoi (env "AOC_DAY")))}}
+    {{- else}}
+    {{- (now | date "02")}}
+    {{- end}}
+  TODAY: '{{.YEAR}}/{{.DAY}}'
   TODAY_DIR: '{{.ROOT_DIR}}/{{.TODAY}}'
 
 tasks:
@@ -141,7 +149,11 @@ tasks:
         - GO_MODULES
 
   go:test:today:
-    desc: Run tests for today's Advent only.
+    desc: Run tests for a single day.
+    requires:
+      vars:
+        - TODAY
+        - TODAY_DIR
     label: '{{.TODAY}}: test'
     deps:
       - task: go:lint:gofumpt
@@ -164,7 +176,12 @@ tasks:
     cmd: go test --count=10 --failfast --race --timeout=10s --vet="" ./...
 
   go:run:today:
-    desc: Run today's Advent only.
+    desc: Run a single day.
+    requires:
+      vars:
+        - DAY
+        - TODAY
+        - TODAY_DIR
     label: '{{.TODAY}}: run'
     deps:
       - task: go:test:today
@@ -174,8 +191,8 @@ tasks:
       - '**/go.{mod,sum}'
       - '**/*.go'
     cmds:
-      - go build -o day{{now | date "02"}} ./cmd/
-      - ./day{{now | date "02"}}
+      - go build -o {{.DAY}} ./cmd/
+      - ./{{.DAY}}
 
   ###
   ### Generic Go command/module runner
@@ -245,19 +262,14 @@ tasks:
   ### Templates for a new day
   ###
   go:template:
-    desc: Make a copy of some code templates for today's Advent.
+    desc: Make a copy of some code templates for a single day.
     summary: >-
       Set 'AOC_DAY=n' and/or 'AOC_YEAR=n' (where n is a valid integer) to
       override default behaviour of templating for today's date.
-    vars:
-      YEAR: '{{default (now | date "2006") (env "AOC_YEAR")}}'
-      DAY: >-
-        day
-        {{- if (env "AOC_DAY")}}
-        {{- (printf "%02d" (atoi (env "AOC_DAY")))}}
-        {{- else}}
-        {{- (now | date "02")}}
-        {{- end}}
+    requires:
+      vars:
+        - DAY
+        - YEAR
     cmds:
       - go run ./template/helper/main.go
       - git unstage
