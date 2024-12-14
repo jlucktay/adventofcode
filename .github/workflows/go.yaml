@@ -44,7 +44,9 @@ jobs:
 
       - uses: golangci/golangci-lint-action@v6
         with:
-          args: --build-tags=skip_embed
+          args: >-
+            --build-tags=skip_embed
+            --verbose
 
       # This step name is linked in the '.octocov.yml' configuration file.
       - name: Run task to gather Go test coverage
