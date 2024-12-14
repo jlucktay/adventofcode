@@ -26,9 +26,9 @@ func main() {
 		os.Exit(1)
 	}
 
-	slog.Info("part 1", slog.Int("result", part1), slog.Duration("elapsed", finishPart1))
+	slog.Info("part 1", slog.String("result", part1), slog.Duration("elapsed", finishPart1))
 
-	if part1 == 0 {
+	if part1 == "" {
 		return
 	}
 
@@ -40,5 +40,5 @@ func main() {
 		os.Exit(2)
 	}
 
-	slog.Info("part 2", slog.Int("result", part2), slog.Duration("elapsed", finishPart2))
+	slog.Info("part 2", slog.String("result", part2), slog.Duration("elapsed", finishPart2))
 }

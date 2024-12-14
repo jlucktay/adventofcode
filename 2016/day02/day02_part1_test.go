@@ -45,14 +45,14 @@ func TestPart1(t *testing.T) {
 
 	testCases := map[string]struct {
 		in   string
-		want int
+		want string
 	}{
-		"empty": {"", 0},
+		"empty": {"", ""},
 		"for example": {`ULL
 RRDDD
 LURDL
 UUUUD
-`, 1985},
+`, "1985"},
 	}
 
 	for desc, testCase := range testCases {

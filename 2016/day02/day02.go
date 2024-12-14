@@ -4,6 +4,7 @@ package day02
 
 import (
 	"fmt"
+	"image"
 	"strings"
 
 	"github.com/orsinium-labs/enum"
@@ -21,6 +22,13 @@ var (
 )
 
 func (d Direction) String() string { return string(d.Value) }
+
+var move = map[Direction]image.Point{
+	Up:    image.Pt(0, -1),
+	Right: image.Pt(1, 0),
+	Down:  image.Pt(0, 1),
+	Left:  image.Pt(-1, 0),
+}
 
 type DigitInstruction []Direction
 

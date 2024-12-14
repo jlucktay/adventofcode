@@ -2,59 +2,70 @@
 // https://adventofcode.com/2016/day/2
 package day02
 
-import (
-	"image"
-	"strconv"
-)
+import "image"
 
-func Part1(input string) (int, error) {
+func Part1(input string) (string, error) {
 	inst, err := parseInput(input)
 	if err != nil {
-		return 0, err
+		return "", err
 	}
 
-	return inst.bathroomCode(), nil
+	/*
+		1 2 3
+		4 5 6
+		7 8 9
+	*/
+
+	part1Keypad := map[image.Point]rune{
+		{0, 0}: '1', {1, 0}: '2', {2, 0}: '3',
+		{0, 1}: '4', {1, 1}: '5', {2, 1}: '6',
+		{0, 2}: '7', {1, 2}: '8', {2, 2}: '9',
+	}
+
+	return inst.bathroomCode(part1Keypad), nil
 }
 
-func (i Instructions) bathroomCode() int {
+func (i Instructions) bathroomCode(keypad map[image.Point]rune) string {
 	if len(i) == 0 {
-		return 0
+		return ""
 	}
 
-	keypad := map[image.Point]int{
-		{0, 0}: 1, {1, 0}: 2, {2, 0}: 3,
-		{0, 1}: 4, {1, 1}: 5, {2, 1}: 6,
-		{0, 2}: 7, {1, 2}: 8, {2, 2}: 9,
+	currPos := image.Pt(-1, -1)
+
+	// Find the '5' to start from.
+	for position, padDigit := range keypad {
+		if padDigit == '5' {
+			currPos = position
+		}
 	}
 
-	keypadBounds := image.Rect(0, 0, 3, 3)
+	if currPos.Eq(image.Pt(-1, -1)) {
+		panic("could not find '5' on keypad to start from")
+	}
 
 	result := ""
-
-	// Start from the '5' in the centre.
-	currentPosition := image.Pt(1, 1)
 
 	for _, di := range i {
 		for _, dir := range di {
 			switch dir {
 			case Up:
-				if currentPosition.Add(image.Pt(0, -1)).In(keypadBounds) {
-					currentPosition.Y -= 1
+				if _, valid := keypad[currPos.Add(move[Up])]; valid {
+					currPos = currPos.Add(move[Up])
 				}
 
 			case Right:
-				if currentPosition.Add(image.Pt(1, 0)).In(keypadBounds) {
-					currentPosition.X += 1
+				if _, valid := keypad[currPos.Add(move[Right])]; valid {
+					currPos = currPos.Add(move[Right])
 				}
 
 			case Down:
-				if currentPosition.Add(image.Pt(0, 1)).In(keypadBounds) {
-					currentPosition.Y += 1
+				if _, valid := keypad[currPos.Add(move[Down])]; valid {
+					currPos = currPos.Add(move[Down])
 				}
 
 			case Left:
-				if currentPosition.Add(image.Pt(-1, 0)).In(keypadBounds) {
-					currentPosition.X -= 1
+				if _, valid := keypad[currPos.Add(move[Left])]; valid {
+					currPos = currPos.Add(move[Left])
 				}
 
 			default:
@@ -62,13 +73,8 @@ func (i Instructions) bathroomCode() int {
 			}
 		}
 
-		result += strconv.Itoa(keypad[currentPosition])
+		result += string(keypad[currPos])
 	}
 
-	convertedResult, err := strconv.Atoi(result)
-	if err != nil {
-		panic("converting '" + result + "': " + err.Error())
-	}
-
-	return convertedResult
+	return result
 }
