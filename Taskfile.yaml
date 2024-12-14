@@ -249,12 +249,21 @@ tasks:
     summary: >-
       Set 'AOC_DAY=n' and/or 'AOC_YEAR=n' (where n is a valid integer) to
       override default behaviour of templating for today's date.
+    vars:
+      YEAR: '{{default (now | date "2006") (env "AOC_YEAR")}}'
+      DAY: >-
+        day
+        {{- if (env "AOC_DAY")}}
+        {{- (printf "%02d" (atoi (env "AOC_DAY")))}}
+        {{- else}}
+        {{- (now | date "02")}}
+        {{- end}}
     cmds:
       - go run ./template/helper/main.go
       - git unstage
-      - git add {{now | date "2006"}}/day{{now | date "02"}}
+      - git add "{{.YEAR}}/{{.DAY}}"
       - git unstage *part2*
-      - code {{now | date "2006"}}/day{{now | date "02"}}/{cmd/main,day{{now | date "02"}}*}.go
+      - code "{{.YEAR}}/{{.DAY}}"/{cmd/main,{{.DAY}}*}.go
 
   ###
   ### Per-module maintenance

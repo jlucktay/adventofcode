@@ -27,7 +27,11 @@
 Stored in [the `template` directory](template/) and rendered on-demand by `task go:template`.
 
 The year and day that the `go:template` task renders for can be overridden by setting the `AOC_YEAR` and `AOC_DAY`
-variables when calling the task.
+environment variables when calling the task, like so:
+
+```shell
+AOC_YEAR=2016 AOC_DAY=2 task go:template
+```
 
 ## `crunchy` Library
 
