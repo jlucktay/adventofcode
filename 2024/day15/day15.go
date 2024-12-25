@@ -69,7 +69,10 @@ var (
 	Down  = Move{'v'}
 	Left  = Move{'<'}
 
-	Moves = enum.New(Up, Right, Down, Left)
+	LeftBox  = Move(BoxLeft)
+	RightBox = Move(BoxRight)
+
+	Moves = enum.New(Up, Right, Down, Left, LeftBox, RightBox)
 )
 
 type Tile enum.Member[rune]
@@ -79,6 +82,9 @@ var (
 	Floor = Tile{'.'}
 	Wall  = Tile{'#'}
 	Box   = Tile{'O'}
+
+	BoxLeft  = Tile{'['}
+	BoxRight = Tile{']'}
 
 	Tiles = enum.New(Robot, Floor, Wall, Box)
 )

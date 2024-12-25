@@ -34,6 +34,9 @@ var moves = map[Move]image.Point{
 	Right: image.Pt(1, 0),
 	Down:  image.Pt(0, 1),
 	Left:  image.Pt(-1, 0),
+
+	LeftBox:  image.Pt(1, 0),
+	RightBox: image.Pt(-1, 0),
 }
 
 func (wh Warehouse) findFirstEmpty(dir Move) (image.Point, bool) {
@@ -69,11 +72,9 @@ func (wh Warehouse) execute(dir Move) {
 func (wh Warehouse) sumBoxGPS() int {
 	result := 0
 
-	for x := range wh.floorBounds.Max.X {
-		for y := range wh.floorBounds.Max.Y {
-			if wh.grid[image.Pt(x, y)] == Box {
-				result += x + (y * 100)
-			}
+	for gridRef, tile := range wh.grid {
+		if tile == Box || tile == BoxLeft {
+			result += gridRef.X + (100 * gridRef.Y)
 		}
 	}
 
