@@ -20,7 +20,7 @@ func Part1(input string) (int, error) {
 		return 0, nil
 	}
 
-	return rm.lowestScore(), nil
+	return rm.lowestScore(false), nil
 }
 
 type Status struct {
@@ -33,7 +33,7 @@ type QueueEntity struct {
 	path   map[image.Point]struct{}
 }
 
-func (rm ReindeerMaze) lowestScore() int {
+func (rm ReindeerMaze) lowestScore(part2 bool) int {
 	// Track costs as we go.
 	distances := make(map[Status]int)
 
@@ -46,6 +46,9 @@ func (rm ReindeerMaze) lowestScore() int {
 
 	// Keep the lowest result.
 	result := math.MaxInt
+
+	// Count tiles on the best paths through the maze.
+	bestSeat := make(map[image.Point]struct{})
 
 	for len(queue) > 0 {
 		// Move the lowest costs to the front of the queue.
@@ -65,6 +68,8 @@ func (rm ReindeerMaze) lowestScore() int {
 
 		if rm.grid[cursor.status.position] == End && result >= cursor.cost {
 			result = cursor.cost
+
+			maps.Copy(bestSeat, cursor.path)
 		}
 
 		// Iterate through candidates for the next move.
@@ -91,5 +96,9 @@ func (rm ReindeerMaze) lowestScore() int {
 		}
 	}
 
-	return result
+	if !part2 {
+		return result
+	}
+
+	return len(bestSeat)
 }
