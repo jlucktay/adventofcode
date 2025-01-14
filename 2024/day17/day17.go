@@ -12,6 +12,7 @@ type register = int
 
 type ChronospatialComputer struct {
 	A, B, C            register
+	rawProgram         string
 	Program            []int
 	instructionPointer int
 	rawOutput          []int
@@ -222,7 +223,9 @@ func parseInput(input string) (ChronospatialComputer, error) {
 		return ChronospatialComputer{}, fmt.Errorf("program '%s' split into %d fields instead of 2", program, len(xProgram))
 	}
 
-	xPrograms := strings.Split(strings.TrimSpace(xProgram[1]), ",")
+	result.rawProgram = strings.TrimSpace(xProgram[1])
+
+	xPrograms := strings.Split(result.rawProgram, ",")
 	if len(xPrograms)%2 != 0 {
 		return ChronospatialComputer{},
 			fmt.Errorf("splitting raw programs '%s' did not give an even number of tokens", xProgram[1])
