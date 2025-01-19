@@ -25,6 +25,8 @@ type RAMRun struct {
 	bounds        image.Rectangle
 	byteDropLimit int
 	graph         dijkstra.MappedGraph[image.Point]
+
+	undroppedRawBytes []string
 }
 
 func (rr RAMRun) String() string {
@@ -82,9 +84,12 @@ func parseInput(input string) (RAMRun, error) {
 			return RAMRun{}, fmt.Errorf("scanning line '%s' parsed %d items: %w", line, n, err)
 		}
 
-		result.grid[image.Pt(x, y)] = Byte
+		newTile := image.Pt(x, y)
+		result.grid[newTile] = Byte
 
 		if i+1 >= result.byteDropLimit {
+			result.undroppedRawBytes = xLines[i+1:]
+
 			break
 		}
 	}
