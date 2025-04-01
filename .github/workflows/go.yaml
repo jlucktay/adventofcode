@@ -42,7 +42,7 @@ jobs:
 
       - uses: luisnquin/setup-gofumpt@v2
 
-      - uses: golangci/golangci-lint-action@v6
+      - uses: golangci/golangci-lint-action@v7
         with:
           args: >-
             --build-tags=skip_embed
