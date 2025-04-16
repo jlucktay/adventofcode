@@ -1,6 +1,8 @@
 module go.jlucktay.dev/adventofcode/aocautoself
 
 go 1.23
+toolchain go1.24.1
+
 require (
 	github.com/PuerkitoBio/goquery v1.10.0
 	github.com/browserutils/kooky v0.2.2
@@ -18,5 +20,5 @@ require (
 	github.com/go-sqlite/sqlite3 v0.0.0-20180313105335-53dd8e640ee7 // indirect
 	github.com/gonuts/binary v0.2.0 // indirect
 	github.com/inconshreveable/mousetrap v1.1.0 // indirect
-	golang.org/x/net v0.36.0 // indirect
+	golang.org/x/net v0.38.0 // indirect
 )
