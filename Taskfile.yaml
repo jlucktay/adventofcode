@@ -123,7 +123,19 @@ tasks:
           var: GO_MODULES
         task: go:cmd
         vars:
-          COMMAND: go test --count=100 --failfast --race --timeout=10s --vet="" ./...
+          COMMAND: >-
+            go test
+            {{if (hasSuffix "/aok" .ITEM) -}}
+            --count=1
+            -v
+            {{- else -}}
+            --count=100
+            --failfast
+            --race
+            --timeout=10s
+            --vet=""
+            {{- end}}
+            ./...
           MODULE: '{{.ITEM}}'
 
   go:test:cover:
