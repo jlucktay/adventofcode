@@ -28,6 +28,7 @@ func parseInput(input string) (Warehouse, error) {
 	for y, line := range lines {
 		if len(line) == 0 {
 			parsingTiles = false
+
 			continue
 		}
 

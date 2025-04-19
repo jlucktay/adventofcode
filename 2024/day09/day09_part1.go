@@ -3,7 +3,7 @@
 package day09
 
 import (
-	"fmt"
+	"strconv"
 	"strings"
 	"unicode/utf8"
 )
@@ -21,7 +21,7 @@ func (d Disk) String() string {
 		} else if block > 10 {
 			printLetter = 'x'
 		} else {
-			pl, _ := utf8.DecodeRuneInString(fmt.Sprintf("%d", block))
+			pl, _ := utf8.DecodeRuneInString(strconv.FormatInt(block, 10))
 			printLetter = pl
 		}
 
@@ -70,7 +70,7 @@ func (d Disk) compact() {
 func (d Disk) checksum(part2 bool) int64 {
 	result := int64(0)
 
-	for i := int64(0); i < int64(len(d)); i++ {
+	for i := range int64(len(d)) {
 		if d[i] == -1 {
 			if part2 {
 				continue

@@ -21,7 +21,6 @@ func Part1(input string) (uint64, error) {
 	for _, eq := range xEq {
 		if attemptResult, found, err := attempt(eq.desiredResult, eq.numbers[1:], eq.numbers[0], false); err == nil &&
 			found && attemptResult > 0 {
-
 			result += eq.desiredResult
 		}
 	}

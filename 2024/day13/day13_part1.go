@@ -19,7 +19,6 @@ func Part1(input string) (int, error) {
 
 func calculate(m Machine) int {
 	// The coordinates of the target (prize) are some number of A button presses and B button presses away.
-
 	// Calculate necessary number of presses for each button.
 	pressA := (m.b.Y*m.p.X - m.b.X*m.p.Y) / (m.a.X*m.b.Y - m.a.Y*m.b.X)
 	pressB := (m.a.Y*m.p.X - m.a.X*m.p.Y) / (m.a.Y*m.b.X - m.a.X*m.b.Y)

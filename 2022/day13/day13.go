@@ -48,7 +48,6 @@ func parseList(input string, indent int) (PacketData, int, error) {
 	//   add to a buffer to strconv later
 	// is this a comma?
 	//   strconv the buffer and add result to current list
-
 	pl := &PacketList{}
 	index := 0
 
@@ -82,18 +81,17 @@ func parseList(input string, indent int) (PacketData, int, error) {
 				}
 
 				intBuffer.Reset()
+
 				*pl = append(*pl, PacketInteger(parseThis))
 
 				//
-				log.Printf("% *sconverted buffer and added %d to list",
-					indent, "", parseThis)
+				log.Printf("% *sconverted buffer and added %d to list", indent, "", parseThis)
 				//
 			}
 
 			if r == ']' {
 				//
-				log.Printf("% *sfound a closing bracket; converted buffer, returning '%#v'",
-					indent, "", *pl)
+				log.Printf("% *sfound a closing bracket; converted buffer, returning '%#v'", indent, "", *pl)
 				//
 
 				return pl, index, nil
@@ -101,8 +99,7 @@ func parseList(input string, indent int) (PacketData, int, error) {
 
 			if r == ',' {
 				//
-				log.Printf("% *sfound a comma; converted buffer",
-					indent, "")
+				log.Printf("% *sfound a comma; converted buffer", indent, "")
 				//
 			}
 		}
@@ -128,6 +125,7 @@ func parseList(input string, indent int) (PacketData, int, error) {
 			*pl = append(*pl, *ipl...)
 
 			index += iplSize + 1
+
 			continue
 		}
 
@@ -172,6 +170,7 @@ type PacketInteger int
 
 func (pi PacketInteger) LowerThan(other PacketData) bool {
 	pl := PacketList{pi}
+
 	return pl.LowerThan(other)
 }
 

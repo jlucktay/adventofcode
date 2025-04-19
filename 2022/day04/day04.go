@@ -7,7 +7,7 @@ import (
 	"strings"
 )
 
-func sectionIDAnalysis(analyser func(left []int, right []int) bool, input string) (int, error) {
+func sectionIDAnalysis(analyser func(left, right []int) bool, input string) (int, error) {
 	scanner := bufio.NewScanner(strings.NewReader(input))
 	result := 0
 
@@ -49,12 +49,12 @@ func parseAssignment(input string) ([]int, error) {
 
 	left, err := strconv.ParseInt(xInput[0], 10, 32)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("parsing integer: %w", err)
 	}
 
 	right, err := strconv.ParseInt(xInput[1], 10, 32)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("parsing integer: %w", err)
 	}
 
 	return []int{int(left), int(right)}, nil

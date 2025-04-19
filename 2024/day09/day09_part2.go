@@ -28,7 +28,7 @@ func (d Disk) fileStart(workBackFrom int) int {
 func (d Disk) firstFreeBlock(requiredSize int) int {
 	currentFreeBlockSize := 0
 
-	for i := 0; i < len(d); i++ {
+	for i := range d {
 		switch d[i] {
 		case -1:
 			currentFreeBlockSize++
@@ -46,7 +46,7 @@ func (d Disk) firstFreeBlock(requiredSize int) int {
 }
 
 func (d Disk) moveFile(fileStart, blockStart, size int) {
-	for i := 0; i < size; i++ {
+	for i := range size {
 		d[blockStart+i] = d[fileStart+i]
 		d[fileStart+i] = -1
 	}

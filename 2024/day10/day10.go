@@ -52,6 +52,7 @@ func parseInput(input string) (HikingMap, error) {
 				height = -1
 			} else {
 				var err error
+
 				height, err = strconv.Atoi(string(r))
 				if err != nil {
 					return HikingMap{}, fmt.Errorf("parsing '%s': %w", string(r), err)

@@ -110,8 +110,8 @@ func (w World) RenderPath(path []*Tile) string {
 
 	rows := make([]string, height)
 
-	for x := 0; x < width; x++ {
-		for y := 0; y < height; y++ {
+	for x := range width {
+		for y := range height {
 			t := w.Tile(x, y)
 			r := ' '
 

@@ -73,7 +73,7 @@ func RucksackGroupPriority(input string) (int, error) {
 	}
 
 	if err := scanner.Err(); err != nil {
-		return 0, fmt.Errorf("scanning input: %v", err)
+		return 0, fmt.Errorf("scanning input: %w", err)
 	}
 
 	return total, nil

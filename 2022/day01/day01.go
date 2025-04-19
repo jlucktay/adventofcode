@@ -25,14 +25,14 @@ func parseElfCalories(input string) ([]int, error) {
 
 		lineCalories, err := strconv.ParseInt(line, 10, 32)
 		if err != nil {
-			return nil, err
+			return nil, fmt.Errorf("parsing integer: %w", err)
 		}
 
 		currentElfCalories += int(lineCalories)
 	}
 
 	if err := scanner.Err(); err != nil {
-		return nil, fmt.Errorf("scanning input: %v", err)
+		return nil, fmt.Errorf("scanning input: %w", err)
 	}
 
 	if currentElfCalories > 0 {

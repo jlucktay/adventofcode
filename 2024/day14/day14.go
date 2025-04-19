@@ -22,6 +22,7 @@ func parseInput(input string) (Robots, error) {
 		}
 
 		var pX, pY, vX, vY int
+
 		n, err := fmt.Sscanf(line, "p=%d,%d v=%d,%d", &pX, &pY, &vX, &vY)
 		if err != nil || n != 4 {
 			return Robots{}, fmt.Errorf("scanning: %w", err)

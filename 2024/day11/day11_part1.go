@@ -13,7 +13,7 @@ func Part1(input string) (int, error) {
 		return 0, err
 	}
 
-	for i := 0; i < 25; i++ {
+	for range 25 {
 		stones = stones.blink()
 	}
 

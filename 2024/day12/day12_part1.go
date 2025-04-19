@@ -37,6 +37,7 @@ func (g Garden) perimeters() int {
 					perimeter++
 				} else if !seen[neighbour] {
 					seen[neighbour] = true
+
 					queue = append(queue, neighbour)
 					area++
 				}

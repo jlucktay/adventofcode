@@ -23,7 +23,7 @@ func parseInput(input string) (struct{}, error) {
 		// go through input line by line and roll up into result
 		// ...
 
-    _ = xLine
+		_ = xLine
 	}
 
 	// ...

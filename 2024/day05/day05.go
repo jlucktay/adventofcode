@@ -27,6 +27,7 @@ func parseInput(input string) (manualPrinter, error) {
 
 		if len(line) == 0 {
 			parsingUpdates = true
+
 			continue
 		}
 

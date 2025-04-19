@@ -12,6 +12,7 @@ func TopCrate9001(input string) (string, error) {
 	afterSeperator := false
 
 	crateStacks := make([]*list.List, 0)
+
 	var err error
 
 	for scanner.Scan() {
@@ -19,6 +20,7 @@ func TopCrate9001(input string) (string, error) {
 
 		if len(line) == 0 {
 			afterSeperator = true
+
 			continue
 		}
 
@@ -27,7 +29,7 @@ func TopCrate9001(input string) (string, error) {
 				return "", fmt.Errorf("parsing crates '%s': %w", line, err)
 			}
 		} else {
-			// Below the seperator, parse 'move X from Y to Z'
+			// Below the separator, parse 'move X from Y to Z'
 			qty, from, to, err := parseMoveOrders(line)
 			if err != nil {
 				return "", fmt.Errorf("parsing move orders '%s': %w", line, err)
@@ -40,12 +42,12 @@ func TopCrate9001(input string) (string, error) {
 	}
 
 	if err := scanner.Err(); err != nil {
-		return "", fmt.Errorf("scanning input: %v", err)
+		return "", fmt.Errorf("scanning input: %w", err)
 	}
 
 	finalOrder := ""
 
-	for i := 0; i < len(crateStacks); i++ {
+	for i := range len(crateStacks) {
 		firstCrate := crateStacks[i].Front()
 		if firstCrate == nil {
 			return "", fmt.Errorf("getting first from stack #%d", i)
@@ -65,7 +67,7 @@ func TopCrate9001(input string) (string, error) {
 func crateMover9001(stacks []*list.List, qty, from, to int) ([]*list.List, error) {
 	moveTheseCrates := list.New()
 
-	for i := 0; i < qty; i++ {
+	for i := range qty {
 		crate := stacks[from-1].Front()
 		if crate == nil {
 			return nil, fmt.Errorf("getting first from stack #%d", from)

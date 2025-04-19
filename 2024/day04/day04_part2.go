@@ -36,7 +36,6 @@ func searchX(grid wordSearch, row, col int) bool {
 
 	if (topLeftToBottomRight == "MAS" || topLeftToBottomRight == "SAM") &&
 		(bottomLeftToTopRight == "MAS" || bottomLeftToTopRight == "SAM") {
-
 		return true
 	}
 
@@ -54,8 +53,8 @@ func searchWordX(grid wordSearch) int {
 
 	result := 0
 
-	for i := 0; i < m; i++ {
-		for j := 0; j < n; j++ {
+	for i := range m {
+		for j := range n {
 			if searchX(grid, i, j) {
 				result++
 			}

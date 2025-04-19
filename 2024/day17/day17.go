@@ -127,6 +127,7 @@ func (cc *ChronospatialComputer) BST(operand int) {
 func (cc *ChronospatialComputer) JNZ(operand int) {
 	if cc.A == 0 {
 		cc.instructionPointer += 2
+
 		return
 	}
 
@@ -197,6 +198,7 @@ func parseInput(input string) (ChronospatialComputer, error) {
 
 	for _, regLine := range xRegisters {
 		var reg string
+
 		var value int
 
 		n, err := fmt.Sscanf(regLine, "Register %1s: %d", &reg, &value)

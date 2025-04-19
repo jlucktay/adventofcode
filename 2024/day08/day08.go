@@ -58,7 +58,7 @@ func (ag AntennaGrid) String() string {
 			continue
 		}
 
-		gptLocationReport := fmt.Sprintf("%s:", string(gpt.Value))
+		gptLocationReport := string(gpt.Value) + ":"
 
 		for _, coordinates := range locations {
 			gptLocationReport += fmt.Sprintf(" %d,%d", coordinates[0], coordinates[1])

@@ -8,8 +8,8 @@ func HighestScenicScore(input string) (int, error) {
 
 	highestScore := 0
 
-	for i := 0; i < len(ttg.trees); i++ {
-		for j := 0; j < len(ttg.trees[i]); j++ {
+	for i := range len(ttg.trees) {
+		for j := range len(ttg.trees[i]) {
 			currentTreeScore := ttg.lookUpFrom(j, i) * ttg.lookRightFrom(j, i) * ttg.lookDownFrom(j, i) *
 				ttg.lookLeftFrom(j, i)
 

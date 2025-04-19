@@ -99,7 +99,7 @@ func ParseFileSystem(input string) (*FileSystem, error) {
 	}
 
 	if err := scanner.Err(); err != nil {
-		return nil, fmt.Errorf("scanning input: %v", err)
+		return nil, fmt.Errorf("scanning input: %w", err)
 	}
 
 	return resultFS, nil
@@ -169,7 +169,7 @@ func (fs *FileSystem) changeDirectory(targetDir string) error {
 		}
 	}
 
-	return fmt.Errorf("change to non-existant '%s' directory", targetDir)
+	return fmt.Errorf("change to non-existent '%s' directory", targetDir)
 }
 
 func (fs *FileSystem) parseFile(input string) error {

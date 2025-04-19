@@ -3,7 +3,7 @@ package day08
 func (ttg *TallTreeGrid) lookDownAt(x, y int) bool {
 	heightOfTargetTree := ttg.trees[y][x]
 
-	for i := 0; i < y; i++ {
+	for i := range y {
 		if ttg.trees[i][x] >= heightOfTargetTree {
 			return false
 		}
@@ -39,7 +39,7 @@ func (ttg *TallTreeGrid) lookUpAt(x, y int) bool {
 func (ttg *TallTreeGrid) lookRightAt(x, y int) bool {
 	heightOfTargetTree := ttg.trees[y][x]
 
-	for i := 0; i < x; i++ {
+	for i := range x {
 		if ttg.trees[y][i] >= heightOfTargetTree {
 			return false
 		}

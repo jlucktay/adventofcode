@@ -34,8 +34,8 @@ func (cc *ClockCircuit) RenderPixels() string {
 	tape := cc.Tape()
 	screen := strings.Builder{}
 
-	for y := 0; y < 6; y++ {
-		for x := 0; x < 40; x++ {
+	for y := range 6 {
+		for x := range 40 {
 			spritePosition := tape[x+(y*40)]
 
 			if spritePosition-1 <= x && x <= spritePosition+1 {
@@ -43,7 +43,6 @@ func (cc *ClockCircuit) RenderPixels() string {
 			} else {
 				screen.WriteString(".")
 			}
-
 		}
 
 		screen.WriteString("\n")

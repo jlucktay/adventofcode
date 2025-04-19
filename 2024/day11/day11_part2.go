@@ -8,7 +8,7 @@ func Part2(input string) (int, error) {
 		return 0, err
 	}
 
-	for i := 0; i < 75; i++ {
+	for range 75 {
 		stones = stones.blink()
 	}
 

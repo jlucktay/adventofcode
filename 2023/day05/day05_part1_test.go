@@ -88,11 +88,12 @@ So, the lowest location number in this example is 35.
 package main
 
 import (
-	_ "embed"
 	"strings"
 	"testing"
 
 	"github.com/matryer/is"
+
+	_ "embed"
 )
 
 //go:embed testdata/almanac.txt

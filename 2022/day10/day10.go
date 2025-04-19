@@ -44,6 +44,7 @@ func (cc *ClockCircuit) QueueProgram(inst instruction, param int) {
 func (cc *ClockCircuit) Tick() {
 	if cc.index >= uint(len(cc.program)) {
 		fmt.Fprintf(os.Stderr, "index %d out of bounds", cc.index)
+
 		return
 	}
 
@@ -61,6 +62,7 @@ func (cc *ClockCircuit) Tick() {
 	case InstAddX:
 		cc.busyAdding = true
 		cc.cycle++
+
 		return
 	default:
 		return
@@ -84,6 +86,7 @@ func (cc *ClockCircuit) ParseProgram(input string) error {
 	for scanner.Scan() {
 		line := scanner.Text()
 		xLine := strings.Split(line, " ")
+
 		if len(xLine) < 1 || len(xLine) > 2 {
 			return fmt.Errorf("parsing '%s'", line)
 		}
@@ -94,7 +97,7 @@ func (cc *ClockCircuit) ParseProgram(input string) error {
 		case InstAddX:
 			param, err := strconv.ParseInt(xLine[1], 10, 32)
 			if err != nil {
-				return err
+				return fmt.Errorf("parsing integer: %w", err)
 			}
 
 			cc.QueueProgram(InstAddX, int(param))
@@ -102,7 +105,7 @@ func (cc *ClockCircuit) ParseProgram(input string) error {
 	}
 
 	if err := scanner.Err(); err != nil {
-		return fmt.Errorf("scanning input: %v", err)
+		return fmt.Errorf("scanning input: %w", err)
 	}
 
 	return nil

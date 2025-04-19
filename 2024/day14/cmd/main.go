@@ -28,6 +28,7 @@ func main() {
 	startPart1 := time.Now()
 	part1, err := day14.Part1(input, bounds, part1Duration)
 	finishPart1 := time.Since(startPart1)
+
 	if err != nil {
 		slog.Error("part 1", slog.Any("err", err))
 		os.Exit(1)
@@ -44,6 +45,7 @@ func main() {
 	startPart2 := time.Now()
 	part2, err := day14.Part2(input, bounds, part2Duration)
 	finishPart2 := time.Since(startPart2)
+
 	if err != nil {
 		slog.Error("part 2", slog.Any("err", err))
 		os.Exit(2)

@@ -17,6 +17,7 @@ func TopCrate9000(input string) (string, error) {
 	afterSeperator := false
 
 	crateStacks := make([]*list.List, 0)
+
 	var err error
 
 	for scanner.Scan() {
@@ -24,6 +25,7 @@ func TopCrate9000(input string) (string, error) {
 
 		if len(line) == 0 {
 			afterSeperator = true
+
 			continue
 		}
 
@@ -32,7 +34,7 @@ func TopCrate9000(input string) (string, error) {
 				return "", fmt.Errorf("parsing crates '%s': %w", line, err)
 			}
 		} else {
-			// Below the seperator, parse 'move X from Y to Z'
+			// Below the separator, parse 'move X from Y to Z'
 			qty, from, to, err := parseMoveOrders(line)
 			if err != nil {
 				return "", fmt.Errorf("parsing move orders '%s': %w", line, err)
@@ -45,12 +47,12 @@ func TopCrate9000(input string) (string, error) {
 	}
 
 	if err := scanner.Err(); err != nil {
-		return "", fmt.Errorf("scanning input: %v", err)
+		return "", fmt.Errorf("scanning input: %w", err)
 	}
 
 	finalOrder := ""
 
-	for i := 0; i < len(crateStacks); i++ {
+	for i := range len(crateStacks) {
 		firstCrate := crateStacks[i].Front()
 		if firstCrate == nil {
 			return "", fmt.Errorf("getting first from stack #%d", i)
@@ -108,6 +110,7 @@ func parseLineOfCrates(incoming []*list.List, line string) ([]*list.List, error)
 
 func parseMoveOrders(orders string) (int, int, int, error) {
 	pattern := `^move ([0-9]+) from ([0-9]+) to ([0-9]+)$`
+
 	regex, err := regexp.Compile(pattern)
 	if err != nil {
 		return 0, 0, 0, fmt.Errorf("compiling regular expression '%s': %w", pattern, err)
@@ -141,7 +144,7 @@ func parseMoveOrders(orders string) (int, int, int, error) {
 }
 
 func crateMover9000(stacks []*list.List, qty, from, to int) ([]*list.List, error) {
-	for i := 0; i < qty; i++ {
+	for range qty {
 		crate := stacks[from-1].Front()
 		if crate == nil {
 			return nil, fmt.Errorf("getting first from stack #%d", from)

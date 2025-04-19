@@ -24,7 +24,7 @@ func gcd(a, b int) int {
 func lcm(a, b int, integers ...int) int {
 	result := a * b / gcd(a, b)
 
-	for i := 0; i < len(integers); i++ {
+	for i := range len(integers) {
 		result = lcm(result, integers[i])
 	}
 

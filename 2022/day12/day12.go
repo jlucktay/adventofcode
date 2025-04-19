@@ -27,6 +27,7 @@ func bfs(w World, part2 bool) (int, error) {
 		for index := range neighbours {
 			if _, seen := dist[neighbours[index]]; !seen {
 				dist[neighbours[index]] = dist[cur] + 1
+
 				queue = append(queue, neighbours[index])
 			}
 		}

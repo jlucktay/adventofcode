@@ -115,6 +115,7 @@ func (lr *LongRope) ParseCommands(input string) error {
 		}
 
 		var dir Direction
+
 		switch xLine[0] {
 		case "U":
 			dir = DirUp
@@ -128,10 +129,10 @@ func (lr *LongRope) ParseCommands(input string) error {
 
 		distance, err := strconv.ParseInt(xLine[1], 10, 32)
 		if err != nil {
-			return err
+			return fmt.Errorf("parsing integer: %w", err)
 		}
 
-		for i := 0; i < int(distance); i++ {
+		for range distance {
 			lr.MoveHead(dir)
 
 			for index := range lr.knots {
@@ -151,7 +152,7 @@ func (lr *LongRope) ParseCommands(input string) error {
 	}
 
 	if err := scanner.Err(); err != nil {
-		return fmt.Errorf("scanning input: %v", err)
+		return fmt.Errorf("scanning input: %w", err)
 	}
 
 	return nil

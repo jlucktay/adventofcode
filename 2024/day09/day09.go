@@ -24,7 +24,7 @@ func parseInput(input string) (Disk, error) {
 				return nil, fmt.Errorf("parsing '%s': %w", string(size), err)
 			}
 
-			for i := 0; i < int(parsedSize); i++ {
+			for range parsedSize {
 				switch index%2 == 0 {
 				case true:
 					result = append(result, int64(index/2))

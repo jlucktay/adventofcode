@@ -50,6 +50,7 @@ func ParseMonkey(input string) (*Monkey, error) {
 	}
 
 	scanner := bufio.NewScanner(strings.NewReader(input))
+
 	var err error
 
 	// Monkey 0:
@@ -59,8 +60,10 @@ func ParseMonkey(input string) (*Monkey, error) {
 	if !scanner.Scan() {
 		return nil, errors.New("scanning starting items line")
 	}
+
 	siLine := scanner.Text()
 	siLine = strings.TrimPrefix(siLine, "  Starting items: ")
+
 	for _, item := range strings.Split(siLine, ", ") {
 		itemNumber, err := strconv.Atoi(item)
 		if err != nil {
@@ -74,6 +77,7 @@ func ParseMonkey(input string) (*Monkey, error) {
 	if !scanner.Scan() {
 		return nil, errors.New("scanning operation line")
 	}
+
 	opLine := scanner.Text()
 	opLine = strings.TrimPrefix(opLine, "  Operation: new = old ")
 	ops := strings.Split(opLine, " ")
@@ -94,8 +98,10 @@ func ParseMonkey(input string) (*Monkey, error) {
 	if !scanner.Scan() {
 		return nil, errors.New("scanning test line")
 	}
+
 	testLine := scanner.Text()
 	testLine = strings.TrimPrefix(testLine, "  Test: divisible by ")
+
 	m.testDivFactor, err = strconv.Atoi(testLine)
 	if err != nil {
 		return nil, fmt.Errorf("test '%#v': %w", testLine, err)
@@ -105,8 +111,10 @@ func ParseMonkey(input string) (*Monkey, error) {
 	if !scanner.Scan() {
 		return nil, errors.New("scanning if true line")
 	}
+
 	ifTrueLine := scanner.Text()
 	ifTrueLine = strings.TrimPrefix(ifTrueLine, "    If true: throw to monkey ")
+
 	m.ifTrue, err = strconv.Atoi(ifTrueLine)
 	if err != nil {
 		return nil, fmt.Errorf("if true '%#v': %w", ifTrueLine, err)
@@ -116,8 +124,10 @@ func ParseMonkey(input string) (*Monkey, error) {
 	if !scanner.Scan() {
 		return nil, errors.New("scanning if false line")
 	}
+
 	ifFalseLine := scanner.Text()
 	ifFalseLine = strings.TrimPrefix(ifFalseLine, "    If false: throw to monkey ")
+
 	m.ifFalse, err = strconv.Atoi(ifFalseLine)
 	if err != nil {
 		return nil, fmt.Errorf("if false '%#v': %w", ifFalseLine, err)
@@ -197,7 +207,7 @@ func SimulateRoundsOfMonkeyBusiness(input string, rounds int, lcmRelief bool) (i
 		relief = monkeys.LCM()
 	}
 
-	for round := 0; round < rounds; round++ {
+	for range rounds {
 		for index := range monkeys {
 			thrownItems, err := monkeys[index].Turn(relief)
 			if err != nil {

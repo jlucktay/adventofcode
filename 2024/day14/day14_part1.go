@@ -5,6 +5,7 @@ package day14
 import (
 	"fmt"
 	"image"
+	"strconv"
 	"strings"
 
 	"github.com/orsinium-labs/enum"
@@ -68,7 +69,7 @@ func (r Robots) String() string {
 			} else if robotsHere >= 10 {
 				sb.WriteRune('X')
 			} else {
-				sb.WriteString(fmt.Sprintf("%d", robotsHere))
+				sb.WriteString(strconv.Itoa(robotsHere))
 			}
 		}
 
@@ -140,6 +141,7 @@ func (r Robots) safetyFactor(test bool) int {
 		for _, q := range quadrants {
 			if robot.position.In(q.Value) {
 				quadrantCounts[q]++
+
 				break
 			}
 		}

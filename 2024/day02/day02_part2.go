@@ -19,7 +19,6 @@ func Part2(input string) (int, error) {
 	for _, report := range reports {
 		if (reportStrictlyAsc(report) || reportStrictlyDesc(report)) &&
 			reportGapsBetween1And3(report) {
-
 			result++
 
 			continue
@@ -30,7 +29,6 @@ func Part2(input string) (int, error) {
 
 			if (reportStrictlyAsc(indexDeleted) || reportStrictlyDesc(indexDeleted)) &&
 				reportGapsBetween1And3(indexDeleted) {
-
 				result++
 
 				break
@@ -115,7 +113,6 @@ func reportRemoveFirstUnsafe(report []int) []int {
 
 		if (clonedReport[index] <= clonedReport[index+1] && clonedReport[index+1] >= clonedReport[index+2]) ||
 			(clonedReport[index] >= clonedReport[index+1] && clonedReport[index+1] <= clonedReport[index+2]) {
-
 			firstUnsafeRemoved := slices.Delete(clonedReport, index+1, index+2)
 
 			if reportHasDuplicates(firstUnsafeRemoved) {

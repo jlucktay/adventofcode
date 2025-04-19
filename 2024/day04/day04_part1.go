@@ -32,9 +32,10 @@ func search2D(grid wordSearch, row, col int, word string) int {
 
 	// This loop searches in all 8 directions, one by one.
 	// It returns true if any one direction contains the word.
-	for dir := 0; dir < 8; dir++ {
+	for dir := range 8 {
 		// Initialise the starting point for the current direction.
 		var k int
+
 		currX := row + x[dir]
 		currY := col + y[dir]
 
@@ -75,8 +76,8 @@ func searchWord(grid wordSearch, word string) int {
 
 	result := 0
 
-	for i := 0; i < m; i++ {
-		for j := 0; j < n; j++ {
+	for i := range m {
+		for j := range n {
 			result += search2D(grid, i, j, word)
 		}
 	}

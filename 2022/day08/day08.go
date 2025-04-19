@@ -24,7 +24,7 @@ func NewTallTreeGrid(input string) (TallTreeGrid, error) {
 		ttg.trees = append(ttg.trees, make([]int, 0))
 		ttg.trees[lineCounter] = make([]int, len(line))
 
-		for i := 0; i < len(line); i++ {
+		for i := range len(line) {
 			r, _ := utf8.DecodeRuneInString(line[i:])
 			if r == utf8.RuneError {
 				return TallTreeGrid{}, fmt.Errorf("decoding rune at index '%d' from '%s'", lineCounter, line)
@@ -42,7 +42,7 @@ func NewTallTreeGrid(input string) (TallTreeGrid, error) {
 	}
 
 	if err := scanner.Err(); err != nil {
-		return TallTreeGrid{}, fmt.Errorf("scanning input: %v", err)
+		return TallTreeGrid{}, fmt.Errorf("scanning input: %w", err)
 	}
 
 	return ttg, nil

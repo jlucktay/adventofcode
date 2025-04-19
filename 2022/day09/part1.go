@@ -39,6 +39,7 @@ func (r *Rope) MoveHead(dir Direction) {
 
 func (r *Rope) TailMustMove() bool {
 	dist := r.tail.DistanceFrom(r.head)
+
 	return dist > 1
 }
 
@@ -96,6 +97,7 @@ func (r *Rope) ParseCommands(input string) error {
 		}
 
 		var dir Direction
+
 		switch xLine[0] {
 		case "U":
 			dir = DirUp
@@ -109,10 +111,10 @@ func (r *Rope) ParseCommands(input string) error {
 
 		distance, err := strconv.ParseInt(xLine[1], 10, 32)
 		if err != nil {
-			return err
+			return fmt.Errorf("parsing integer: %w", err)
 		}
 
-		for i := 0; i < int(distance); i++ {
+		for range distance {
 			r.MoveHead(dir)
 
 			if r.TailMustMove() {
@@ -122,7 +124,7 @@ func (r *Rope) ParseCommands(input string) error {
 	}
 
 	if err := scanner.Err(); err != nil {
-		return fmt.Errorf("scanning input: %v", err)
+		return fmt.Errorf("scanning input: %w", err)
 	}
 
 	return nil

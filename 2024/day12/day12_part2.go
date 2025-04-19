@@ -40,6 +40,7 @@ func (g Garden) sides() int {
 					}
 				} else if !seen[neighbour] {
 					seen[neighbour] = true
+
 					queue = append(queue, neighbour)
 					area++
 				}
