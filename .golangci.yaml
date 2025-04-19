@@ -1,50 +1,67 @@
-issues:
-  # Maximum issues count per one linter.
-  # Set to 0 to disable.
-  # Default: 50
-  max-issues-per-linter: 0
-
-  # Maximum count of issues with the same text.
-  # Set to 0 to disable.
-  # Default: 3
-  max-same-issues: 0
-
-linters-settings:
-  gci:
-    # Section configuration to compare against.
-    # Section names are case-insensitive and may contain parameters in ().
-    # The default order of sections is `standard > default > custom > blank > dot`,
-    # If `custom-order` is `true`, it follows the order of `sections` option.
-    # Default: ["standard", "default"]
-    sections:
-      # Standard section: captures all standard packages.
-      - standard
-      # Default section: contains all imports that could not be matched to another section type.
-      - default
-      # Custom section: groups all imports with the specified Prefix.
-      - prefix(go.jlucktay.dev/adventofcode)
-      - prefix(go.jlucktay.dev/adventofcode/2017)
-      - prefix(go.jlucktay.dev/adventofcode/2018)
-      - prefix(go.jlucktay.dev/adventofcode/2020)
-      - prefix(go.jlucktay.dev/adventofcode/2022)
-      - prefix(go.jlucktay.dev/adventofcode/2023)
-      - prefix(go.jlucktay.dev/adventofcode/2024)
-      - prefix(go.jlucktay.dev/adventofcode/aocautoself)
-      - prefix(go.jlucktay.dev/adventofcode/crunchy)
-      # Blank section: contains all blank imports. This section is not present unless explicitly enabled.
-      - blank
-      # Dot section: contains all dot imports. This section is not present unless explicitly enabled.
-      - dot
-
-    # Skip generated files.
-    # Default: true
-    skip-generated: false
-
-    # Enable custom order of sections.
-    # If `true`, make the section order the same as the order of `sections`.
-    # Default: false
-    custom-order: true
+version: '2'
 
 linters:
+  default: standard
   disable:
+    - lll
     - unused
+  settings:
+    varnamelen:
+      ignore-decls:
+        - is *is.I
+    wsl:
+      allow-trailing-comment: true
+  exclusions:
+    generated: lax
+    warn-unused: true
+    presets:
+      - std-error-handling
+
+formatters:
+  enable:
+    - gci
+    - gofmt
+    - gofumpt
+
+  settings:
+    gci:
+      sections:
+        - standard
+        - default
+        - prefix(go.jlucktay.dev/adventofcode)
+        - blank
+        - dot
+      no-inline-comments: true
+      no-prefix-comments: true
+      custom-order: true
+      no-lex-order: false
+
+    gofmt:
+      simplify: true
+      rewrite-rules:
+        - pattern: 'interface{}'
+          replacement: 'any'
+
+    gofumpt:
+      extra-rules: true
+
+  exclusions:
+    generated: lax
+
+issues:
+  max-issues-per-linter: 0
+  max-same-issues: 0
+
+output:
+  formats:
+    tab:
+      print-linter-name: true
+      colors: true
+  sort-order:
+    - linter
+    - file
+  show-stats: true
+
+run:
+  tests: true
+  modules-download-mode: readonly
