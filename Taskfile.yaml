@@ -52,9 +52,16 @@ tasks:
     desc: Lint each Go module separately.
 
   go:lint:gofumpt:
+    desc: Enforce a stricter format than gofmt, while being backwards compatible.
     preconditions:
       - sh: command -v gofumpt
         msg: 'Required CLI command `gofumpt` missing. Please install it: https://github.com/mvdan/gofumpt'
+      - sh: gofumpt -d .
+        msg: gofumpt detected a diff
+    requires:
+      vars:
+        - GO_MODULES
+    dir: '{{.ROOT_DIR}}'
     cmds:
       - for:
           var: GO_MODULES
@@ -63,12 +70,6 @@ tasks:
           COMMAND: gofumpt -l -extra .
           MODULE: '{{.ITEM}}'
           PREFIX: lint-gofumpt
-    desc: Enforce a stricter format than gofmt, while being backwards compatible.
-    # TODO(jlucktay): watch https://github.com/mvdan/gofumpt/issues/114 for exit status changes, to enforce this.
-    dir: '{{.ROOT_DIR}}'
-    requires:
-      vars:
-        - GO_MODULES
 
   go:lint:golangci:
     preconditions:
