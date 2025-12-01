@@ -288,7 +288,7 @@ tasks:
       - git unstage
       - git add "{{.YEAR}}/{{.DAY}}"
       - git unstage *part2*
-      - code "{{.YEAR}}/{{.DAY}}"/{cmd/main,{{.DAY}}*}.go
+      - code {{.YEAR}}/{{.DAY}}/{cmd/main,{{.DAY}}*}.go
 
   ###
   ### Per-module maintenance
