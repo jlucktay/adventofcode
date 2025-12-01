@@ -30,9 +30,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
 
-      - uses: actions/setup-go@v5
+      - uses: actions/setup-go@v6
         with:
           go-version-file: go.work
 
@@ -42,7 +42,7 @@ jobs:
 
       - uses: luisnquin/setup-gofumpt@v2
 
-      - uses: golangci/golangci-lint-action@v8
+      - uses: golangci/golangci-lint-action@v9
         with:
           args: >-
             --build-tags=skip_embed
