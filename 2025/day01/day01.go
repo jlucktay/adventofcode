@@ -12,8 +12,9 @@ import (
 )
 
 type Safe struct {
-	dial        int
-	countZeroes int
+	dial                 int
+	leftPointingAtZero   int
+	anyClickPointsAtZero int
 }
 
 func NewSafe() *Safe {
@@ -30,24 +31,24 @@ type Rotation struct {
 }
 
 func (s *Safe) Turn(input Rotation) {
-	mag := input.magnitude % 100
+	for range input.magnitude {
+		if input.left {
+			s.dial--
+		} else {
+			s.dial++
+		}
 
-	if input.left {
-		s.dial -= mag
-	} else {
-		s.dial += mag
-	}
+		if s.dial < 0 {
+			s.dial = 99
+		}
 
-	for s.dial < 0 {
-		s.dial += 100
-	}
+		if s.dial > 99 {
+			s.dial = 0
+		}
 
-	for s.dial >= 100 {
-		s.dial -= 100
-	}
-
-	if s.DialPointsToZero() {
-		s.countZeroes++
+		if s.DialPointsToZero() {
+			s.anyClickPointsAtZero++
+		}
 	}
 }
 
@@ -56,6 +57,10 @@ type Instructions []Rotation
 func (s *Safe) Follow(input Instructions) {
 	for _, inst := range input {
 		s.Turn(inst)
+
+		if s.DialPointsToZero() {
+			s.leftPointingAtZero++
+		}
 	}
 }
 

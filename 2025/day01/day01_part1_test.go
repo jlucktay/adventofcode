@@ -60,6 +60,8 @@ L99
 R14
 L82
 `, 3},
+		"zoe": {`L50
+L50`, 1},
 	}
 
 	for desc, testCase := range testCases {

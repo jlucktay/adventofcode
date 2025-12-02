@@ -11,5 +11,5 @@ func Part1(input string) (int, error) {
 	safe := NewSafe()
 	safe.Follow(rotations)
 
-	return safe.countZeroes, nil
+	return safe.leftPointingAtZero, nil
 }
