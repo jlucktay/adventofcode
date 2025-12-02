@@ -1,8 +1,8 @@
-github.com/lmittmann/tint v1.0.5 h1:NQclAutOfYsqs2F1Lenue6OoWCajs5wJcP3DfWVpePw=
-github.com/lmittmann/tint v1.0.5/go.mod h1:HIS3gSy7qNwGCj+5oRjAutErFBl4BzdQP6cJZ0NfMwE=
+github.com/lmittmann/tint v1.1.2 h1:2CQzrL6rslrsyjqLDwD11bZ5OpLBPU+g3G/r5LSfS8w=
+github.com/lmittmann/tint v1.1.2/go.mod h1:HIS3gSy7qNwGCj+5oRjAutErFBl4BzdQP6cJZ0NfMwE=
 github.com/matryer/is v1.4.1 h1:55ehd8zaGABKLXQUe2awZ99BD/PTc2ls+KV/dXphgEQ=
 github.com/matryer/is v1.4.1/go.mod h1:8I/i5uYgLzgsgEloJE1U6xx5HkBQpAZvepWuujKwMRU=
-go.jlucktay.dev/adventofcode/crunchy v0.0.0-20241210201440-539a928fa35e h1:O7pwbIABrPkDc7N3V3kSkknOFEE2SFFBMeSGoOZHzRU=
-go.jlucktay.dev/adventofcode/crunchy v0.0.0-20241210201440-539a928fa35e/go.mod h1:kK0k3swjYiT6bxBxkL9PE7bAlcPlJaCOX65N3qUaBf0=
-golang.org/x/exp v0.0.0-20241210194714-1829a127f884 h1:Y/Mj/94zIQQGHVSv1tTtQBDaQaJe62U9bkDZKKyhPCU=
-golang.org/x/exp v0.0.0-20241210194714-1829a127f884/go.mod h1:qj5a5QZpwLU2NLQudwIN5koi3beDhSAlJwa67PuM98c=
+go.jlucktay.dev/adventofcode/crunchy v0.0.0-20251202162824-e0857b26fc8d h1:WAYTuSk9DJ7TpQ8oojSfQkq6id4Q/YSaHLT0jqUyCS0=
+go.jlucktay.dev/adventofcode/crunchy v0.0.0-20251202162824-e0857b26fc8d/go.mod h1:jQ2uYBMgo7+6tjB/otjT5nZ4oPj3+G9thD+oN64/ieU=
+golang.org/x/exp v0.0.0-20251125195548-87e1e737ad39 h1:DHNhtq3sNNzrvduZZIiFyXWOL9IWaDPHqTnLJp+rCBY=
+golang.org/x/exp v0.0.0-20251125195548-87e1e737ad39/go.mod h1:46edojNIoXTNOhySWIWdix628clX9ODXwPsQuG6hsK0=
