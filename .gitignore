@@ -17,7 +17,8 @@ cmd-aocautoself
 # MacOS
 .DS_Store
 
-# Pending resolution of https://github.com/golang/go/issues/51941
+# https://go.dev/ref/mod#go-work-file
+/go.work
 /go.work.sum
 
 # https://www.reddit.com/r/adventofcode/comments/18an94z/psa_dont_share_your_inputs_even_in_your_github/
