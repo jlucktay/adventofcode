@@ -186,7 +186,7 @@ tasks:
     sources:
       - '**/go.{mod,sum}'
       - '**/*.go'
-    cmd: go test --count=10 --failfast --race --timeout=10s --vet="" ./...
+    cmd: go test --count=10 --failfast --race --timeout=10s -v --vet="" ./...
 
   go:run:today:
     desc: Run a single day.
@@ -287,7 +287,6 @@ tasks:
       - go run ./template/helper/main.go
       - git unstage
       - git add "{{.YEAR}}/{{.DAY}}"
-      - git unstage *part2*
       - code {{.YEAR}}/{{.DAY}}/{cmd/main,{{.DAY}}*}.go
 
   ###
