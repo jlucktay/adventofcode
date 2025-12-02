@@ -104,14 +104,16 @@ func (snc spiralNodeCoords) neighbours() [8]spiralNodeCoords {
 }
 
 // Calculates the sum of all actual neighbours' values
-func (sn spiralNode) sumNeighbours() (result uint) {
+func (sn spiralNode) sumNeighbours() uint {
+	var result uint
+
 	for _, neighbour := range sn.coords.neighbours() {
 		if node, ok := sn.parent.nodeMap[neighbour]; ok {
 			result += node.value
 		}
 	}
 
-	return
+	return result
 }
 
 func (sn spiralNode) String() string {
