@@ -40,5 +40,5 @@ func main() {
 		os.Exit(2)
 	}
 
-	slog.Info("part 2", slog.Int("result", part2), slog.Duration("elapsed", finishPart2))
+	slog.Info("part 2", slog.Int64("result", part2), slog.Duration("elapsed", finishPart2))
 }

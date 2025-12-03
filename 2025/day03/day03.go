@@ -6,6 +6,7 @@ import (
 	"bufio"
 	"bytes"
 	"fmt"
+	"math/big"
 	"slices"
 	"strconv"
 	"strings"
@@ -31,6 +32,58 @@ func (bb BatteryBank) largestJoltage() int {
 	}
 
 	return highestTotal
+}
+
+// overcomeStaticFriction was made possible by this write-up: https://www.geeksforgeeks.org/dsa/largest-number-possible-after-removal-of-k-digits/
+func (bb BatteryBank) overcomeStaticFriction() (int64, error) {
+	sb := strings.Builder{}
+
+	for _, b := range bb {
+		sb.WriteString(fmt.Sprintf("%d", b))
+	}
+
+	sbs := sb.String()
+
+	n, ok := new(big.Int).SetString(sbs, 10)
+	if !ok {
+		return 0, fmt.Errorf("setting string '%s' to big.Int", sbs)
+	}
+
+	k := len(bb) - 12
+
+	if k <= 0 {
+		return 0, fmt.Errorf("battery bank '%+v' is not big enough (%d) to turn on 12 batteries", bb, len(bb))
+	}
+
+	// Generate the largest number after removal of the least K digits one by one
+	for range k {
+		ans := big.NewInt(0)
+		i := big.NewInt(1)
+
+		// Remove the least digit after every iteration
+		for new(big.Int).Div(n, i).Cmp(big.NewInt(0)) == 1 {
+			// Store the numbers formed after removing every digit once
+			iTimesTen := new(big.Int).Mul(i, big.NewInt(10))
+			nOverI := new(big.Int).Div(n, iTimesTen)
+			leftOfPlus := new(big.Int).Mul(nOverI, i)
+
+			rightOfPlus := new(big.Int).Mod(n, i)
+
+			temp := new(big.Int).Add(leftOfPlus, rightOfPlus)
+
+			i.Mul(i, big.NewInt(10))
+
+			// Compare and store the maximum
+			if temp.Cmp(ans) == 1 {
+				ans = temp
+			}
+		}
+
+		// Store the largest number remaining
+		n = ans
+	}
+
+	return n.Int64(), nil
 }
 
 func parseInput(input string) (BatteryBanks, error) {
