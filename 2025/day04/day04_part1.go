@@ -14,5 +14,5 @@ func Part1(input string) (int, error) {
 
 	fmt.Printf("%s\n", pd)
 
-	return pd.paperAccessibleByForklift(), nil
+	return pd.paperAccessibleByForklift(false), nil
 }

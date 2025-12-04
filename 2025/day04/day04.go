@@ -42,24 +42,40 @@ func (pd PrintingDepartment) String() string {
 	return result
 }
 
-func (pd PrintingDepartment) paperAccessibleByForklift() int {
+func (pd PrintingDepartment) paperAccessibleByForklift(remove bool) int {
 	result := 0
+
+	markForRemoval := make(map[image.Point]struct{}, 0)
 
 	for y := range pd.yMax {
 		for x := range pd.xMax {
+			currentPosition := image.Pt(x, y)
+
 			// 1. Make sure tile exists in the grid
 			// 2. Only count neighbours of paper, not of empty tiles
-			if tileType, ok := pd.grid[image.Pt(x, y)]; ok && tileType != Paper {
+			if tileType, ok := pd.grid[currentPosition]; ok && tileType != Paper {
 				continue
 			}
 
-			paperNeighbourCount := pd.countPaperNeighbours(image.Pt(x, y))
+			paperNeighbourCount := pd.countPaperNeighbours(currentPosition)
 
 			slog.Debug("neighbours", slog.Int("x", x), slog.Int("y", y), slog.Int("paperNeighbourCount", paperNeighbourCount))
 
 			if paperNeighbourCount < 4 {
 				result++
+
+				if remove {
+					markForRemoval[currentPosition] = struct{}{}
+				}
 			}
+		}
+	}
+
+	if remove {
+		slog.Debug("marked for removal", slog.Int("count", len(markForRemoval)), slog.String("map", fmt.Sprintf("%+v", markForRemoval)))
+
+		for key := range markForRemoval {
+			pd.grid[key] = Empty
 		}
 	}
 

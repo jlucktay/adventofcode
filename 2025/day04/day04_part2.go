@@ -2,13 +2,34 @@
 // https://adventofcode.com/2025/day/4
 package day04
 
+import (
+	"fmt"
+	"log/slog"
+)
+
 func Part2(input string) (int, error) {
-	_, err := parseInput(input)
+	pd, err := parseInput(input)
 	if err != nil {
 		return 0, err
 	}
 
-	result := 0
+	fmt.Printf("Initial state:\n%s\n", pd)
 
-	return result, nil
+	runningTotal := 0
+
+	for {
+		removedThisTime := pd.paperAccessibleByForklift(true)
+
+		runningTotal += removedThisTime
+
+		slog.Debug("removed paper", slog.Int("removedThisTime", removedThisTime), slog.Int("runningTotal", runningTotal))
+
+		fmt.Printf("Removed %d rolls of paper:\n%s\n", removedThisTime, pd)
+
+		if removedThisTime == 0 {
+			break
+		}
+	}
+
+	return runningTotal, nil
 }
