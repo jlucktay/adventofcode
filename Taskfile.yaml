@@ -286,8 +286,8 @@ tasks:
     cmds:
       - go run ./template/helper/main.go
       - git unstage
-      - git add "{{.YEAR}}/{{.DAY}}"
-      - code {{.YEAR}}/{{.DAY}}/{cmd/main,{{.DAY}}*}.go
+      - git add "{{.TODAY_DIR}}"
+      - code {{.TODAY_DIR}}/{cmd/input.txt,**/day*.go}
 
   ###
   ### Per-module maintenance
