@@ -131,7 +131,6 @@ tasks:
             --race
             --tags=skip_embed
             --timeout=10s
-            -v
             --vet=""
             ./...
           MODULE: '{{.ITEM}}'

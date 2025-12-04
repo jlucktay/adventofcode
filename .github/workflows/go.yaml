@@ -24,6 +24,10 @@ on:
       - '**/*.go'
       - '**/go.{mod,sum}'
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   test-cover:
     name: Test coverage
