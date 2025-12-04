@@ -126,16 +126,13 @@ tasks:
         vars:
           COMMAND: >-
             go test
-            {{if (hasSuffix "/aok" .ITEM) -}}
-            --count=1
-            -v
-            {{- else -}}
             --count=100
             --failfast
             --race
+            --tags=skip_embed
             --timeout=10s
+            -v
             --vet=""
-            {{- end}}
             ./...
           MODULE: '{{.ITEM}}'
 
