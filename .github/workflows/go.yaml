@@ -11,7 +11,8 @@ on:
       - .golangci.yaml
       - Taskfile.yaml
       - '**/*.go'
-      - '**/go.{mod,sum}'
+      - '**/go.mod'
+      - '**/go.sum'
 
   pull_request:
     branches:
