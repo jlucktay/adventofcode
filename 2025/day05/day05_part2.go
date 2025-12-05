@@ -3,12 +3,12 @@
 package day05
 
 func Part2(input string) (int, error) {
-	_, err := parseInput(input)
+	cafe, err := parseInput(input)
 	if err != nil {
 		return 0, err
 	}
 
-	result := 0
+	result := cafe.countAllFresh()
 
 	return result, nil
 }
