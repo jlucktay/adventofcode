@@ -3,12 +3,12 @@
 package day07
 
 func Part2(input string) (int, error) {
-	_, err := parseInput(input)
+	tbs, err := parseInput(input)
 	if err != nil {
 		return 0, err
 	}
 
-	result := 0
+	result := tbs.startQuantum()
 
 	return result, nil
 }

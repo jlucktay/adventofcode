@@ -27,6 +27,7 @@ var (
 
 type TachyonBeamSplitter struct {
 	grid       map[image.Point]Tile
+	timelines  map[image.Point]int
 	xMax, yMax int
 }
 
@@ -35,7 +36,17 @@ func (tbs TachyonBeamSplitter) String() string {
 
 	for y := range tbs.yMax {
 		for x := range tbs.xMax {
-			sb.WriteRune(tbs.grid[image.Pt(x, y)].Value)
+			currentPos := image.Pt(x, y)
+
+			if timelineCount, exists := tbs.timelines[currentPos]; exists {
+				if timelineCount >= 10 {
+					sb.WriteRune('x')
+				} else {
+					sb.WriteString(fmt.Sprintf("%d", timelineCount))
+				}
+			} else {
+				sb.WriteRune(tbs.grid[currentPos].Value)
+			}
 		}
 
 		sb.WriteString("\n")
@@ -88,12 +99,70 @@ func (tbs TachyonBeamSplitter) startSplitting() int {
 	return result
 }
 
+func (tbs TachyonBeamSplitter) startQuantum() int {
+	result := 0
+
+CreatedFirstBlock:
+	for y := 1; y < tbs.yMax; y++ {
+		for x := range tbs.xMax {
+			currentPosition := image.Pt(x, y)
+			positionAbove := currentPosition.Sub(image.Pt(0, 1))
+
+			if tbs.grid[positionAbove] == Start {
+				// Create the first '1' block
+				tbs.timelines[currentPosition] = 1
+
+				break CreatedFirstBlock
+			}
+		}
+	}
+
+	for y := 1; y < tbs.yMax; y++ {
+		for x := range tbs.xMax {
+			currentPosition := image.Pt(x, y)
+
+			if currentTimelineValue, exists := tbs.timelines[currentPosition]; exists {
+				below := currentPosition.Add(image.Pt(0, 1))
+
+				switch tbs.grid[below] {
+				case Empty:
+					slog.Debug("nothing below current position", slog.Any("currentPosition", currentPosition), slog.Int("currentTimelineValue", currentTimelineValue))
+
+					tbs.timelines[below] += currentTimelineValue
+
+				case Splitter:
+					slog.Debug("splitter is below current position", slog.Any("currentPosition", currentPosition), slog.Int("currentTimelineValue", currentTimelineValue))
+
+					belowLeft := currentPosition.Add(image.Pt(-1, 1))
+					belowRight := currentPosition.Add(image.Pt(1, 1))
+
+					tbs.timelines[belowLeft] += currentTimelineValue
+					tbs.timelines[belowRight] += currentTimelineValue
+				}
+			}
+		}
+
+		if y == tbs.yMax-1 {
+			slog.Debug("bottom row; add up the blocks")
+
+			for x := range tbs.xMax {
+				if bottomRowBlockValue, exists := tbs.timelines[image.Pt(x, y)]; exists {
+					result += bottomRowBlockValue
+				}
+			}
+		}
+	}
+
+	return result
+}
+
 func parseInput(input string) (TachyonBeamSplitter, error) {
 	buffer := bytes.NewBufferString(input)
 	scanner := bufio.NewScanner(buffer)
 
 	result := TachyonBeamSplitter{
-		grid: make(map[image.Point]Tile),
+		grid:      make(map[image.Point]Tile),
+		timelines: make(map[image.Point]int),
 	}
 
 	y := 0
