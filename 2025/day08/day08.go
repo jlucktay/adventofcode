@@ -127,18 +127,7 @@ func (jb *junctionBox) EuclideanDistance(target *junctionBox) int {
 
 func (p *Playground) calculateDistances() {
 	for outerIdx := range p.boxes {
-	NextInner:
 		for innerIdx := outerIdx + 1; innerIdx < len(p.boxes); innerIdx++ {
-			for _, dp := range p.distances {
-				if (dp.left == p.boxes[outerIdx] && dp.right == p.boxes[innerIdx]) || (dp.left == p.boxes[innerIdx] && dp.right == p.boxes[outerIdx]) {
-					slog.Debug("already know distance between these two boxes; skipping", slog.String("outer", p.boxes[outerIdx].String()), slog.String("inner", p.boxes[innerIdx].String()), slog.Int("distance", dp.distance))
-
-					break NextInner
-				}
-			}
-
-			slog.Debug("distance between these two boxes is not yet known; calculating", slog.String("outer", p.boxes[outerIdx].String()), slog.String("inner", p.boxes[innerIdx].String()))
-
 			newDistCalc := p.boxes[outerIdx].EuclideanDistance(p.boxes[innerIdx])
 
 			newDistPair := distancePair{
@@ -147,8 +136,6 @@ func (p *Playground) calculateDistances() {
 				distance: newDistCalc,
 			}
 
-			slog.Debug("distance between these two boxes is now calculated", slog.Any("new", newDistPair))
-
 			p.distances = append(p.distances, newDistPair)
 		}
 	}
@@ -156,6 +143,22 @@ func (p *Playground) calculateDistances() {
 	slices.SortStableFunc(p.distances, func(a, b distancePair) int {
 		return cmp.Compare(a.distance, b.distance)
 	})
+}
+
+func min(a, b int) int {
+	if a <= b {
+		return a
+	}
+
+	return b
+}
+
+func max(a, b int) int {
+	if a >= b {
+		return a
+	}
+
+	return b
 }
 
 func (p *Playground) connectClosestPairs() {
@@ -173,8 +176,8 @@ func (p *Playground) connectClosestPairs() {
 			p.distances[sa].right.circuit = p.distances[sa].left.circuit
 		} else {
 			// Both are already part of existing circuits, so collapse to the lower of the two.
-			lowestCircuit := int(math.Min(float64(p.distances[sa].left.circuit), float64(p.distances[sa].right.circuit)))
-			highestCircuit := int(math.Max(float64(p.distances[sa].left.circuit), float64(p.distances[sa].right.circuit)))
+			lowestCircuit := min(p.distances[sa].left.circuit, p.distances[sa].right.circuit)
+			highestCircuit := max(p.distances[sa].left.circuit, p.distances[sa].right.circuit)
 
 			for circuitUpdateIdx := range p.stopAfter() {
 				if p.distances[circuitUpdateIdx].left.circuit == highestCircuit {
