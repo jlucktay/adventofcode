@@ -15,6 +15,6 @@ require (
 	github.com/go-sqlite/sqlite3 v0.0.0-20180313105335-53dd8e640ee7 // indirect
 	github.com/gonuts/binary v0.2.0 // indirect
 	github.com/orsinium-labs/enum v1.5.0 // indirect
-	golang.org/x/net v0.47.0 // indirect
+	golang.org/x/net v0.55.0 // indirect
 	golang.org/x/sync v0.18.0 // indirect
 )
